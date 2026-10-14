@@ -58,9 +58,6 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
         <label class="f"><span>Client email</span><input name="client_email" type="email" /></label>
         <label class="f"><span>Service</span><select name="service"><option value="">Choose…</option>{services.map((s) => <option>{s.title}</option>)}<option>Other</option></select></label>
         <label class="f"><span>Quantity</span><input name="quantity" placeholder="e.g. 500 pcs, 12 stores" /></label>
-        <label class="f sp-full"><span>Job description (client can see this)</span><textarea name="description" rows="3"></textarea></label>
-        <label class="f"><span>Expected delivery date</span><input name="due_date" type="date" /></label>
-        <label class="f"><span>Advance received (₹)</span><input name="advance" type="number" min="0" step="0.01" /></label>
       </div>
       <fieldset class="it-box">
         <legend>Bill items <small>(staff only)</small></legend>
@@ -73,6 +70,11 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
           <dl class="it-tot" data-tot></dl>
         </div>
       </fieldset>
+      <div class="sp-grid">
+        <label class="f sp-full"><span>Job description (client can see this)</span><textarea name="description" rows="3"></textarea></label>
+        <label class="f"><span>Expected delivery date</span><input name="due_date" type="date" /></label>
+        <label class="f"><span>Advance received (₹)</span><input name="advance" type="number" min="0" step="0.01" /></label>
+      </div>
       <label class="f"><span>Internal notes (staff only)</span><textarea name="internal_notes" rows="2"></textarea></label>
       <p class="notice notice--err" data-msg hidden></p>
       <div class="sp-btns"><button class="btn btn--primary" type="submit" value="save">Save order</button><button class="btn btn--outline" type="button" data-close>Cancel</button></div>
@@ -241,6 +243,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
     field('gst_percent').value = String(Number(o?.gst_percent || 0));
     msg($('[data-msg]', fOrder), '');
     itemsBox.innerHTML = '';
+    if (!products.length) await loadProducts();
     if (o) { const { data } = await supa!.from('order_items').select('*').eq('order_id', o.id).order('sort'); (data || []).forEach((it: any) => addItem(it)); }
     recalc();
     dOrder.showModal();
@@ -256,7 +259,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   function addItem(it: any = {}) {
     const unit = it.unit || 'sqft';
     itemsBox.insertAdjacentHTML('beforeend', `<div class="it" data-row>
-      <label class="f"><span>Category</span><select data-k="category">${opts(cats().map((c) => c.name), it.category || '', 'Choose…')}</select></label>
+      <label class="f"><span>Category</span><select data-k="category">${opts(cats().map((c) => c.name), it.category || '', cats().length ? 'Choose…' : 'No products yet: add them in Products')}</select></label>
       <label class="f"><span>Quality</span><select data-k="quality">${opts(qualsOf(it.category || '').map((q) => q.name), it.quality || '', '—')}</select></label>
       <label class="f it-det"><span>Details</span><input data-k="details" value="${val(it.details)}" placeholder="e.g. shop front board" /></label>
       <label class="f"><span>Unit</span><select data-k="unit">${UNITS.map((u) => `<option value="${u.key}"${u.key === unit ? ' selected' : ''}>${u.label}</option>`).join('')}</select></label>
