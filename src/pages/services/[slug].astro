@@ -1,0 +1,145 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import { services, config, waLink, serviceUrl, ph } from '../../lib/site.js';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts } from '../../lib/blog.js';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+const { service: s } = Astro.props;
+const others = services.filter((x) => x.slug !== s.slug);
+const guides = (await getPosts()).filter((p) => p.data.service === s.slug);
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: s.faqs.filter((f) => !/\[/.test(f.a)).map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.title,
+  description: s.metaDescription,
+  serviceType: s.title,
+  areaServed: 'Delhi NCR',
+  url: `${config.siteUrl}${serviceUrl(s)}`,
+  provider: { '@id': `${config.siteUrl}/#business` },
+};
+const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [serviceSchema];
+---
+<Base title={s.metaTitle} description={s.metaDescription} crumb={s.title} image={s.cardImage.src.endsWith('.svg') ? undefined : s.cardImage.src} schema={schema}>
+  <PageHero label={s.shortTitle} title={s.title} text={s.tagline} crumbs={[{ href: '/services/', label: 'Services' }, { href: '', label: s.title }]}>
+    <div class="btn-row" style="margin-top:28px">
+      <a href="#quote" class="btn btn--primary">Get a quote <Icon name="arrow-right" /></a>
+      <a href={waLink(`Hi M.S. Graphics Studio, I need a quote for ${s.title}: ...`)} class="btn btn--ghost-light" target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> WhatsApp Us</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container split">
+      <div class="reveal">
+        <SectionLabel>What we do</SectionLabel>
+        <h2>{s.keywordHeading}</h2>
+        <ul class="checklist">{s.whatWeDo.map((w) => <li><Icon name="check" />{w}</li>)}</ul>
+      </div>
+      <div class="reveal"><Photo image={s.cardImage} ratio="4 / 3" crop /></div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Gallery</SectionLabel>
+        <h2>Recent {s.shortTitle.toLowerCase()} work</h2>
+      </div>
+      <div class="grid grid-4">
+        {s.gallery.map((g) => <Photo image={g} class="reveal" />)}
+      </div>
+      <p style="margin-top:24px"><a class="link-arrow" href="/work/">See more of our work <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Why us for this</SectionLabel>
+        <h2>Why brands choose us for {s.shortTitle.toLowerCase()}</h2>
+      </div>
+      <div class="grid grid-4">
+        {s.whyUs.map((w, i) => (
+          <div class="card reveal">
+            <span class="num">0{i + 1}</span>
+            <h3>{w.title}</h3>
+            <p>{w.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Process</SectionLabel>
+        <h2>How we deliver it</h2>
+      </div>
+      <ol class="steps">{s.process.map((p) => <li>{p}</li>)}</ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container faq-wrap">
+      <div>
+        <SectionLabel>FAQs</SectionLabel>
+        <h2>Questions about {s.shortTitle.toLowerCase()}</h2>
+        <p class="lead">Something else? <a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">Ask us on WhatsApp</a>.</p>
+      </div>
+      <div class="faq">
+        {s.faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div><p set:html={ph(f.a)} /></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {guides.length > 0 && (
+    <section class="section section--paper">
+      <div class="container">
+        <div class="section-head"><SectionLabel>Guides</SectionLabel><h2>Helpful reading before you order</h2></div>
+        <div class="grid grid-3">{guides.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--navy" id="quote">
+    <div class="container split">
+      <div>
+        <SectionLabel>Get a quote</SectionLabel>
+        <h2>Get a quote for {s.title}</h2>
+        <p class="lead">Share the details. We'll reply with a clear quote within 24 hours.</p>
+        <h3 class="others-h">Other services</h3>
+        <ul class="others">{others.map((o) => <li><a href={serviceUrl(o)}><Icon name={o.icon} />{o.title}</a></li>)}</ul>
+      </div>
+      <QuoteForm service={s.title} />
+    </div>
+  </section>
+</Base>
+<style>
+  .num { font-size: 1.8rem; font-weight: 700; color: var(--magenta); line-height: 1; }
+  .faq-wrap { display: grid; gap: 32px; }
+  @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
+  #quote .split { align-items: start; }
+  .others-h { margin-top: 32px; font-size: 1rem; }
+  .others { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .others a { color: #dfe4ef; text-decoration: none; display: inline-flex; gap: 10px; align-items: center; }
+  .others a:hover { color: #fff; text-decoration: underline; }
+  .others :global(.icon) { color: var(--cyan); width: 20px; height: 20px; }
+</style>

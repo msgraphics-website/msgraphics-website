@@ -1,0 +1,234 @@
+{
+  "hero": {
+    "label": "Factory-direct branding · Delhi NCR",
+    "headline": "Printed in-house. Delivered on-ground.",
+    "sub": "Print, branding, signage, hoardings and event setups for businesses across Delhi NCR — designed, produced and installed by our own team, on our own machines.",
+    "image": {
+      "src": "/images/home-hero-installation.webp",
+      "alt": "3D illustration: our team installing branding on site",
+      "label": "PHOTO: Installation or printing machine in action (hero background)"
+    }
+  },
+  "trust": [
+    {
+      "icon": "factory",
+      "value": "Own Printing Unit",
+      "text": "Dwarka, New Delhi"
+    },
+    {
+      "icon": "badge-check",
+      "value": "10K+ Projects",
+      "text": "Delivered"
+    },
+    {
+      "icon": "receipt-indian-rupee",
+      "value": "GST & MSME Registered",
+      "text": "Transparent billing"
+    },
+    {
+      "icon": "truck",
+      "value": "Delhi NCR",
+      "text": "Installation"
+    }
+  ],
+  "servicesHeading": "Retail branding, signage and printing in Delhi NCR",
+  "servicesIntro": "Six services, one team. Everything is designed and produced at our own unit in Dwarka.",
+  "why": [
+    {
+      "icon": "printer",
+      "title": "In-house printing",
+      "text": "Offset, digital and large-format printing on our own machines. No middlemen, better rates."
+    },
+    {
+      "icon": "pen-tool",
+      "title": "In-house design studio",
+      "text": "Our designers prepare print-ready artwork, so what you approve is what gets printed."
+    },
+    {
+      "icon": "layers-3",
+      "title": "One-stop execution",
+      "text": "Design, print, fabrication, installation and events. One team, one invoice."
+    },
+    {
+      "icon": "clock",
+      "title": "Speed you can plan on",
+      "text": "Production is in our hands, so we commit to dates, take urgent jobs and work round the clock when a project needs it."
+    },
+    {
+      "icon": "palette",
+      "title": "Quality control",
+      "text": "A colour proof before every bulk run. Every piece is checked before dispatch."
+    },
+    {
+      "icon": "camera",
+      "title": "Photo report",
+      "text": "You get photos of every installation, store by store, site by site."
+    },
+    {
+      "icon": "receipt-indian-rupee",
+      "title": "Transparent GST billing",
+      "text": "Clear quotes and proper GST invoices. No hidden charges."
+    }
+  ],
+  "unitTeaser": {
+    "title": "Our production unit in Dwarka",
+    "text": "Most agencies outsource production. We don't. Design, printing, cutting, fabrication and dispatch all happen on our own floor at Dwarka Mor. That is how we keep rates honest and dates firm.",
+    "points": [
+      "Design studio",
+      "Printing",
+      "Cutting & finishing",
+      "Fabrication",
+      "Dispatch"
+    ],
+    "images": [
+      {
+        "src": "/images/unit-printing-floor.webp",
+        "alt": "3D illustration: printing floor at our Dwarka unit",
+        "label": "PHOTO: Printing floor"
+      },
+      {
+        "src": "/images/unit-large-format-printer.webp",
+        "alt": "3D illustration: large-format printer running a flex job",
+        "label": "PHOTO: Large-format printer"
+      },
+      {
+        "src": "/images/unit-fabrication-workshop.webp",
+        "alt": "3D illustration: fabrication workshop",
+        "label": "PHOTO: Fabrication workshop"
+      },
+      {
+        "src": "/images/unit-dispatch.webp",
+        "alt": "3D illustration: finished jobs packed for dispatch",
+        "label": "PHOTO: Dispatch area"
+      }
+    ]
+  },
+  "featuredHeading": "Recent branding and signage work in Delhi NCR",
+  "process": [
+    {
+      "icon": "message-circle",
+      "title": "Brief",
+      "text": "Tell us what, where, how many and by when."
+    },
+    {
+      "icon": "pen-tool",
+      "title": "Design",
+      "text": "Our studio prepares artwork and mock-ups."
+    },
+    {
+      "icon": "file-check",
+      "title": "Proof",
+      "text": "You approve a colour proof before bulk printing."
+    },
+    {
+      "icon": "printer",
+      "title": "Print",
+      "text": "Produced on our own machines in Dwarka."
+    },
+    {
+      "icon": "wrench",
+      "title": "Install",
+      "text": "Our crews install and set up on site."
+    },
+    {
+      "icon": "camera",
+      "title": "Report",
+      "text": "You get a photo report of every location."
+    }
+  ],
+  "industries": [
+    {
+      "icon": "store",
+      "name": "Retail & Showrooms"
+    },
+    {
+      "icon": "package",
+      "name": "FMCG & Distributors"
+    },
+    {
+      "icon": "building-2",
+      "name": "Real Estate"
+    },
+    {
+      "icon": "graduation-cap",
+      "name": "Education"
+    },
+    {
+      "icon": "hospital",
+      "name": "Healthcare"
+    },
+    {
+      "icon": "briefcase",
+      "name": "Corporate Offices"
+    },
+    {
+      "icon": "utensils",
+      "name": "Restaurants & Hotels"
+    },
+    {
+      "icon": "rocket",
+      "name": "Startups"
+    },
+    {
+      "icon": "tent",
+      "name": "Events & Exhibitions"
+    }
+  ],
+  "clients": [
+    {
+      "name": "Muthoot Finance",
+      "logo": ""
+    },
+    {
+      "name": "Coca-Cola",
+      "logo": ""
+    },
+    {
+      "name": "SBI Life",
+      "logo": ""
+    },
+    {
+      "name": "LIC",
+      "logo": ""
+    },
+    {
+      "name": "KFC",
+      "logo": ""
+    }
+  ],
+  "cta": {
+    "headline": "Have a launch, a store opening or an event coming up?",
+    "text": "Send us the brief. We'll send a clear quote within 24 hours."
+  },
+  "_clientsHelp": "Add the client's official logo file to /public/images/clients/ and put its path in \"logo\", e.g. \"/images/clients/kfc.png\". Until then the name is shown as text.",
+  "faqs": [
+    {
+      "q": "What does M.S. Graphics Studio do?",
+      "a": "We are a print, branding and events company in New Delhi. We design, print, fabricate and install in-store branding, POP/POSM, shop signage, hoardings, vehicle branding, exhibition stalls, event setups, corporate gifts and bulk printing."
+    },
+    {
+      "q": "Where is your printing unit?",
+      "a": "Our own production unit is at Plot No. B-32, Dwarka Mor, Patel Garden Extn., New Delhi 110059. Design, printing, cutting, fabrication and dispatch all happen there."
+    },
+    {
+      "q": "Which areas do you serve?",
+      "a": "We install across Delhi NCR, including Delhi, Gurugram, Noida, Ghaziabad and Faridabad, and have delivered work in 20+ cities across India and Nepal."
+    },
+    {
+      "q": "How fast can I get a quote?",
+      "a": "Send your requirement through the website form or WhatsApp on +91 97162 14982. We send a quote within 24 hours."
+    },
+    {
+      "q": "Do you take urgent jobs?",
+      "a": "Yes. Because production is in-house, we can schedule urgent jobs. Our normal hours are Monday to Saturday, 10 AM to 7 PM, and we work round the clock when a project needs it."
+    },
+    {
+      "q": "How long have you been in business?",
+      "a": "Since 2014. Our team of 90+ people has delivered more than 10,000 projects for over 9,500 clients."
+    },
+    {
+      "q": "Do you give GST invoices?",
+      "a": "Yes. We are GST registered and MSME registered, and every job is billed with a proper GST invoice."
+    }
+  ]
+}

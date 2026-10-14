@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import Gallery from '../components/Gallery.astro';
+import BeforeAfterSlider from '../components/BeforeAfterSlider.astro';
+import Photo from '../components/Photo.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { content, ph } from '../lib/site.js';
+const w = content.work;
+---
+<Base
+  title="Our Work: In-Store Branding, Signage, Hoardings & Events in Delhi"
+  description="Portfolio of in-store branding, glow sign boards, hoardings, exhibition stalls, event branding and printing work by M.S. Graphics Studio, Delhi NCR."
+>
+  <PageHero label="Work" title="Work we've printed, built and installed" text="Real jobs from our unit in Dwarka, across stores, streets, offices and event venues." crumbs={[{ href: '', label: 'Work' }]} />
+
+  <section class="section">
+    <div class="container">
+      <Gallery items={w.items} categories={w.categories} />
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Before & after</SectionLabel>
+        <h2>See the difference</h2>
+        <p class="lead">Drag the handle to compare.</p>
+      </div>
+      <div class="grid grid-2">
+        {w.beforeAfter.map((b) => <div class="reveal"><BeforeAfterSlider before={b.before} after={b.after} title={b.title} /></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Case studies</SectionLabel>
+        <h2>How we handled it</h2>
+      </div>
+      <div class="cases">
+        {w.caseStudies.map((c, i) => (
+          <article class="case reveal">
+            <div class="case__text">
+              <span class="tag">Case study 0{i + 1}</span>
+              <h3 set:html={ph(c.title)} />
+              <dl>
+                <dt>Client & industry</dt><dd set:html={ph(c.client)} />
+                <dt>The brief</dt><dd set:html={ph(c.brief)} />
+                <dt>What we did</dt><dd set:html={ph(c.whatWeDid)} />
+                <dt>Result</dt><dd set:html={ph(c.result)} />
+              </dl>
+            </div>
+            <div class="case__photos" data-n={c.images.length}>
+              {c.images.map((img) => <Photo image={img} />)}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+<style>
+  .cases { display: grid; gap: 48px; }
+  .case { display: grid; gap: 28px; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+  .case:last-child { border-bottom: 0; padding-bottom: 0; }
+  @media (min-width: 900px) { .case { grid-template-columns: 1fr 1.1fr; } .case:nth-child(even) .case__text { order: 2; } }
+  .case h3 { font-size: 1.4rem; margin: 12px 0 16px; }
+  dl { margin: 0; }
+  dt { font-weight: 600; color: var(--navy); margin-top: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  dd { margin: 4px 0 0; }
+  .case__photos { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; align-content: start; }
+  .case__photos[data-n="3"] > :first-child { grid-column: 1 / -1; }
+</style>

@@ -1,0 +1,94 @@
+{
+  "paragraphs": [
+    "M.S. Graphics Studio is a Delhi-based print, branding and events company, operating from our own production unit at Dwarka Mor, New Delhi since 2014.",
+    "What started as a printing studio has grown into a one-stop partner for brands that need their marketing to show up in the real world — on shop counters, store fronts, roadside hoardings, office walls and event stages.",
+    "Unlike agencies that outsource production, we print on our own machines. Our in-house team of 90+ designers, printers, fabricators and installers handles every job from concept to installation, across 20+ cities in India and Nepal."
+  ],
+  "image": {
+    "src": "/images/about-team-at-unit.webp",
+    "alt": "3D illustration: our team at the Dwarka unit",
+    "label": "PHOTO: Team at the unit"
+  },
+  "vision": "To be North India's most dependable factory-direct branding partner — the team brands call when it has to be right, and it has to be on time.",
+  "mission": [
+    "Deliver print that matches the approved design every time.",
+    "Keep production in-house for honest pricing and fast delivery.",
+    "Treat every client deadline as our own."
+  ],
+  "_statsHelp": "Use plain numbers (e.g. \"2014\" or \"90\") to get the count-up effect. Text like \"9.5K\" is shown as-is. \"suffix\" is added after the number, e.g. \"+\".",
+  "stats": [
+    {
+      "label": "Founded",
+      "value": "2014",
+      "suffix": ""
+    },
+    {
+      "label": "Team members",
+      "value": "90",
+      "suffix": "+"
+    },
+    {
+      "label": "Projects delivered",
+      "value": "10",
+      "suffix": "K+"
+    },
+    {
+      "label": "Happy clients",
+      "value": "9.5K",
+      "suffix": "+"
+    },
+    {
+      "label": "Cities in India & Nepal",
+      "value": "20",
+      "suffix": "+"
+    }
+  ],
+  "founder": {
+    "name": "[Founder name]",
+    "role": "Founder, M.S. Graphics Studio",
+    "message": "We started in 2014 with one belief: if your name is on it, it has to be right and it has to be on time. That is why we built our own production unit instead of outsourcing. Every job that leaves our floor carries our name too, and we treat your deadline as our own.",
+    "image": {
+      "src": "/images/founder-portrait.webp",
+      "alt": "3D illustration: portrait of the founder",
+      "label": "PHOTO: Founder portrait"
+    }
+  },
+  "teams": [
+    {
+      "icon": "pen-tool",
+      "name": "Design studio",
+      "count": "20+",
+      "text": "Artwork, mock-ups and print-ready files."
+    },
+    {
+      "icon": "printer",
+      "name": "Printing",
+      "count": "15+",
+      "text": "Offset, digital and large-format printing."
+    },
+    {
+      "icon": "hammer",
+      "name": "Fabrication",
+      "count": "12+",
+      "text": "Frames, boards, displays and stalls."
+    },
+    {
+      "icon": "wrench",
+      "name": "Installation",
+      "count": "15+",
+      "text": "On-site fitting across Delhi NCR and beyond."
+    },
+    {
+      "icon": "message-circle",
+      "name": "Client servicing",
+      "count": "9.5K+",
+      "text": "Clients served. One point of contact for every job."
+    },
+    {
+      "icon": "tent",
+      "name": "Events",
+      "count": "100+",
+      "text": "Events set up and run by our on-ground crews."
+    }
+  ]
+}

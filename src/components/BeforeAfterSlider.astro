@@ -1,0 +1,37 @@
+---
+// Drag the handle (or use arrow keys) to compare BEFORE and AFTER photos.
+interface Props { before: { src: string; alt: string }; after: { src: string; alt: string }; title?: string }
+const { before, after, title } = Astro.props;
+---
+<figure class="ba">
+  <div class="ba__frame" style="--pos:50%">
+    <img src={after.src} alt={after.alt} loading="lazy" decoding="async" width="1200" height="900" />
+    <div class="ba__before"><img src={before.src} alt={before.alt} loading="lazy" decoding="async" width="1200" height="900" /></div>
+    <span class="ba__tag ba__tag--b">Before</span><span class="ba__tag ba__tag--a">After</span>
+    <div class="ba__line" aria-hidden="true"><span class="ba__knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></span></div>
+    <input class="ba__range" type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after" />
+  </div>
+  {title && <figcaption set:html={title.replace(/\[([^\]]+)\]/g, '<span class="ph">[$1]</span>')} />}
+</figure>
+<style>
+  .ba { margin: 0; }
+  .ba__frame { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden; background: #e3e1db; user-select: none; touch-action: pan-y; }
+  .ba__frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ba__before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+  .ba__line { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 3px; background: #fff; transform: translateX(-50%); pointer-events: none; box-shadow: 0 0 8px rgba(0,0,0,0.3); }
+  .ba__knob { position: absolute; top: 50%; left: 50%; width: 46px; height: 46px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--magenta); color: #fff; display: grid; place-items: center; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+  .ba__knob svg { width: 24px; height: 24px; }
+  .ba__range { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+  .ba__range:focus-visible ~ .ba__line .ba__knob, .ba__frame:has(.ba__range:focus-visible) .ba__knob { outline: 3px solid var(--cyan); outline-offset: 3px; }
+  .ba__tag { position: absolute; top: 14px; background: rgba(20,33,61,0.85); color: #fff; font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em; text-transform: uppercase; pointer-events: none; }
+  .ba__tag--b { left: 14px; }
+  .ba__tag--a { right: 14px; background: var(--magenta); }
+  figcaption { margin-top: 12px; font-size: 0.92rem; color: var(--muted); }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('.ba__frame').forEach((frame) => {
+    const range = frame.querySelector<HTMLInputElement>('.ba__range')!;
+    const set = (v: number) => frame.style.setProperty('--pos', `${v}%`);
+    range.addEventListener('input', () => set(+range.value));
+  });
+</script>

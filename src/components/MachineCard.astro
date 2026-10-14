@@ -1,0 +1,28 @@
+---
+import Photo from './Photo.astro';
+import { ph } from '../lib/site.js';
+interface Props { machine: { type: string; model: string; does: string; capacity: string; image: any } }
+const { machine: m } = Astro.props;
+---
+<article class="machine card reveal">
+  <Photo image={m.image} ratio="4 / 3" />
+  <div class="machine__body">
+    <h3>{m.type}</h3>
+    <p>{m.does}</p>
+    <dl>
+      <div><dt>Brand / model</dt><dd set:html={ph(m.model)} /></div>
+      <div><dt>Capacity</dt><dd set:html={ph(m.capacity)} /></div>
+    </dl>
+  </div>
+</article>
+<style>
+  .machine { padding: 0; overflow: hidden; }
+  .machine :global(.photo) { border-radius: 0; }
+  .machine__body { padding: 20px 22px 22px; }
+  .machine h3 { margin: 0 0 6px; }
+  .machine p { color: var(--muted); font-size: 0.95rem; }
+  dl { margin: 0; display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 0.9rem; }
+  dl div { display: flex; justify-content: space-between; gap: 12px; }
+  dt { color: var(--muted); }
+  dd { margin: 0; font-weight: 600; color: var(--navy); text-align: right; }
+</style>

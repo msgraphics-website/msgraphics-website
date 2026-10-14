@@ -1,0 +1,17 @@
+---
+// One photo. `image` comes from src/data/content/: { src, alt, label }.
+interface Props { image: { src: string; alt: string }; ratio?: string; eager?: boolean; crop?: boolean; class?: string; sizes?: string }
+const { image, ratio = '4 / 3', eager = false, crop = false, class: cls = '' } = Astro.props;
+---
+{crop ? (
+  <div class={`crop ${cls}`}>
+    <span class="crop-b" aria-hidden="true"></span>
+    <div class="photo" style={`--ratio:${ratio}`}>
+      <img src={image.src} alt={image.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} width="1200" height="900" />
+    </div>
+  </div>
+) : (
+  <div class={`photo ${cls}`} style={`--ratio:${ratio}`}>
+    <img src={image.src} alt={image.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} width="1200" height="900" />
+  </div>
+)}

@@ -1,0 +1,45 @@
+{
+  "name": "M.S. Graphics Studio",
+  "tagline": "Printed in-house. Delivered on-ground.",
+  "hindiLine": "Design se setup tak, sab ek jagah.",
+  "shortAbout": "A Delhi-based print, branding and events company with its own printing unit at Dwarka Mor. We design, print, fabricate, install and set up events ourselves, under one roof.",
+  "phone": "+919716214982",
+  "phoneDisplay": "+91 97162 14982",
+  "whatsappNumber": "919716214982",
+  "email": "msgraphicsstudio@gmail.com",
+  "address": {
+    "line1": "Plot No. B-32, Dwarka Mor",
+    "line2": "Patel Garden Extn.",
+    "city": "New Delhi",
+    "postalCode": "110059",
+    "region": "Delhi",
+    "country": "IN",
+    "full": "Plot No. B-32, Dwarka Mor, Patel Garden Extn., New Delhi 110059, India"
+  },
+  "registrations": [
+    "GST Registered",
+    "MSME Registered"
+  ],
+  "workingHours": "Mon–Sat, 10:00 AM – 7:00 PM (24×7 when a project needs it)",
+  "founded": "2014",
+  "pillars": [
+    {
+      "title": "In-house",
+      "text": "Own machines, better rates."
+    },
+    {
+      "title": "On-time",
+      "text": "Urgent jobs possible."
+    },
+    {
+      "title": "One-stop",
+      "text": "One team, one invoice."
+    }
+  ],
+  "social": {
+    "facebook": "[Facebook page URL]",
+    "instagram": "[Instagram profile URL]",
+    "youtube": "[YouTube channel URL]",
+    "x": "[X profile URL]"
+  }
+}

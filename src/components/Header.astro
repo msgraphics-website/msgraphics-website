@@ -1,0 +1,156 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { services, business, config, telLink, mailLink, serviceUrl } from '../lib/site.js';
+const path = Astro.url.pathname;
+const active = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
+const links = [
+  { href: '/our-unit/', label: 'Our Unit' },
+  { href: '/work/', label: 'Work' },
+  { href: '/about/', label: 'About' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+<div class="topbar">
+  <div class="container topbar__in">
+    <span class="topbar__left">
+      <a href={telLink} data-track="call_click"><Icon name="phone" /> {business.phoneDisplay}</a>
+      <a href={mailLink}><Icon name="mail" /> {business.email}</a>
+    </span>
+    <span class="topbar__right">
+      <a href="/track/"><Icon name="package-search" /> Track your order</a>
+      <span class="topbar__hours"><Icon name="clock" /> {business.workingHours}</span>
+    </span>
+  </div>
+</div>
+<header class="header" id="top">
+  <div class="container header__in">
+    <a href="/" class="header__logo"><Logo /></a>
+    <a class="shop-m" href={config.shopUrl}><Icon name="shopping-cart" /><span>Shop</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Menu</span><Icon name="menu" class="icon nav-toggle__open" /><Icon name="x" class="icon nav-toggle__close" />
+    </button>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul class="nav__list">
+        <li><a href="/" aria-current={active('/') ? 'page' : undefined}>Home</a></li>
+        <li class="has-sub">
+          <a href="/services/" class="nav__services" aria-current={active('/services') ? 'page' : undefined}>Services</a>
+          <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="sub-services"><span class="sr-only">Show services</span><Icon name="chevron-down" /></button>
+          <ul class="sub" id="sub-services">
+            {services.map((s) => (
+              <li><a href={serviceUrl(s)}><Icon name={s.icon} /><span>{s.title}</span></a></li>
+            ))}
+            <li class="sub__all"><a href="/services/">All services <Icon name="arrow-right" /></a></li>
+          </ul>
+        </li>
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+        <li class="nav__track"><a href="/track/" aria-current={active('/track') ? 'page' : undefined}>Track Order</a></li>
+        <li class="nav__shop"><a href={config.shopUrl}><Icon name="shopping-cart" /><span>Shop Print Products</span></a></li>
+      </ul>
+      <a href="/contact/" class="btn btn--primary btn--sm nav__cta">Get a Quote</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .topbar { background: var(--navy); color: #c9d0e0; font-size: 0.82rem; display: none; }
+  @media (min-width: 900px) { .topbar { display: block; } }
+  .topbar__in { display: flex; justify-content: space-between; align-items: center; min-height: 36px; gap: 16px; }
+  .topbar a { color: #d9deea; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .topbar a:hover { color: #fff; }
+  .topbar :global(.icon) { width: 15px; height: 15px; }
+  .topbar__left { display: flex; gap: 22px; }
+  .topbar__hours { display: inline-flex; align-items: center; gap: 6px; }
+  .topbar__right { display: inline-flex; align-items: center; gap: 22px; }
+  .topbar__right a { color: var(--yellow); font-weight: 500; }
+  @media (min-width: 1200px) { .nav__track { display: none; } }
+  .nav a { white-space: nowrap; }
+  .nav a.nav__cta, .nav a.nav__cta:hover { color: #fff; }
+
+  .header { position: sticky; top: 0; z-index: 80; background: #fff; border-bottom: 1px solid var(--line); }
+  .header__in { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-h); gap: 10px; }
+  .header__logo { display: block; flex-shrink: 0; }
+  .header__logo :global(.logo) { height: 44px; width: auto; }
+  @media (max-width: 400px) { .header__logo :global(.logo) { height: 34px; } }
+
+  .shop-m { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 14px; border-radius: 999px; background: var(--yellow); color: var(--navy); font-weight: 600; font-size: 0.9rem; text-decoration: none; }
+  .shop-m :global(.icon) { width: 18px; height: 18px; }
+  .shop-m:hover { color: var(--navy); background: #ffd34d; }
+  @media (max-width: 400px) { .shop-m span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } .shop-m { width: 46px; justify-content: center; padding: 0; } }
+  @media (min-width: 1200px) { .shop-m { display: none; } }
+  .nav-toggle { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; color: var(--navy); cursor: pointer; }
+  .nav-toggle :global(.nav-toggle__close) { display: none; }
+  .nav-toggle[aria-expanded="true"] :global(.nav-toggle__open) { display: none; }
+  .nav-toggle[aria-expanded="true"] :global(.nav-toggle__close) { display: block; }
+
+  .nav { display: none; }
+  .nav__list { list-style: none; margin: 0; padding: 0; }
+  .nav a { color: var(--navy); text-decoration: none; font-weight: 500; }
+  .nav a[aria-current="page"] { color: var(--magenta); }
+  .sub { list-style: none; margin: 0; padding: 0; }
+  .sub a { display: flex; gap: 10px; align-items: center; font-size: 0.95rem; }
+  .sub :global(.icon) { width: 20px; height: 20px; color: var(--cyan); }
+  .sub__all a { color: var(--magenta); font-weight: 600; }
+  .sub__all :global(.icon) { color: var(--magenta); width: 16px; }
+  .nav__list > li.nav__shop > a { display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); color: var(--navy); font-weight: 600; border-radius: 999px; padding: 8px 16px; }
+  .nav__list > li.nav__shop > a:hover { background: #ffd34d; color: var(--navy); }
+  .nav__shop :global(.icon) { width: 18px; height: 18px; }
+  .sub-toggle { background: none; border: 0; color: var(--navy); cursor: pointer; padding: 6px; display: grid; place-items: center; }
+  .sub-toggle :global(.icon) { width: 18px; height: 18px; transition: transform 0.2s; }
+  .sub-toggle[aria-expanded="true"] :global(.icon) { transform: rotate(180deg); }
+
+  /* mobile panel */
+  @media (max-width: 1199px) {
+    .nav.is-open { display: block; position: fixed; inset: var(--header-h) 0 0 0; background: #fff; overflow-y: auto; padding: 8px var(--gutter) 120px; border-top: 1px solid var(--line); }
+    .nav__list > li { border-bottom: 1px solid var(--line); }
+    .nav__list > li > a { display: block; padding: 14px 0; font-size: 1.05rem; }
+    .nav__list > li.nav__shop { border-bottom: 0; margin-top: 16px; }
+    .nav__list > li.nav__shop > a { display: flex; justify-content: center; padding: 13px 16px; }
+    .has-sub { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .has-sub > a { flex: 1; }
+    .sub { display: none; width: 100%; padding: 0 0 12px 8px; }
+    .sub.is-open { display: block; }
+    .sub a { padding: 10px 0; }
+    .nav__cta { width: 100%; margin-top: 20px; min-height: 50px; }
+  }
+  /* desktop */
+  @media (min-width: 1200px) {
+    .nav-toggle { display: none; }
+    .nav { display: flex; align-items: center; gap: 28px; }
+    .nav__list { display: flex; gap: 26px; align-items: center; }
+    .nav__list > li > a { padding: 8px 0; font-size: 0.95rem; position: relative; }
+    .nav__list > li > a:hover { color: var(--magenta); }
+    .has-sub { position: relative; display: flex; align-items: center; gap: 2px; }
+    .sub { position: absolute; top: calc(100% + 12px); left: -20px; width: 340px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 10px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity 0.2s, transform 0.2s, visibility 0.2s; }
+    .sub::before { content: ""; position: absolute; top: -14px; left: 0; right: 0; height: 14px; }
+    .has-sub:hover .sub, .has-sub:focus-within .sub, .sub.is-open { opacity: 1; visibility: visible; transform: none; }
+    .sub a { padding: 10px 12px; border-radius: 6px; }
+    .sub a:hover { background: var(--paper); color: var(--navy); }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') !== 'true';
+    toggle.setAttribute('aria-expanded', String(open));
+    nav?.classList.toggle('is-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  const subToggle = document.querySelector<HTMLButtonElement>('.sub-toggle');
+  const sub = document.getElementById('sub-services');
+  subToggle?.addEventListener('click', () => {
+    const open = subToggle.getAttribute('aria-expanded') !== 'true';
+    subToggle.setAttribute('aria-expanded', String(open));
+    sub?.classList.toggle('is-open', open);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (subToggle?.getAttribute('aria-expanded') === 'true') { subToggle.click(); subToggle.focus(); }
+    if (toggle?.getAttribute('aria-expanded') === 'true') { toggle.click(); toggle.focus(); }
+  });
+</script>

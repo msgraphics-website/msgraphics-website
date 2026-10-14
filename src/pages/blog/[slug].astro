@@ -1,0 +1,125 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import PostCard from '../../components/PostCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getPosts, readingTime, fmtDate } from '../../lib/blog.js';
+import { services, config, business, waLink, serviceUrl } from '../../lib/site.js';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, all: posts } }));
+}
+const { post, all } = Astro.props;
+const { Content, headings } = await render(post);
+const d = post.data;
+const url = `${config.siteUrl}/blog/${post.id}/`;
+const service = services.find((s) => s.slug === d.service);
+const related = all.filter((p) => p.id !== post.id).sort((a, b) => (b.data.service === d.service ? 1 : 0) - (a.data.service === d.service ? 1 : 0)).slice(0, 3);
+const toc = headings.filter((h) => h.depth === 2);
+const schema: object[] = [{
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: d.title,
+  description: d.description,
+  url,
+  mainEntityOfPage: url,
+  datePublished: d.date.toISOString(),
+  dateModified: (d.updated ?? d.date).toISOString(),
+  inLanguage: 'en-IN',
+  keywords: d.keywords.join(', '),
+  image: new URL(config.ogImage, config.siteUrl).href,
+  author: { '@type': 'Organization', name: business.name, url: config.siteUrl },
+  publisher: { '@id': `${config.siteUrl}/#business` },
+  about: service ? { '@type': 'Service', name: service.title, url: `${config.siteUrl}${serviceUrl(service)}` } : undefined,
+}];
+if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+---
+<Base title={d.title} description={d.description} schema={schema} crumb={d.title} type="article" published={d.date} modified={d.updated ?? d.date}>
+  <article>
+    <header class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/blog/">Blog</a> / <span aria-current="page">Article</span></nav>
+        <SectionLabel>{service ? service.shortTitle : 'Guide'}</SectionLabel>
+        <h1>{d.title}</h1>
+        <p class="meta">By the M.S. Graphics Studio team · <time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>{d.updated && <> · Updated <time datetime={d.updated.toISOString()}>{fmtDate(d.updated)}</time></>} · {readingTime(post.body)} min read</p>
+      </div>
+    </header>
+
+    <div class="container article">
+      <div class="article__main">
+        <p class="summary">{d.description}</p>
+        <Photo image={d.cover} ratio="16 / 9" crop eager />
+        {toc.length > 2 && (
+          <nav class="toc" aria-label="In this article">
+            <p class="toc__h">In this article</p>
+            <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+          </nav>
+        )}
+        <div class="prose"><Content /></div>
+
+        {d.faq.length > 0 && (
+          <section class="qa" aria-labelledby="qa-h">
+            <h2 id="qa-h">Quick answers</h2>
+            <div class="faq">
+              {d.faq.map((f) => <details><summary>{f.q}</summary><div><p>{f.a}</p></div></details>)}
+            </div>
+          </section>
+        )}
+      </div>
+
+      <aside class="article__side">
+        {service && (
+          <div class="side-card">
+            <p class="side-card__label">Related service</p>
+            <p class="side-card__title"><Icon name={service.icon} /> {service.title}</p>
+            <p>{service.tagline}</p>
+            <a class="btn btn--primary btn--sm" href={serviceUrl(service)}>View service <Icon name="arrow-right" /></a>
+          </div>
+        )}
+        <div class="side-card side-card--navy">
+          <p class="side-card__title">Need a quote?</p>
+          <p>Send your requirement. We reply within 24 hours.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary btn--sm" href="/contact/">Get a quote</a>
+            <a class="btn btn--ghost-light btn--sm" href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> WhatsApp</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head"><SectionLabel>Keep reading</SectionLabel><h2>More guides</h2></div>
+      <div class="grid grid-3">{related.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+<style>
+  .meta { font-size: 0.95rem !important; color: #c4cbdc; margin-top: 8px !important; }
+  .article { display: grid; gap: 40px; padding-top: clamp(32px, 5vw, 56px); padding-bottom: clamp(56px, 8vw, 96px); }
+  @media (min-width: 1000px) { .article { grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; } }
+  .article__main { min-width: 0; max-width: 760px; }
+  .summary { font-size: 1.15rem; font-weight: 300; color: var(--muted); }
+  .toc { margin: 28px 0; padding: 20px 24px; background: var(--paper); border-radius: var(--radius); }
+  .toc__h { font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+  .toc ol { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+  .toc a { color: var(--graphite); }
+  .toc a:hover { color: var(--magenta-dark); }
+  .qa { margin-top: 48px; }
+  .qa h2 { font-size: 1.5rem; }
+  .article__side { display: grid; gap: 20px; align-content: start; }
+  @media (min-width: 1000px) { .article__side { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .side-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .side-card p { font-size: 0.95rem; }
+  .side-card__label { font-size: 0.78rem !important; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+  .side-card__title { font-weight: 600; color: var(--navy); display: flex; gap: 8px; align-items: center; font-size: 1.05rem !important; }
+  .side-card__title :global(.icon) { color: var(--cyan); }
+  .side-card--navy { background: var(--navy); border-color: var(--navy); color: #d9deea; }
+  .side-card--navy .side-card__title { color: #fff; }
+</style>

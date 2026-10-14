@@ -1,0 +1,205 @@
+---
+// Quote request form. Sends to the endpoint in src/config/site.config.js (formEndpoint).
+// `service` pre-selects a service (use the service title).
+import Icon from './Icon.astro';
+import { services, content, config, business } from '../lib/site.js';
+interface Props { service?: string; id?: string; compact?: boolean }
+const { service = '', id = 'quote-form', compact = false } = Astro.props;
+const options = [...services.map((s) => s.title), ...content.contact.extraFormServices];
+const today = new Date().toISOString().slice(0, 10);
+---
+<form
+  class:list={['qf', { 'qf--compact': compact }]}
+  id={id}
+  action={config.formEndpoint || undefined}
+  method="POST"
+  enctype="multipart/form-data"
+  novalidate
+  data-quote-form
+  data-endpoint={config.formEndpoint}
+  data-wa={business.whatsappNumber}
+  data-maxmb={config.maxUploadMB}
+>
+  <input type="hidden" name="_subject" value="New quote request — website" />
+  <div class="qf__hp" aria-hidden="true">
+    <label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="qf__grid">
+    <div class="qf__field">
+      <label for={`${id}-name`}>Name <span class="req" aria-hidden="true">*</span></label>
+      <input id={`${id}-name`} name="name" type="text" autocomplete="name" required aria-describedby={`${id}-name-err`} />
+      <p class="qf__err" id={`${id}-name-err`}></p>
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-company`}>Company</label>
+      <input id={`${id}-company`} name="company" type="text" autocomplete="organization" />
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-phone`}>Phone <span class="req" aria-hidden="true">*</span></label>
+      <input id={`${id}-phone`} name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+91" aria-describedby={`${id}-phone-err`} />
+      <p class="qf__err" id={`${id}-phone-err`}></p>
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-email`}>Email</label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" aria-describedby={`${id}-email-err`} />
+      <p class="qf__err" id={`${id}-email-err`}></p>
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-city`}>City</label>
+      <input id={`${id}-city`} name="city" type="text" autocomplete="address-level2" placeholder="e.g. Gurugram" />
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-service`}>Service</label>
+      <select id={`${id}-service`} name="service">
+        <option value="">Select a service</option>
+        {options.map((o) => <option value={o} selected={o === service}>{o}</option>)}
+      </select>
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-qty`}>Quantity / size</label>
+      <input id={`${id}-qty`} name="quantity" type="text" placeholder="e.g. 500 flyers, 10×4 ft board" />
+    </div>
+    <div class="qf__field">
+      <label for={`${id}-deadline`}>Deadline</label>
+      <input id={`${id}-deadline`} name="deadline" type="date" min={today} />
+    </div>
+    <div class="qf__field qf__full">
+      <label for={`${id}-msg`}>Message</label>
+      <textarea id={`${id}-msg`} name="message" rows="4" placeholder="Tell us what you need, where, and any details."></textarea>
+    </div>
+    <div class="qf__field qf__full">
+      <label for={`${id}-file`}>Artwork / reference file <span class="hint">(optional, max {config.maxUploadMB} MB)</span></label>
+      <input id={`${id}-file`} name="attachment" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.ai,.cdr,.psd,.eps,.zip" aria-describedby={`${id}-file-err`} />
+      <p class="qf__err" id={`${id}-file-err`}></p>
+    </div>
+  </div>
+
+  <div class="qf__actions">
+    <button type="submit" class="btn btn--primary">Get my quote <Icon name="arrow-right" /></button>
+    <button type="button" class="btn btn--outline qf__wa"><Icon name="whatsapp" /> Send on WhatsApp instead</button>
+  </div>
+  <p class="qf__note">We reply within 24 hours. Your details are only used to prepare your quote.</p>
+
+  <div class="qf__status" role="status" aria-live="polite" tabindex="-1" hidden data-success={content.contact.successMessage}>
+    <Icon name="circle-check" class="icon qf__ok-icon" />
+    <div>
+      <p class="qf__status-title">{content.contact.successMessage}</p>
+      <p class="qf__status-text">Need it faster? Send the same details on WhatsApp.</p>
+      <button type="button" class="btn btn--sm btn--outline qf__wa"><Icon name="whatsapp" /> Send on WhatsApp instead</button>
+    </div>
+  </div>
+</form>
+
+<style>
+  .qf { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 4vw, 36px); box-shadow: var(--shadow); }
+  .qf__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .qf__grid { display: grid; gap: 16px 20px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .qf__grid { grid-template-columns: 1fr 1fr; } .qf__full { grid-column: 1 / -1; } }
+  .qf__field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-weight: 500; font-size: 0.92rem; color: var(--navy); }
+  .req { color: var(--magenta); }
+  .hint { font-weight: 400; color: var(--muted); }
+  input, select, textarea { font: inherit; font-size: 1rem; color: var(--graphite); background: var(--paper); border: 1px solid #d6d2c8; border-radius: var(--radius); padding: 11px 14px; min-height: 48px; width: 100%; }
+  input[type="file"] { padding: 10px; background: #fff; }
+  textarea { resize: vertical; min-height: 110px; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,160,227,0.2); background: #fff; }
+  [aria-invalid="true"] { border-color: #c4002f; background: #fff5f7; }
+  .qf__err { color: #b0002a; font-size: 0.85rem; margin: 0; min-height: 0; }
+  .qf__err:empty { display: none; }
+  .qf__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .qf__note { font-size: 0.85rem; color: var(--muted); margin: 14px 0 0; }
+  .qf__status { display: flex; gap: 14px; margin-top: 20px; padding: 18px; border-radius: var(--radius); background: #effaf3; border: 1px solid #b9e6c8; }
+  .qf__status[hidden] { display: none; }
+  .qf__status[data-type="error"] { background: #fff7e0; border-color: #f2d27a; }
+  .qf__status[data-type="error"] .qf__ok-icon { color: #b07800; }
+  .qf__ok-icon { color: #1a8c4a; width: 28px; height: 28px; }
+  .qf__status-title { font-weight: 600; color: var(--navy); margin: 0 0 4px; }
+  .qf__status-text { margin: 0 0 12px; font-size: 0.95rem; }
+  .qf.is-sending button[type="submit"] { opacity: 0.7; pointer-events: none; }
+</style>
+
+<script>
+  import { track } from '../scripts/site.ts';
+  const labels: Record<string, string> = { name: 'Name', company: 'Company', phone: 'Phone', email: 'Email', city: 'City', service: 'Service', quantity: 'Quantity / size', deadline: 'Deadline', message: 'Message' };
+
+  document.querySelectorAll<HTMLFormElement>('[data-quote-form]').forEach((form) => {
+    // Pre-select service from ?service=… (used by links on the site)
+    const qs = new URLSearchParams(location.search).get('service');
+    const sel = form.querySelector<HTMLSelectElement>('select[name="service"]')!;
+    if (qs && [...sel.options].some((o) => o.value === qs)) sel.value = qs;
+
+    const status = form.querySelector<HTMLElement>('.qf__status')!;
+    const setErr = (name: string, msg: string) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement;
+      const err = form.querySelector<HTMLElement>(`#${input.id}-err`);
+      input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      if (err) err.textContent = msg;
+      return !msg;
+    };
+    const validate = () => {
+      const f = new FormData(form);
+      const name = String(f.get('name') || '').trim();
+      const phone = String(f.get('phone') || '').replace(/[^\d]/g, '');
+      const email = String(f.get('email') || '').trim();
+      const file = (form.elements.namedItem('attachment') as HTMLInputElement).files?.[0];
+      const maxMb = Number(form.dataset.maxmb || 10);
+      const ok = [
+        setErr('name', name.length < 2 ? 'Please enter your name.' : ''),
+        setErr('phone', phone.length < 10 || phone.length > 13 ? 'Please enter a valid 10-digit phone number.' : ''),
+        setErr('email', email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Please check the email address.' : ''),
+        setErr('attachment', file && file.size > maxMb * 1024 * 1024 ? `File is larger than ${maxMb} MB. Send it on WhatsApp or email instead.` : ''),
+      ];
+      const first = form.querySelector<HTMLElement>('[aria-invalid="true"]');
+      first?.focus();
+      return ok.every(Boolean);
+    };
+    const waText = () => {
+      const f = new FormData(form);
+      const lines = ['Hi M.S. Graphics Studio, I need a quote.'];
+      for (const [k, label] of Object.entries(labels)) {
+        const v = String(f.get(k) || '').trim();
+        if (v) lines.push(`${label}: ${v}`);
+      }
+      return lines.join('\n');
+    };
+    const showStatus = (type: 'ok' | 'error', title: string, text: string) => {
+      status.hidden = false; status.dataset.type = type;
+      status.querySelector('.qf__status-title')!.textContent = title;
+      status.querySelector('.qf__status-text')!.textContent = text;
+      status.focus();
+    };
+
+    form.querySelectorAll<HTMLButtonElement>('.qf__wa').forEach((b) => b.addEventListener('click', () => {
+      if (!status.hidden || validate()) {
+        track('whatsapp_click', { source: 'quote_form', page: location.pathname });
+        window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(waText())}`, '_blank', 'noopener');
+      }
+    }));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+      const data = new FormData(form);
+      if (String(data.get('_gotcha') || '')) return; // bot
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        showStatus('error', 'Online form is not connected yet.', 'Please send your details on WhatsApp — it takes one tap.');
+        return;
+      }
+      form.classList.add('is-sending');
+      try {
+        if (!(data.get('attachment') as File)?.size) data.delete('attachment');
+        const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(String(res.status));
+        track('quote_form_submit', { service: data.get('service') || 'not selected', page: location.pathname });
+        const title = status.dataset.success || '';
+        showStatus('ok', title || "Thanks! We'll send your quote within 24 hours.", 'Need it faster? Send the same details on WhatsApp.');
+      } catch {
+        showStatus('error', 'Sorry, the form could not be sent.', 'Please send your details on WhatsApp or call us.');
+      } finally {
+        form.classList.remove('is-sending');
+      }
+    });
+  });
+</script>

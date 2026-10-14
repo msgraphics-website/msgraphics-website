@@ -1,0 +1,29 @@
+---
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import { fmtDate, readingTime } from '../lib/blog.js';
+interface Props { post: any; headingLevel?: 'h2' | 'h3' }
+const { post, headingLevel = 'h2' } = Astro.props;
+const H = headingLevel;
+---
+<article class="post card reveal">
+  <Photo image={post.data.cover} ratio="16 / 10" />
+  <div class="post__body">
+    <p class="post__meta"><time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time> · {readingTime(post.body)} min read</p>
+    <H class="post__title"><a href={`/blog/${post.id}/`}>{post.data.title}</a></H>
+    <p>{post.data.description}</p>
+    <span class="link-arrow" aria-hidden="true">Read article <Icon name="arrow-right" /></span>
+  </div>
+</article>
+<style>
+  .post { padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+  .post :global(.photo) { border-radius: 0; }
+  .post__body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+  .post__body p { color: var(--muted); font-size: 0.95rem; flex: 1; }
+  .post__meta { font-size: 0.82rem !important; flex: 0 !important; margin-bottom: 8px; }
+  .post__title { font-size: 1.12rem; line-height: 1.35; margin: 0 0 10px; }
+  .post__title a { color: var(--navy); text-decoration: none; }
+  .post__title a::after { content: ""; position: absolute; inset: 0; }
+  .post:hover .post__title a { color: var(--magenta-dark); }
+  .post:focus-within { box-shadow: 0 0 0 3px var(--cyan); }
+</style>

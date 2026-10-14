@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getPosts } from '../../lib/blog.js';
+import { config } from '../../lib/site.js';
+const posts = await getPosts();
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'M.S. Graphics Studio Blog',
+  url: `${config.siteUrl}/blog/`,
+  publisher: { '@id': `${config.siteUrl}/#business` },
+  blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.data.title, url: `${config.siteUrl}/blog/${p.id}/`, datePublished: p.data.date.toISOString() })),
+}];
+---
+<Base
+  title="Branding, Signage & Printing Guides for Delhi Businesses"
+  description="Practical guides on shop signage, flex and vinyl printing, in-store branding rollouts, exhibition stalls, BTL activations and corporate gifts, from our team in Dwarka, New Delhi."
+  schema={schema}
+>
+  <PageHero label="Blog" title="Guides from our print floor" text="Practical answers on signage, printing, in-store branding and events, from the team that makes and installs them." crumbs={[{ href: '', label: 'Blog' }]} />
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-3">
+        {posts.map((p) => <PostCard post={p} />)}
+      </div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>

@@ -1,0 +1,22 @@
+{
+  "testimonials": [
+    {
+      "quote": "[Client testimonial to be added. Ask a happy client for 2–3 lines about the job, the quality and the timing.]",
+      "name": "[Name]",
+      "designation": "[Designation]",
+      "company": "[Company]"
+    },
+    {
+      "quote": "[Client testimonial to be added.]",
+      "name": "[Name]",
+      "designation": "[Designation]",
+      "company": "[Company]"
+    },
+    {
+      "quote": "[Client testimonial to be added.]",
+      "name": "[Name]",
+      "designation": "[Designation]",
+      "company": "[Company]"
+    }
+  ]
+}

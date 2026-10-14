@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { services, content, serviceUrl } from '../../lib/site.js';
+---
+<Base
+  title="Branding, Signage, Printing & Event Services in Delhi NCR"
+  description="Six services from one factory-direct team in Dwarka: printing, in-store branding & POSM, signage, hoardings, events & BTL activation, and corporate branding & gifts."
+>
+  <PageHero label="Services" title="Branding, signage, printing and events in Delhi NCR" text="Six services. One team. All produced at our own unit in Dwarka, so you get one quote, one timeline and one invoice." crumbs={[{ href: '', label: 'Services' }]} />
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-3">
+        {services.map((s) => <ServiceCard service={s} headingLevel="h2" />)}
+      </div>
+    </div>
+  </section>
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>At a glance</SectionLabel>
+        <h2>What's included in each service</h2>
+      </div>
+      <div class="grid grid-2">
+        {services.map((s) => (
+          <div class="card reveal">
+            <div class="row"><span class="icon-badge"><Icon name={s.icon} /></span><h3><a href={serviceUrl(s)}>{s.title}</a></h3></div>
+            <ul class="checklist">{s.whatWeDo.map((w) => <li><Icon name="check" />{w}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+      <div class="pillars">
+        {content.business.pillars.map((p) => <p><strong>{p.title}.</strong> {p.text}</p>)}
+      </div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+<style>
+  .row { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+  .row h3 { margin: 0; }
+  .row a { color: var(--navy); text-decoration: none; }
+  .row a:hover { color: var(--magenta); }
+  .checklist { font-size: 0.95rem; }
+  .pillars { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 40px; justify-content: center; }
+  .pillars p { margin: 0; }
+  .pillars strong { color: var(--magenta); }
+</style>

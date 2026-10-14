@@ -1,0 +1,267 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Dots from '../components/Dots.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import Photo from '../components/Photo.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import BeforeAfterSlider from '../components/BeforeAfterSlider.astro';
+import Gallery from '../components/Gallery.astro';
+import Testimonials from '../components/Testimonials.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { content, services, business, waLink, ph } from '../lib/site.js';
+import PostCard from '../components/PostCard.astro';
+import { getPosts } from '../lib/blog.js';
+const h = content.home;
+const ba = content.work.beforeAfter[0];
+const featured = content.work.items.slice(0, 6);
+const posts = (await getPosts()).slice(0, 3);
+const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: h.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }];
+---
+<Base
+  title="M.S. Graphics Studio | Retail Branding, Signage & Printing Company in Delhi NCR"
+  description="Factory-direct branding from our own printing unit in Dwarka, New Delhi, since 2014. In-store branding, glow sign boards, hoardings, POP material, event branding and bulk printing across Delhi NCR."
+  schema={faqSchema}
+>
+  <!-- 1. HERO -->
+  <section class="hero">
+    <img class="hero__bg" src={h.hero.image.src} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+    <div class="container hero__in">
+      <SectionLabel>{h.hero.label}</SectionLabel>
+      <h1>{h.hero.headline}</h1>
+      <p class="hero__sub">{h.hero.sub}</p>
+      <div class="btn-row">
+        <a href="/contact/" class="btn btn--primary">Get a Quote in 24 Hours <Icon name="arrow-right" /></a>
+        <a href={waLink()} class="btn btn--ghost-light" target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> WhatsApp Us</a>
+      </div>
+      <p class="hero__hindi">{business.hindiLine}</p>
+    </div>
+  </section>
+
+  <!-- 2. TRUST STRIP -->
+  <div class="container">
+    <ul class="trust">
+      {h.trust.map((t) => (
+        <li>
+          <span class="icon-badge"><Icon name={t.icon} /></span>
+          <span><strong set:html={ph(t.value)} /><span>{t.text}</span></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- 3. SERVICES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>What we do</SectionLabel>
+        <h2>{h.servicesHeading}</h2>
+        <p class="lead">{h.servicesIntro}</p>
+      </div>
+      <div class="grid grid-3">
+        {services.map((s) => <ServiceCard service={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. WHY CHOOSE US -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <SectionLabel>Why choose us</SectionLabel>
+        <h2>Factory-direct, from design to installation</h2>
+        <p class="lead">Agencies outsource production. We own it. That changes the price, the timeline and the quality.</p>
+      </div>
+      <div class="grid grid-4">
+        {h.why.map((w) => (
+          <div class="card reveal">
+            <span class="icon-badge"><Icon name={w.icon} /></span>
+            <h3>{w.title}</h3>
+            <p>{w.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PRODUCTION UNIT TEASER -->
+  <section class="section">
+    <div class="container split">
+      <div class="crop reveal">
+        <span class="crop-b" aria-hidden="true"></span>
+        <div class="unit-grid">
+          {h.unitTeaser.images.map((img) => <Photo image={img} ratio="4 / 3" />)}
+        </div>
+      </div>
+      <div class="reveal">
+        <SectionLabel>Our Unit</SectionLabel>
+        <h2>{h.unitTeaser.title}</h2>
+        <p>{h.unitTeaser.text}</p>
+        <ul class="checklist">
+          {h.unitTeaser.points.map((p) => <li><Icon name="check" />{p}</li>)}
+        </ul>
+        <p style="margin-top:24px"><a href="/our-unit/" class="btn btn--outline">See our production unit <Icon name="arrow-right" /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FEATURED WORK -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Work</SectionLabel>
+        <h2>{h.featuredHeading}</h2>
+        <p class="lead">Drag the handle to see the before and after.</p>
+      </div>
+      <div class="featured">
+        <div class="reveal"><BeforeAfterSlider before={ba.before} after={ba.after} title={ba.title} /></div>
+        <div class="reveal"><Gallery items={featured} filters={false} /></div>
+      </div>
+      <p style="margin-top:32px"><a href="/work/" class="link-arrow">See all our work <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+
+  <!-- 7. PROCESS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <SectionLabel>How it works</SectionLabel>
+        <h2>From brief to photo report, one team</h2>
+      </div>
+      <ol class="timeline">
+        {h.process.map((p, i) => (
+          <li class="reveal">
+            <span class="timeline__dot"><Icon name={p.icon} /></span>
+            <span class="timeline__n">0{i + 1}</span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 8. INDUSTRIES -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Industries we serve</SectionLabel>
+        <h2>Branding for every kind of business in Delhi NCR</h2>
+      </div>
+      <ul class="chips" role="list">
+        {h.industries.map((i) => <li class="chip reveal"><Icon name={i.icon} />{i.name}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 9. CLIENTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <SectionLabel>Clients</SectionLabel>
+        <h2>Brands we have worked with</h2>
+        <p class="lead">From national brands to the shop next door: 9,500+ clients across India and Nepal.</p>
+      </div>
+      <ul class="logos">
+        {h.clients.map((c) => (
+          <li>{c.logo ? <img src={c.logo} alt={c.name} loading="lazy" width="160" height="80" /> : <span class="logo-name">{c.name}</span>}</li>
+        ))}
+        <li class="logos__more"><strong>9.5K+</strong><span>more clients</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10. TESTIMONIALS -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Testimonials</SectionLabel>
+        <h2>What clients say</h2>
+      </div>
+      <Testimonials items={content.testimonials} />
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container faq-wrap">
+      <div>
+        <SectionLabel>FAQs</SectionLabel>
+        <h2>Common questions</h2>
+        <p class="lead">Quick facts about M.S. Graphics Studio. Anything else, <a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">ask on WhatsApp</a>.</p>
+      </div>
+      <div class="faq">
+        {h.faqs.map((f) => <details><summary>{f.q}</summary><div><p>{f.a}</p></div></details>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>From the blog</SectionLabel>
+        <h2>Guides for signage, printing and events</h2>
+      </div>
+      <div class="grid grid-3">{posts.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
+      <p style="margin-top:28px"><a href="/blog/" class="link-arrow">All articles <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+
+  <!-- 11. CTA -->
+  <CtaBand />
+</Base>
+
+<style>
+  .faq-wrap { display: grid; gap: 32px; }
+  @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
+  .hero { position: relative; color: #fff; background: var(--navy); min-height: min(88vh, 760px); display: flex; align-items: center; padding: 80px 0 120px; overflow: hidden; }
+  .hero__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(20,33,61,0.96) 0%, rgba(20,33,61,0.86) 55%, rgba(20,33,61,0.6) 100%); z-index: 1; }
+  .hero__in { position: relative; z-index: 2; }
+  .hero h1 { color: #fff; max-width: 780px; font-size: clamp(2.3rem, 7vw, 4.2rem); }
+  .hero__sub { font-size: clamp(1.05rem, 2vw, 1.25rem); font-weight: 300; max-width: 640px; color: #dfe4ef; margin-bottom: 32px; }
+  .hero__hindi { margin: 28px 0 0; font-style: italic; color: var(--yellow); font-weight: 500; }
+
+  .trust { list-style: none; margin: -64px 0 0; padding: 0; position: relative; z-index: 3; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); display: grid; grid-template-columns: 1fr 1fr; }
+  @media (min-width: 900px) { .trust { grid-template-columns: repeat(4, 1fr); } }
+  .trust li { display: flex; gap: 14px; align-items: center; padding: 20px; border-bottom: 1px solid var(--line); }
+  @media (min-width: 900px) { .trust li { border-bottom: 0; border-right: 1px solid var(--line); } .trust li:last-child { border-right: 0; } }
+  @media (max-width: 899px) { .trust li:nth-child(odd) { border-right: 1px solid var(--line); } .trust li:nth-last-child(-n+2) { border-bottom: 0; } }
+  @media (max-width: 480px) { .trust li { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px; } .trust .icon-badge { width: 42px; height: 42px; } }
+  .trust strong { display: block; color: var(--navy); font-size: 1rem; line-height: 1.3; }
+  .trust span span { font-size: 0.85rem; color: var(--muted); }
+
+  .unit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .featured { display: grid; gap: 28px; }
+  @media (min-width: 1000px) { .featured { grid-template-columns: 1fr 1.15fr; align-items: start; } }
+  .featured :global(.gallery__grid) { grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 14px; }
+  .featured :global(.gitem__cap) { font-size: 0.78rem; padding: 8px 10px 10px; }
+
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; grid-template-columns: 1fr; position: relative; }
+  @media (min-width: 600px) { .timeline { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1000px) {
+    .timeline { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+    .timeline::before { content: ""; position: absolute; top: 28px; left: 8%; right: 8%; height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px); }
+    .timeline li { text-align: center; }
+    .timeline__dot { margin: 0 auto; }
+  }
+  .timeline li { position: relative; }
+  .timeline__dot { width: 56px; height: 56px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; position: relative; z-index: 1; border: 4px solid #fff; box-shadow: 0 0 0 1px var(--line); }
+  .timeline li:nth-child(3) .timeline__dot { background: var(--magenta); }
+  .timeline__n { display: block; margin-top: 14px; font-size: 0.8rem; font-weight: 700; color: var(--magenta); letter-spacing: 0.1em; }
+  .timeline h3 { margin: 4px 0 6px; }
+  .timeline p { font-size: 0.92rem; color: var(--muted); margin: 0; }
+
+  .logos { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 640px) { .logos { grid-template-columns: repeat(3, 1fr); } }
+  .logos li { height: 96px; border: 1px solid var(--line); border-radius: var(--radius); display: grid; place-items: center; padding: 14px; }
+  .logos img { max-height: 60px; width: auto; filter: grayscale(1); opacity: 0.7; transition: filter 0.3s, opacity 0.3s; }
+  .logos li:hover img { filter: none; opacity: 1; }
+  .logo-name { color: #6a675f; font-weight: 700; font-size: clamp(1.05rem, 2.4vw, 1.4rem); letter-spacing: -0.01em; text-align: center; transition: color 0.3s; }
+  .logos li:hover .logo-name { color: var(--navy); }
+  .logos__more { background: var(--navy); border-color: var(--navy) !important; flex-direction: column; color: #fff; display: flex !important; align-items: center; justify-content: center; }
+  .logos__more strong { font-size: 1.6rem; line-height: 1.1; color: var(--yellow); }
+  .logos__more span { font-size: 0.9rem; color: #c4cbdc; }
+</style>

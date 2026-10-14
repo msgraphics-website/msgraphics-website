@@ -1,0 +1,20 @@
+---
+// Text-based logo as inline SVG. variant "light" = for light backgrounds, "dark" = for navy backgrounds.
+// To use a designed logo later, replace this SVG (or swap for <img src="/images/logo.svg">).
+interface Props { variant?: 'light' | 'dark'; class?: string }
+const { variant = 'light', class: cls = '' } = Astro.props;
+const text = variant === 'dark' ? '#FFFFFF' : '#14213D';
+const mark = variant === 'dark' ? '#FFFFFF' : '#14213D';
+const markText = variant === 'dark' ? '#14213D' : '#FFFFFF';
+const navyDot = variant === 'dark' ? '#14213D' : '#FFFFFF';
+---
+<svg class={`logo ${cls}`} viewBox="0 0 286 56" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="M.S. Graphics Studio">
+  <rect x="0" y="2" width="52" height="52" rx="10" fill={mark} />
+  <text x="26" y="31" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="21" fill={markText} letter-spacing="0.5">MS</text>
+  <circle cx="14.5" cy="42" r="3" fill="#00A0E3" />
+  <circle cx="22.2" cy="42" r="3" fill="#E6007E" />
+  <circle cx="29.8" cy="42" r="3" fill="#FFC20E" />
+  <circle cx="37.5" cy="42" r="3" fill={navyDot} />
+  <text x="64" y="24" font-family="Poppins, Arial, sans-serif" font-size="19" fill={text} letter-spacing="0.4"><tspan font-weight="700">MS GRAPHICS</tspan><tspan font-weight="300" dx="6">STUDIO</tspan></text>
+  <text x="64" y="44" font-family="Poppins, Arial, sans-serif" font-size="10" font-weight="600" fill="#E6007E" letter-spacing="1.6">PRINT · BRANDING · EVENTS</text>
+</svg>

@@ -1,0 +1,18 @@
+---
+import SectionLabel from './SectionLabel.astro';
+interface Props { title: string; text?: string; label?: string; crumbs?: { href: string; label: string }[] }
+const { title, text, label, crumbs = [] } = Astro.props;
+---
+<section class="page-hero">
+  <div class="container">
+    {crumbs.length > 0 && (
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>{crumbs.map((c) => <Fragment> / {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</Fragment>)}
+      </nav>
+    )}
+    {label && <SectionLabel>{label}</SectionLabel>}
+    <h1>{title}</h1>
+    {text && <p>{text}</p>}
+    <slot />
+  </div>
+</section>

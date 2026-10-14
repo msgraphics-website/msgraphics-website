@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Staff login management (see SETUP-ADMIN-AND-ORDERS.md)
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

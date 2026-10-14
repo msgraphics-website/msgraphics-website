@@ -1,0 +1,30 @@
+---
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import { serviceUrl } from '../lib/site.js';
+interface Props { service: any; headingLevel?: 'h2' | 'h3' }
+const { service: s, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+<article class="svc card reveal">
+  <Photo image={s.cardImage} ratio="16 / 10" />
+  <div class="svc__body">
+    <span class="svc__icon"><Icon name={s.icon} /></span>
+    <H class="svc__title"><a href={serviceUrl(s)}>{s.title}</a></H>
+    <p>{s.tagline}</p>
+    <span class="link-arrow" aria-hidden="true">Learn more <Icon name="arrow-right" /></span>
+  </div>
+</article>
+<style>
+  .svc { padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+  .svc :global(.photo) { border-radius: 0; }
+  .svc__body { padding: 22px 24px 24px; position: relative; flex: 1; display: flex; flex-direction: column; }
+  .svc__body p { color: var(--muted); flex: 1; }
+  .svc__icon { position: absolute; top: -26px; right: 20px; width: 52px; height: 52px; border-radius: var(--radius); background: var(--navy); color: #fff; display: grid; place-items: center; }
+  .svc__title { margin: 0 0 6px; font-size: 1.15rem; }
+  .svc__title a { color: var(--navy); text-decoration: none; }
+  .svc__title a::after { content: ""; position: absolute; inset: 0; }
+  .svc:hover .svc__title a { color: var(--magenta); }
+  .svc .link-arrow { color: var(--magenta); }
+  .svc:focus-within { box-shadow: 0 0 0 3px var(--cyan); }
+</style>

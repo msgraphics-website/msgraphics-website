@@ -1,0 +1,157 @@
+{
+  "intro": "Everything we deliver is made under one roof at our production unit in Dwarka Mor, New Delhi. Keeping production in-house lets us match colours across every size, run urgent jobs when needed, and check every piece before it leaves our floor.",
+  "photos": [
+    {
+      "src": "/images/unit-entrance.webp",
+      "alt": "3D illustration: entrance of our production unit",
+      "label": "PHOTO: Unit entrance"
+    },
+    {
+      "src": "/images/unit-printing-floor.webp",
+      "alt": "3D illustration: printing floor",
+      "label": "PHOTO: Printing floor"
+    },
+    {
+      "src": "/images/unit-fabrication-workshop.webp",
+      "alt": "3D illustration: fabrication workshop",
+      "label": "PHOTO: Fabrication workshop"
+    },
+    {
+      "src": "/images/unit-dispatch.webp",
+      "alt": "3D illustration: dispatch area",
+      "label": "PHOTO: Dispatch area"
+    }
+  ],
+  "glance": [
+    {
+      "label": "Address",
+      "value": "Plot No. B-32, Dwarka Mor, Patel Garden Extn., New Delhi 110059"
+    },
+    {
+      "label": "Area",
+      "value": "[sq.ft]"
+    },
+    {
+      "label": "Sections",
+      "value": "Design studio · Printing · Cutting & finishing · Fabrication · Dispatch"
+    },
+    {
+      "label": "Working hours",
+      "value": "Mon–Sat, 10:00 AM – 7:00 PM · 24×7 on project need"
+    },
+    {
+      "label": "Daily capacity",
+      "value": "[Daily capacity]"
+    },
+    {
+      "label": "Installation crews",
+      "value": "[Number of crews]"
+    }
+  ],
+  "_machinesHelp": "To add a machine, copy one { ... } block, paste it after a comma, and edit it. To remove one, delete its block.",
+  "machines": [
+    {
+      "type": "Offset press",
+      "model": "[Brand / model]",
+      "does": "High-volume printing of brochures, stationery, catalogues and packaging.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-offset-press.webp",
+        "alt": "3D illustration: offset press",
+        "label": "PHOTO: Offset press"
+      }
+    },
+    {
+      "type": "Digital press",
+      "model": "[Brand / model]",
+      "does": "Short runs and quick jobs: visiting cards, flyers, personalised prints.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-digital-press.webp",
+        "alt": "3D illustration: digital press",
+        "label": "PHOTO: Digital press"
+      }
+    },
+    {
+      "type": "Large-format flex/vinyl printer",
+      "model": "[Brand / model]",
+      "does": "Flex, vinyl and banners for hoardings, shop fronts and events.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-large-format-printer.webp",
+        "alt": "3D illustration: large-format printer",
+        "label": "PHOTO: Large-format flex/vinyl printer"
+      }
+    },
+    {
+      "type": "Eco-solvent / UV printer",
+      "model": "[Brand / model]",
+      "does": "Sharp prints on vinyl, one-way vision, canvas, backlit and rigid boards.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-uv-printer.webp",
+        "alt": "3D illustration: eco-solvent or UV printer",
+        "label": "PHOTO: Eco-solvent / UV printer"
+      }
+    },
+    {
+      "type": "Cutting plotter / CNC / laser",
+      "model": "[Brand / model]",
+      "does": "Vinyl cutting, acrylic and sunboard shapes, letters and display parts.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-cutting-cnc-laser.webp",
+        "alt": "3D illustration: cutting plotter, CNC or laser machine",
+        "label": "PHOTO: Cutting plotter / CNC / laser"
+      }
+    },
+    {
+      "type": "Lamination & finishing",
+      "model": "[Brand / model]",
+      "does": "Lamination, mounting, creasing and finishing for a clean, durable result.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-lamination.webp",
+        "alt": "3D illustration: lamination machine",
+        "label": "PHOTO: Lamination & finishing"
+      }
+    },
+    {
+      "type": "Fabrication tools",
+      "model": "[Tools list]",
+      "does": "Frames, glow sign boxes, ACP boards, stalls and display units.",
+      "capacity": "[Capacity]",
+      "image": {
+        "src": "/images/machine-fabrication-tools.webp",
+        "alt": "3D illustration: fabrication tools in the workshop",
+        "label": "PHOTO: Fabrication tools"
+      }
+    }
+  ],
+  "benefits": [
+    {
+      "icon": "indian-rupee",
+      "title": "Better rates",
+      "text": "No outsourcing markup. You pay the factory price."
+    },
+    {
+      "icon": "zap",
+      "title": "Faster turnaround",
+      "text": "Your job is scheduled on our machines, not in someone else's queue."
+    },
+    {
+      "icon": "palette",
+      "title": "Consistent colour",
+      "text": "Same files, same machines, same colours across every size."
+    },
+    {
+      "icon": "users",
+      "title": "One responsible team",
+      "text": "One team owns the job from design to installation."
+    }
+  ],
+  "video": {
+    "youtubeId": "",
+    "label": "VIDEO: 30–60 sec machine / time-lapse of the unit (add a YouTube video ID in content.json → unit.video.youtubeId)"
+  }
+}

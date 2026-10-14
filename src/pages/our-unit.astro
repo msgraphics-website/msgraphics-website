@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import Photo from '../components/Photo.astro';
+import MachineCard from '../components/MachineCard.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { content, ph } from '../lib/site.js';
+const u = content.unit;
+---
+<Base
+  title="Our Printing & Fabrication Unit in Dwarka, New Delhi"
+  description="See our in-house production unit at Dwarka Mor, New Delhi: design studio, offset, digital and large-format printing, cutting, fabrication and dispatch under one roof."
+>
+  <PageHero label="Our Unit" title="Our own printing and fabrication unit in Dwarka" text={u.intro} crumbs={[{ href: '', label: 'Our Unit' }]} />
+
+  <section class="section">
+    <div class="container">
+      <div class="unit-photos">
+        {u.photos.map((p, i) => <Photo image={p} ratio={i === 0 ? '16 / 10' : '4 / 3'} crop={i === 0} class="reveal" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container split">
+      <div>
+        <SectionLabel>Unit at a glance</SectionLabel>
+        <h2>Everything under one roof</h2>
+        <p class="lead">Design, printing, finishing, fabrication and dispatch in one building. No hand-offs to outside vendors.</p>
+      </div>
+      <table class="glance reveal">
+        <caption class="sr-only">Production unit at a glance</caption>
+        <tbody>
+          {u.glance.map((r) => <tr><th scope="row">{r.label}</th><td set:html={ph(r.value)} /></tr>)}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Machines</SectionLabel>
+        <h2>The machines that make your job</h2>
+        <p class="lead">Offset, digital and large-format printing, cutting, finishing and fabrication. In-house.</p>
+      </div>
+      <div class="grid grid-3">
+        {u.machines.map((m) => <MachineCard machine={m} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>What this means for you</SectionLabel>
+        <h2>Why an in-house unit matters</h2>
+      </div>
+      <div class="grid grid-4">
+        {u.benefits.map((b) => (
+          <div class="benefit reveal">
+            <span class="icon-badge"><Icon name={b.icon} /></span>
+            <h3>{b.title}</h3>
+            <p>{b.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <SectionLabel>Inside the unit</SectionLabel>
+        <h2>Watch our machines at work</h2>
+      </div>
+      <div class="video">
+        {u.video.youtubeId ? (
+          <iframe src={`https://www.youtube-nocookie.com/embed/${u.video.youtubeId}`} title="Video of our production unit" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        ) : (
+          <div class="video__ph"><Icon name="play" /><p>{u.video.label}</p></div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand headline="Want to see the unit in person?" text="Visit us at Dwarka Mor. Call or WhatsApp to fix a time." />
+</Base>
+<style>
+  .unit-photos { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 800px) { .unit-photos { grid-template-columns: 2fr 1fr 1fr; } .unit-photos > :first-child { grid-column: 1 / -1; } }
+  .glance { width: 100%; border-collapse: collapse; background: #fff; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+  .glance th, .glance td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .glance tr:last-child th, .glance tr:last-child td { border-bottom: 0; }
+  .glance th { width: 38%; color: var(--navy); font-weight: 600; background: #fbfaf7; }
+  .benefit .icon-badge { background: rgba(255,255,255,0.08); }
+  .benefit h3 { margin-top: 16px; }
+  .video { max-width: 900px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #e3e1db; }
+  .video iframe { width: 100%; height: 100%; border: 0; }
+  .video__ph { height: 100%; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px; color: #55534d; }
+  .video__ph :global(.icon) { width: 56px; height: 56px; color: var(--magenta); margin-bottom: 12px; }
+  .video__ph p { max-width: 520px; font-weight: 500; }
+</style>

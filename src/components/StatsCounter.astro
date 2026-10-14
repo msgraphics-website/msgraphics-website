@@ -1,0 +1,52 @@
+---
+// Numbers count up when scrolled into view. Placeholders like [year] are shown as-is.
+import { isPlaceholder } from '../lib/site.js';
+interface Props { stats: { label: string; value: string; suffix?: string }[]; dark?: boolean }
+const { stats, dark = false } = Astro.props;
+---
+<dl class:list={['stats', { 'stats--dark': dark }]}>
+  {stats.map((s) => {
+    const num = !isPlaceholder(s.value) && /^\d+$/.test(String(s.value).trim());
+    return (
+      <div class="stat reveal">
+        <dt class="stat__label">{s.label}</dt>
+        <dd class="stat__num">
+          {num ? <span data-count={s.value}>{s.value}</span> : isPlaceholder(s.value) ? <span class="ph">{s.value}</span> : <span>{s.value}</span>}{s.suffix}
+        </dd>
+      </div>
+    );
+  })}
+</dl>
+<style>
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0; }
+  @media (min-width: 800px) { .stats { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); } }
+  .stat__num .ph { font-size: 0.6em; overflow-wrap: anywhere; }
+  .stat { display: flex; flex-direction: column-reverse; border-left: 3px solid var(--magenta); padding-left: 18px; }
+  .stat__num { margin: 0; font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .stat__label { color: var(--muted); font-size: 0.95rem; }
+  .stats--dark .stat__num { color: #fff; }
+  .stats--dark .stat__label { color: #c4cbdc; }
+</style>
+<script>
+  const els = document.querySelectorAll<HTMLElement>('[data-count]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const el = en.target as HTMLElement; io.unobserve(el);
+        const end = parseInt(el.dataset.count!, 10);
+        // Years count up from a nearby value, not from zero
+        const start = end > 1900 && end < 2100 ? end - 25 : 0;
+        const t0 = performance.now(), dur = 1400;
+        const step = (t: number) => {
+          const p = Math.min(1, (t - t0) / dur);
+          el.textContent = String(Math.round(start + (end - start) * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.5 });
+    els.forEach((el) => io.observe(el));
+  }
+</script>

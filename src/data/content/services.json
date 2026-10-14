@@ -1,0 +1,503 @@
+{
+  "services": [
+    {
+      "slug": "printing-marketing-material",
+      "title": "Printing & Marketing Material",
+      "shortTitle": "Printing",
+      "tagline": "Offset and digital printing for every business need.",
+      "icon": "printer",
+      "metaTitle": "Printing & Flex Printing in Dwarka, Delhi | M.S. Graphics Studio",
+      "metaDescription": "Offset, digital and flex printing in Dwarka, New Delhi. Visiting cards, brochures, stickers, packaging, flex and vinyl. Bulk orders with pan-India delivery.",
+      "keywordHeading": "Offset, digital and flex printing in Dwarka, Delhi",
+      "cardImage": {
+        "src": "/images/service-printing.webp",
+        "alt": "3D illustration: printed brochures, cards and flex",
+        "label": "PHOTO: Printed brochures, cards & flex"
+      },
+      "whatWeDo": [
+        "Visiting cards, letterheads, envelopes, ID cards",
+        "Brochures, catalogues, flyers, posters",
+        "Stickers, labels, packaging boxes, carry bags",
+        "Flex, vinyl, one-way vision, canvas, backlit",
+        "Bulk orders with pan-India delivery"
+      ],
+      "gallery": [
+        {
+          "src": "/images/printing-visiting-cards.webp",
+          "alt": "3D illustration: visiting cards and stationery",
+          "label": "PHOTO: Visiting cards & stationery"
+        },
+        {
+          "src": "/images/printing-brochures.webp",
+          "alt": "3D illustration: brochures and catalogues",
+          "label": "PHOTO: Brochures & catalogues"
+        },
+        {
+          "src": "/images/printing-packaging.webp",
+          "alt": "3D illustration: packaging boxes and labels",
+          "label": "PHOTO: Packaging & labels"
+        },
+        {
+          "src": "/images/printing-flex-vinyl.webp",
+          "alt": "3D illustration: flex and vinyl prints",
+          "label": "PHOTO: Flex & vinyl printing"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Printed on our own machines",
+          "text": "Offset, digital and large-format under one roof. No outsourcing, no markup."
+        },
+        {
+          "title": "Colour proof first",
+          "text": "You approve a proof before the bulk run, so colours match across sizes."
+        },
+        {
+          "title": "Small runs to bulk",
+          "text": "From 100 visiting cards to large print orders, on the right machine for the job."
+        },
+        {
+          "title": "Packed and dispatched",
+          "text": "Delivered across Delhi NCR, and shipped pan-India for bulk orders."
+        }
+      ],
+      "process": [
+        "Share artwork or brief",
+        "Proof & approval",
+        "Print & finish",
+        "Pack & deliver"
+      ],
+      "faqs": [
+        {
+          "q": "Can you design the artwork as well?",
+          "a": "Yes. Our in-house design studio can create or adapt artwork. You approve the final proof before printing."
+        },
+        {
+          "q": "What is the minimum order quantity?",
+          "a": "It depends on the product and the machine. Tell us what you need and we will suggest the most economical option. [Add typical minimums if you want them listed.]"
+        },
+        {
+          "q": "How long does printing take?",
+          "a": "Typical turnaround is [X] working days after proof approval. Urgent jobs are possible — ask us when you send the brief."
+        },
+        {
+          "q": "Do you deliver outside Delhi?",
+          "a": "Yes. Bulk orders can be shipped pan-India. Delivery charges are shown in the quote."
+        }
+      ]
+    },
+    {
+      "slug": "in-store-branding-pop-posm",
+      "title": "In-Store Branding & POP/POSM",
+      "shortTitle": "In-Store Branding",
+      "tagline": "Make your brand win at the shelf and the counter.",
+      "icon": "store",
+      "metaTitle": "In-Store Branding & POP Material Printing in Delhi | M.S. Graphics Studio",
+      "metaDescription": "In-store branding company in Delhi NCR. Standees, danglers, shelf strips, counter tops, window graphics and acrylic displays. Multi-store rollouts from our own unit.",
+      "keywordHeading": "In-store branding and POP material printing in Delhi",
+      "cardImage": {
+        "src": "/images/service-in-store.webp",
+        "alt": "3D illustration: in-store branding at a retail counter",
+        "label": "PHOTO: In-store branding / POSM at a counter"
+      },
+      "whatWeDo": [
+        "Standees, danglers, wobblers, shelf strips, tent cards",
+        "Counter tops, display units, gondola & end-cap branding",
+        "Window, wall and floor graphics",
+        "Acrylic and sunboard displays",
+        "Multi-store rollouts with one master artwork"
+      ],
+      "gallery": [
+        {
+          "src": "/images/instore-standee-dangler.webp",
+          "alt": "3D illustration: standees and danglers in a store",
+          "label": "PHOTO: Standees & danglers"
+        },
+        {
+          "src": "/images/instore-counter-display.webp",
+          "alt": "3D illustration: counter top display unit",
+          "label": "PHOTO: Counter top display"
+        },
+        {
+          "src": "/images/instore-window-graphics.webp",
+          "alt": "3D illustration: window graphics on a shop",
+          "label": "PHOTO: Window graphics"
+        },
+        {
+          "src": "/images/instore-gondola-branding.webp",
+          "alt": "3D illustration: gondola and end-cap branding",
+          "label": "PHOTO: Gondola / end-cap branding"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Same colour in every store",
+          "text": "One master artwork, printed on our own machines, so store 1 and store 50 look the same."
+        },
+        {
+          "title": "Print + fabrication together",
+          "text": "Acrylic, sunboard and display units are made in our own workshop."
+        },
+        {
+          "title": "Rollout handled",
+          "text": "We pack store-wise kits and our crews install them."
+        },
+        {
+          "title": "Photo report per store",
+          "text": "You get installation photos for every outlet."
+        }
+      ],
+      "process": [
+        "Store survey & sizes",
+        "Master artwork & proof",
+        "Print & fabricate",
+        "Install & photo report"
+      ],
+      "faqs": [
+        {
+          "q": "Can you handle rollouts across many stores?",
+          "a": "Yes. We work from one master artwork, adapt sizes per store and pack store-wise kits for installation."
+        },
+        {
+          "q": "Do you take store measurements?",
+          "a": "Yes. Our team can survey stores in Delhi NCR before production. [Mention if survey is free or chargeable.]"
+        },
+        {
+          "q": "Can you install outside Delhi NCR?",
+          "a": "Yes. We have installed across 20+ cities in India and Nepal. For far-off locations we can also dispatch store-wise kits with installation guides."
+        }
+      ]
+    },
+    {
+      "slug": "signage-out-store-branding",
+      "title": "Out-Store Branding & Signage",
+      "shortTitle": "Signage",
+      "tagline": "Be seen from the street.",
+      "icon": "signpost",
+      "metaTitle": "Glow Sign Board Maker in Dwarka, Delhi | Signage & Shop Fronts",
+      "metaDescription": "Glow sign boards, ACP and LED letter signage, shop fronts and shutter branding in Dwarka, Delhi. Site survey, fabrication and installation by our own team.",
+      "keywordHeading": "Glow sign board maker in Dwarka, Delhi",
+      "cardImage": {
+        "src": "/images/service-signage.webp",
+        "alt": "3D illustration: glow sign board on a shop front",
+        "label": "PHOTO: Glow sign / shop front signage"
+      },
+      "whatWeDo": [
+        "Glow sign boards, ACP and LED letter signage",
+        "Shop fronts and shutter branding",
+        "Wall painting and wall wraps",
+        "Office and directional signage",
+        "Site survey, fabrication and installation"
+      ],
+      "gallery": [
+        {
+          "src": "/images/signage-glow-sign.webp",
+          "alt": "3D illustration: glow sign board",
+          "label": "PHOTO: Glow sign board"
+        },
+        {
+          "src": "/images/signage-acp-led-letters.webp",
+          "alt": "3D illustration: aCP board with LED letters",
+          "label": "PHOTO: ACP with LED letters"
+        },
+        {
+          "src": "/images/signage-shutter-branding.webp",
+          "alt": "3D illustration: shutter branding",
+          "label": "PHOTO: Shutter branding"
+        },
+        {
+          "src": "/images/signage-office-directional.webp",
+          "alt": "3D illustration: office directional signage",
+          "label": "PHOTO: Office / directional signage"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Made in our workshop",
+          "text": "Printing and fabrication happen at our own unit, so we control quality and dates."
+        },
+        {
+          "title": "Survey before we build",
+          "text": "We measure the site first, so the board fits the first time."
+        },
+        {
+          "title": "Installed by our crew",
+          "text": "No third-party fitters. Our own team installs and checks the lighting."
+        },
+        {
+          "title": "One point of contact",
+          "text": "From design to installation, one person handles your job."
+        }
+      ],
+      "process": [
+        "Site survey",
+        "Design & approval",
+        "Fabricate",
+        "Install & handover"
+      ],
+      "faqs": [
+        {
+          "q": "Which is better: glow sign, ACP or LED letters?",
+          "a": "It depends on budget, visibility and the building. We suggest options after the site survey and show you a mock-up first."
+        },
+        {
+          "q": "Do you handle permissions for signage?",
+          "a": "[Confirm whether you help with local permissions.] We can advise on sizes and placement."
+        },
+        {
+          "q": "How long does a shop front take?",
+          "a": "Typically [X] days from design approval, depending on size and material."
+        },
+        {
+          "q": "Do you repair or replace old boards?",
+          "a": "[Confirm.] We can remove old signage and install the new board in the same visit."
+        }
+      ]
+    },
+    {
+      "slug": "outdoor-advertising-hoardings",
+      "title": "Outdoor Advertising & Hoardings",
+      "shortTitle": "Hoardings & Outdoor",
+      "tagline": "Visibility that covers the city.",
+      "icon": "megaphone",
+      "metaTitle": "Hoarding Printing in Delhi | Outdoor & Vehicle Branding | M.S. Graphics Studio",
+      "metaDescription": "Hoarding and unipole printing and mounting in Delhi. Pole kiosks, bus shelters, vehicle branding and construction-site branding. Media booking through partners.",
+      "keywordHeading": "Hoarding printing and outdoor branding in Delhi",
+      "cardImage": {
+        "src": "/images/service-hoardings.webp",
+        "alt": "3D illustration: roadside hoarding",
+        "label": "PHOTO: Hoarding / unipole"
+      },
+      "whatWeDo": [
+        "Hoarding and unipole printing & mounting",
+        "Pole kiosk, bus shelter, metro panel creatives",
+        "Vehicle branding (auto, e-rickshaw, cab, van, bus)",
+        "Construction-site and RWA gate branding",
+        "Media booking support through partner networks"
+      ],
+      "gallery": [
+        {
+          "src": "/images/outdoor-hoarding.webp",
+          "alt": "3D illustration: hoarding mounted on a frame",
+          "label": "PHOTO: Hoarding mounting"
+        },
+        {
+          "src": "/images/outdoor-pole-kiosk.webp",
+          "alt": "3D illustration: pole kiosks on a road",
+          "label": "PHOTO: Pole kiosks"
+        },
+        {
+          "src": "/images/outdoor-vehicle-branding.webp",
+          "alt": "3D illustration: branded auto or e-rickshaw",
+          "label": "PHOTO: Vehicle branding"
+        },
+        {
+          "src": "/images/outdoor-site-branding.webp",
+          "alt": "3D illustration: construction site branding",
+          "label": "PHOTO: Construction-site branding"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Large-format in-house",
+          "text": "Flex and vinyl for hoardings are printed on our own large-format machines."
+        },
+        {
+          "title": "Printing + mounting",
+          "text": "We print and mount, so there is no gap between two vendors."
+        },
+        {
+          "title": "Fleet branding done right",
+          "text": "Vehicle vinyls cut and applied to fit each model."
+        },
+        {
+          "title": "Proof of display",
+          "text": "Photo report of every site after mounting."
+        }
+      ],
+      "process": [
+        "Sites & sizes",
+        "Creative & proof",
+        "Print",
+        "Mount & photo report"
+      ],
+      "faqs": [
+        {
+          "q": "Do you own hoarding sites?",
+          "a": "No. We print and mount, and support media booking through partner networks."
+        },
+        {
+          "q": "Can you brand a fleet of autos or e-rickshaws?",
+          "a": "Yes. Tell us the vehicle types and count, and we will plan the vinyl sizes and application schedule."
+        },
+        {
+          "q": "What material is used for hoardings?",
+          "a": "Usually flex or vinyl, chosen by size, duration and lighting. We recommend the right one in the quote."
+        }
+      ]
+    },
+    {
+      "slug": "events-btl-activation",
+      "title": "Events & BTL Activation",
+      "shortTitle": "Events & BTL",
+      "tagline": "We build the stage and bring the crowd.",
+      "icon": "party-popper",
+      "metaTitle": "Event Branding & Exhibition Stall Fabrication in Delhi | BTL Activation",
+      "metaDescription": "Event branding, exhibition stall fabrication and BTL activation agency in Delhi. Dealer meets, launches, backdrops, stages, mall and RWA activations.",
+      "keywordHeading": "Event branding, exhibition stalls and BTL activation in Delhi",
+      "cardImage": {
+        "src": "/images/service-events.webp",
+        "alt": "3D illustration: event stage with branded backdrop",
+        "label": "PHOTO: Event stage / exhibition stall"
+      },
+      "whatWeDo": [
+        "Corporate events, dealer meets, product launches",
+        "Exhibition stalls and trade show booths",
+        "Backdrops, stages, selfie booths, event branding",
+        "Mall, society (RWA) and corporate park activations",
+        "Canopies, promo tables, sampling and promoter staff"
+      ],
+      "gallery": [
+        {
+          "src": "/images/events-stage-backdrop.webp",
+          "alt": "3D illustration: stage and backdrop",
+          "label": "PHOTO: Stage & backdrop"
+        },
+        {
+          "src": "/images/events-exhibition-stall.webp",
+          "alt": "3D illustration: exhibition stall",
+          "label": "PHOTO: Exhibition stall"
+        },
+        {
+          "src": "/images/events-rwa-activation.webp",
+          "alt": "3D illustration: rWA society activation",
+          "label": "PHOTO: RWA / mall activation"
+        },
+        {
+          "src": "/images/events-canopy-promo-table.webp",
+          "alt": "3D illustration: canopy and promo table",
+          "label": "PHOTO: Canopy & promo table"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Branding made in-house",
+          "text": "Backdrops, standees and stall graphics come off our own machines. Last-minute changes are easier."
+        },
+        {
+          "title": "Fabrication + printing",
+          "text": "Stalls and stages are built and branded by one team."
+        },
+        {
+          "title": "On-ground team",
+          "text": "Setup crews, promoters and coordination for the day."
+        },
+        {
+          "title": "Photo report",
+          "text": "Event photos and activation reports after the job."
+        }
+      ],
+      "process": [
+        "Brief & venue",
+        "Design & 3D/mock-up",
+        "Fabricate & print",
+        "Setup, run & report"
+      ],
+      "faqs": [
+        {
+          "q": "Can you handle the full event or only branding?",
+          "a": "Both. We can do only the branding and stall, or the full setup with stage, crew and promoters."
+        },
+        {
+          "q": "Do you provide promoter staff?",
+          "a": "Yes, for sampling and activations. Tell us the venue, dates and number of people needed."
+        },
+        {
+          "q": "How early should we book?",
+          "a": "As early as possible for exhibitions. For urgent events, call or WhatsApp us and we will tell you what is possible."
+        }
+      ]
+    },
+    {
+      "slug": "corporate-branding-gifts-digital",
+      "title": "Corporate Branding, Gifts & Digital",
+      "shortTitle": "Corporate & Digital",
+      "tagline": "Your brand, everywhere your customers are.",
+      "icon": "gift",
+      "metaTitle": "Corporate Gifts Printing & Office Branding in Delhi | M.S. Graphics Studio",
+      "metaDescription": "Corporate gifts printing in Delhi: T-shirts, mugs, diaries and kits. Office interior branding, logo and brand identity, social media, Google Ads, SEO and websites.",
+      "keywordHeading": "Corporate gifts printing and office branding in Delhi",
+      "cardImage": {
+        "src": "/images/service-corporate.webp",
+        "alt": "3D illustration: branded corporate gift kit",
+        "label": "PHOTO: Corporate gift kit / office branding"
+      },
+      "whatWeDo": [
+        "Office interior branding",
+        "Corporate gifts, T-shirts, mugs, diaries, kits",
+        "Logo and brand identity, publication design",
+        "Social media, Google Ads, SEO, websites"
+      ],
+      "gallery": [
+        {
+          "src": "/images/corporate-office-branding.webp",
+          "alt": "3D illustration: office wall branding",
+          "label": "PHOTO: Office interior branding"
+        },
+        {
+          "src": "/images/corporate-gift-kit.webp",
+          "alt": "3D illustration: corporate gift kit",
+          "label": "PHOTO: Corporate gift kit"
+        },
+        {
+          "src": "/images/corporate-tshirts-mugs.webp",
+          "alt": "3D illustration: printed T-shirts and mugs",
+          "label": "PHOTO: T-shirts & mugs"
+        },
+        {
+          "src": "/images/corporate-brand-identity.webp",
+          "alt": "3D illustration: brand identity design",
+          "label": "PHOTO: Logo / brand identity work"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Print and design together",
+          "text": "Logo, stationery, office walls and gifts designed and produced by one team."
+        },
+        {
+          "title": "Consistent brand",
+          "text": "The same colours and look across print, walls and screens."
+        },
+        {
+          "title": "Bulk gift orders",
+          "text": "Branded kits packed and delivered for teams, dealers and events."
+        },
+        {
+          "title": "Digital, too",
+          "text": "Social media, Google Ads, SEO and websites when you need them."
+        }
+      ],
+      "process": [
+        "Brief",
+        "Design & samples",
+        "Produce",
+        "Deliver or install"
+      ],
+      "faqs": [
+        {
+          "q": "Can we see samples before a bulk gift order?",
+          "a": "Yes. We share a sample or a mock-up for approval before the full order. [Mention any sample charges.]"
+        },
+        {
+          "q": "Do you brand office interiors?",
+          "a": "Yes. Wall graphics, frosted films, reception signage and more, designed and installed by our team."
+        },
+        {
+          "q": "Do you run digital marketing as well?",
+          "a": "Yes. We handle social media, Google Ads, SEO and websites. Ask for a separate proposal."
+        }
+      ]
+    }
+  ]
+}

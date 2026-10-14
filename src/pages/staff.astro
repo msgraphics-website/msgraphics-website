@@ -1,0 +1,359 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { services } from '../lib/site.js';
+import { allSteps } from '../config/order-steps.js';
+import config from '../config/site.config.js';
+const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
+---
+<Base title="Staff Panel | M.S. Graphics Studio" description="Order management for M.S. Graphics Studio staff." noindex>
+  <section class="section sp">
+    <div class="container">
+      <!-- Login -->
+      <div id="v-login" class="sp-login">
+        <h1>Staff panel</h1>
+        <p>Log in with your Staff ID and password.</p>
+        {!connected && <p class="notice">The order system is not connected yet. Follow <strong>SETUP-ADMIN-AND-ORDERS.md</strong> to connect Supabase, then rebuild the site.</p>}
+        <form id="f-login" class="sp-card" novalidate>
+          <label class="f"><span>Staff ID</span><input name="sid" autocomplete="username" required placeholder="e.g. ravi" /></label>
+          <label class="f"><span>Password</span><input name="pw" type="password" autocomplete="current-password" required /></label>
+          <button class="btn btn--primary" type="submit">Log in</button>
+          <p class="notice notice--err" data-msg hidden></p>
+        </form>
+      </div>
+
+      <!-- App -->
+      <div id="v-app" hidden>
+        <div class="sp-top">
+          <div><h1>Orders</h1><p class="sp-who" id="who"></p></div>
+          <div class="sp-top__btns">
+            <button class="btn btn--primary btn--sm" id="b-new" type="button"><Icon name="plus" /> New order</button>
+            <button class="btn btn--outline btn--sm" id="b-staff" type="button" hidden><Icon name="users" /> Staff</button>
+            <button class="btn btn--outline btn--sm" id="b-out" type="button">Log out</button>
+          </div>
+        </div>
+        <div class="sp-tools">
+          <label class="f"><span class="sr-only">Search</span><input id="q" type="search" placeholder="Search order ID, client, phone, company" /></label>
+          <label class="f"><span class="sr-only">Status</span>
+            <select id="fs"><option value="">All open orders</option><option value="*">All orders (incl. completed)</option>{allSteps.map((s) => <option value={s.key}>{s.label}</option>)}</select>
+          </label>
+          <button class="btn btn--outline btn--sm" id="b-ref" type="button"><Icon name="refresh-cw" /> Refresh</button>
+        </div>
+        <p class="notice notice--err" id="app-msg" hidden></p>
+        <div class="sp-list" id="list" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- New / edit order -->
+  <dialog id="d-order" class="sp-dlg">
+    <form id="f-order" method="dialog" novalidate>
+      <h2 data-title>New order</h2>
+      <div class="sp-grid">
+        <label class="f"><span>Client name *</span><input name="client_name" required /></label>
+        <label class="f"><span>Client phone *</span><input name="client_phone" required inputmode="tel" placeholder="+91 98xxx xxxxx" /><small>The client tracks the order with the last 4 digits.</small></label>
+        <label class="f"><span>Company</span><input name="client_company" /></label>
+        <label class="f"><span>Client email</span><input name="client_email" type="email" /></label>
+        <label class="f"><span>Service</span><select name="service"><option value="">Choose…</option>{services.map((s) => <option>{s.title}</option>)}<option>Other</option></select></label>
+        <label class="f"><span>Quantity</span><input name="quantity" placeholder="e.g. 500 pcs, 12 stores" /></label>
+        <label class="f sp-full"><span>Job description (client can see this)</span><textarea name="description" rows="3"></textarea></label>
+        <label class="f"><span>Expected delivery date</span><input name="due_date" type="date" /></label>
+        <label class="f"><span>Amount (₹, staff only)</span><input name="amount" type="number" min="0" step="0.01" /></label>
+        <label class="f sp-full"><span>Internal notes (staff only)</span><textarea name="internal_notes" rows="2"></textarea></label>
+      </div>
+      <p class="notice notice--err" data-msg hidden></p>
+      <div class="sp-btns"><button class="btn btn--primary" type="submit" value="save">Save order</button><button class="btn btn--outline" type="button" data-close>Cancel</button></div>
+    </form>
+  </dialog>
+
+  <!-- Order detail -->
+  <dialog id="d-detail" class="sp-dlg sp-dlg--wide">
+    <div class="sp-detail">
+      <div class="sp-detail__head">
+        <div><p class="sp-code" data-code></p><h2 data-client></h2><p class="sp-sub" data-sub></p></div>
+        <button class="sp-x" type="button" data-close aria-label="Close"><Icon name="x" /></button>
+      </div>
+      <div class="sp-cols">
+        <div>
+          <dl class="sp-dl" data-info></dl>
+          <div class="sp-btns">
+            <a class="btn btn--primary btn--sm" data-wa target="_blank" rel="noopener"><Icon name="whatsapp" /> Send tracking link</a>
+            <button class="btn btn--outline btn--sm" type="button" data-copy><Icon name="copy" /> Copy link</button>
+            <button class="btn btn--outline btn--sm" type="button" data-edit><Icon name="pencil" /> Edit details</button>
+            <button class="btn btn--outline btn--sm sp-del" type="button" data-del hidden><Icon name="trash-2" /> Delete</button>
+          </div>
+        </div>
+        <div>
+          <form id="f-status" class="sp-card" novalidate>
+            <h3>Update status</h3>
+            <label class="f"><span>New status</span><select name="status">{allSteps.map((s) => <option value={s.key}>{s.label}</option>)}</select></label>
+            <label class="f"><span>Note</span><textarea name="note" rows="2" placeholder="e.g. Proof sent on WhatsApp"></textarea></label>
+            <label class="sp-check"><input type="checkbox" name="show" checked /> Show this update to the client</label>
+            <button class="btn btn--primary btn--sm" type="submit">Save update</button>
+            <p class="notice notice--err" data-msg hidden></p>
+          </form>
+          <h3>History</h3>
+          <ul class="sp-hist" data-hist></ul>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Staff management (admin) -->
+  <dialog id="d-staff" class="sp-dlg sp-dlg--wide">
+    <div class="sp-detail">
+      <div class="sp-detail__head"><h2>Staff logins</h2><button class="sp-x" type="button" data-close aria-label="Close"><Icon name="x" /></button></div>
+      <div class="sp-cols">
+        <div><table class="sp-table"><thead><tr><th>Staff ID</th><th>Name</th><th>Role</th><th>Active</th><th></th></tr></thead><tbody data-rows></tbody></table></div>
+        <form id="f-staff" class="sp-card" novalidate>
+          <h3>Create a staff ID</h3>
+          <label class="f"><span>Staff ID</span><input name="staffId" required placeholder="e.g. ravi" autocomplete="off" /><small>Letters and numbers, no spaces. They log in with this.</small></label>
+          <label class="f"><span>Full name</span><input name="fullName" required /></label>
+          <label class="f"><span>Password</span><input name="password" type="text" minlength="8" required autocomplete="new-password" /><small>At least 8 characters. Share it with them privately.</small></label>
+          <label class="f"><span>Role</span><select name="role"><option value="staff">Staff: orders only</option><option value="admin">Admin: orders and staff</option></select></label>
+          <button class="btn btn--primary btn--sm" type="submit">Create staff ID</button>
+          <p class="notice" data-msg hidden></p>
+        </form>
+      </div>
+    </div>
+  </dialog>
+</Base>
+
+<script>
+  import { supa, esc, fmtDate } from '../lib/supa.js';
+  import { allSteps, stepLabel } from '../config/order-steps.js';
+  import config from '../config/site.config.js';
+
+  const $ = <T extends HTMLElement = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector(s) as T;
+  const msg = (el: HTMLElement, t: string, type = 'err') => { el.textContent = t; el.className = 'notice' + (type ? ' notice--' + type : ''); el.hidden = !t; };
+  const site = location.origin;
+  const trackUrl = (code: string) => `${site}/track/?id=${encodeURIComponent(code)}`;
+  const OPEN = new Set(['received', 'design', 'approval', 'production', 'fabrication', 'qc', 'dispatched', 'hold']);
+
+  let me: any = null; let orders: any[] = []; let current: any = null;
+
+  document.querySelectorAll('dialog [data-close]').forEach((b) => b.addEventListener('click', () => (b.closest('dialog') as HTMLDialogElement).close()));
+
+  // ---------- login ----------
+  const fLogin = $<HTMLFormElement>('#f-login');
+  fLogin.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const m = $('[data-msg]', fLogin);
+    if (!supa) return msg(m, 'The order system is not connected yet.');
+    const id = (fLogin.elements.namedItem('sid') as HTMLInputElement).value.trim().toLowerCase();
+    const pw = (fLogin.elements.namedItem('pw') as HTMLInputElement).value;
+    if (!id || !pw) return msg(m, 'Enter your Staff ID and password.');
+    const email = id.includes('@') ? id : `${id}@${config.staffEmailDomain}`;
+    msg(m, 'Logging in…', '');
+    const { error } = await supa.auth.signInWithPassword({ email, password: pw });
+    if (error) return msg(m, 'Wrong Staff ID or password.');
+    msg(m, '');
+    start();
+  });
+  $('#b-out').addEventListener('click', async () => { await supa?.auth.signOut(); location.reload(); });
+
+  async function start() {
+    if (!supa) return;
+    const { data: { session } } = await supa.auth.getSession();
+    if (!session) return;
+    const { data: prof } = await supa.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+    if (!prof || !prof.active) {
+      await supa.auth.signOut();
+      return msg($('[data-msg]', fLogin), 'This login is not active. Ask the admin.');
+    }
+    me = prof;
+    $('#who').textContent = `Logged in as ${prof.full_name} (${prof.staff_id}, ${prof.role})`;
+    $('#b-staff').hidden = prof.role !== 'admin';
+    $('#v-login').hidden = true; $('#v-app').hidden = false;
+    load();
+  }
+
+  // ---------- list ----------
+  async function load() {
+    const { data, error } = await supa!.from('orders').select('*').order('created_at', { ascending: false }).limit(500);
+    if (error) return msg($('#app-msg'), 'Could not load orders: ' + error.message);
+    msg($('#app-msg'), '');
+    orders = data || [];
+    render();
+  }
+  function render() {
+    const q = ($('#q') as HTMLInputElement).value.trim().toLowerCase();
+    const fs = ($('#fs') as HTMLSelectElement).value;
+    const rows = orders.filter((o) => (fs === '*' ? true : fs ? o.status === fs : OPEN.has(o.status)))
+      .filter((o) => !q || [o.order_code, o.client_name, o.client_phone, o.client_company, o.service].join(' ').toLowerCase().includes(q));
+    $('#list').innerHTML = rows.length ? rows.map((o) => `
+      <button type="button" class="sp-row" data-id="${o.id}">
+        <span class="sp-row__code">${esc(o.order_code)}</span>
+        <span class="sp-row__client"><strong>${esc(o.client_name)}</strong>${o.client_company ? ` · ${esc(o.client_company)}` : ''}<small>${esc(o.service || '')}${o.quantity ? ' · ' + esc(o.quantity) : ''}</small></span>
+        <span class="sp-badge" data-s="${o.status}">${esc(stepLabel(o.status))}</span>
+        <span class="sp-row__due">${o.due_date ? 'Due ' + esc(fmtDate(o.due_date)) : ''}<small>Updated ${esc(fmtDate(o.updated_at))}</small></span>
+      </button>`).join('') : `<p class="sp-empty">No orders here yet.</p>`;
+  }
+  $('#q').addEventListener('input', render);
+  $('#fs').addEventListener('change', render);
+  $('#b-ref').addEventListener('click', load);
+  $('#list').addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest('[data-id]') as HTMLElement; if (b) openDetail(b.dataset.id!); });
+
+  // ---------- new / edit ----------
+  const dOrder = $<HTMLDialogElement>('#d-order'); const fOrder = $<HTMLFormElement>('#f-order');
+  const FIELDS = ['client_name', 'client_phone', 'client_company', 'client_email', 'service', 'quantity', 'description', 'due_date', 'amount', 'internal_notes'];
+  function openForm(o: any = null) {
+    fOrder.reset(); fOrder.dataset.id = o?.id || '';
+    $('[data-title]', fOrder).textContent = o ? `Edit ${o.order_code}` : 'New order';
+    if (o) FIELDS.forEach((k) => ((fOrder.elements.namedItem(k) as HTMLInputElement).value = o[k] ?? ''));
+    msg($('[data-msg]', fOrder), '');
+    dOrder.showModal();
+  }
+  $('#b-new').addEventListener('click', () => openForm());
+  fOrder.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const m = $('[data-msg]', fOrder);
+    const v: any = Object.fromEntries(FIELDS.map((k) => [k, (fOrder.elements.namedItem(k) as HTMLInputElement).value.trim()]));
+    if (!v.client_name || !v.client_phone) return msg(m, 'Client name and phone are needed.');
+    if (v.client_phone.replace(/\D/g, '').length < 10) return msg(m, 'Enter the full phone number (at least 10 digits).');
+    v.due_date = v.due_date || null; v.amount = v.amount === '' ? null : Number(v.amount);
+    const id = fOrder.dataset.id;
+    const res = id ? await supa!.from('orders').update(v).eq('id', id).select().single() : await supa!.from('orders').insert(v).select().single();
+    if (res.error) return msg(m, 'Could not save: ' + res.error.message);
+    dOrder.close();
+    await load();
+    openDetail(res.data.id, !id);
+  });
+
+  // ---------- detail ----------
+  const dDet = $<HTMLDialogElement>('#d-detail');
+  async function openDetail(id: string, isNew = false) {
+    const o = orders.find((x) => x.id === id); if (!o) return;
+    current = o;
+    $('[data-code]', dDet).textContent = o.order_code + (isNew ? '  (new order created)' : '');
+    $('[data-client]', dDet).textContent = o.client_name;
+    $('[data-sub]', dDet).innerHTML = `<span class="sp-badge" data-s="${o.status}">${esc(stepLabel(o.status))}</span>`;
+    const row = (k: string, v: any) => (v || v === 0 ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '');
+    $('[data-info]', dDet).innerHTML = row('Phone', o.client_phone) + row('Company', o.client_company) + row('Email', o.client_email) + row('Service', o.service) + row('Quantity', o.quantity) + row('Job', o.description) + row('Due', fmtDate(o.due_date)) + row('Amount', o.amount != null ? '₹' + Number(o.amount).toLocaleString('en-IN') : '') + row('Internal notes', o.internal_notes) + row('Created', fmtDate(o.created_at, true));
+    const phone = o.client_phone.replace(/\D/g, '');
+    const text = `Hello ${o.client_name.split(' ')[0]}, your order with M.S. Graphics Studio is confirmed.\nOrder ID: ${o.order_code}\nTrack it here: ${trackUrl(o.order_code)}\n(Use the last 4 digits of this phone number to view it.)`;
+    ($('[data-wa]', dDet) as HTMLAnchorElement).href = `https://wa.me/${phone.length === 10 ? '91' + phone : phone}?text=${encodeURIComponent(text)}`;
+    $('[data-del]', dDet).hidden = me?.role !== 'admin';
+    const fS = $<HTMLFormElement>('#f-status'); fS.reset(); (fS.elements.namedItem('status') as HTMLSelectElement).value = nextStatus(o.status); msg($('[data-msg]', fS), '');
+    $('[data-hist]', dDet).innerHTML = '<li>Loading…</li>';
+    if (!dDet.open) dDet.showModal();
+    const { data: ev } = await supa!.from('order_events').select('*').eq('order_id', id).order('created_at', { ascending: false });
+    $('[data-hist]', dDet).innerHTML = (ev || []).map((e: any) => `<li><time>${esc(fmtDate(e.created_at, true))}${e.created_by_name ? ' · ' + esc(e.created_by_name) : ''}${e.show_to_client ? '' : ' · <em>staff only</em>'}</time><strong>${esc(stepLabel(e.status))}</strong>${e.note ? `<p>${esc(e.note)}</p>` : ''}</li>`).join('');
+  }
+  function nextStatus(s: string) { const flow = allSteps.slice(0, 8).map((x) => x.key); const i = flow.indexOf(s); return i >= 0 && i < flow.length - 1 ? flow[i + 1] : s; }
+  $('[data-edit]', dDet).addEventListener('click', () => { dDet.close(); openForm(current); });
+  $('[data-copy]', dDet).addEventListener('click', async (e) => { await navigator.clipboard?.writeText(trackUrl(current.order_code)); (e.currentTarget as HTMLElement).lastChild!.textContent = ' Copied'; });
+  $('[data-del]', dDet).addEventListener('click', async () => {
+    if (!confirm(`Delete order ${current.order_code} and its history? This cannot be undone.`)) return;
+    const { error } = await supa!.from('orders').delete().eq('id', current.id);
+    if (error) return alert('Could not delete: ' + error.message);
+    dDet.close(); load();
+  });
+  $<HTMLFormElement>('#f-status').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.currentTarget as HTMLFormElement; const m = $('[data-msg]', f);
+    const status = (f.elements.namedItem('status') as HTMLSelectElement).value;
+    const note = (f.elements.namedItem('note') as HTMLTextAreaElement).value.trim();
+    const show = (f.elements.namedItem('show') as HTMLInputElement).checked;
+    const { error } = await supa!.from('order_events').insert({ order_id: current.id, status, note, show_to_client: show });
+    if (error) return msg(m, 'Could not save: ' + error.message);
+    await load(); openDetail(current.id);
+  });
+
+  // ---------- staff (admin) ----------
+  const dStaff = $<HTMLDialogElement>('#d-staff');
+  async function loadStaff() {
+    const { data } = await supa!.from('profiles').select('*').order('created_at');
+    $('[data-rows]', dStaff).innerHTML = (data || []).map((p: any) => `<tr data-uid="${p.id}"><td>${esc(p.staff_id)}</td><td>${esc(p.full_name)}</td><td>${esc(p.role)}</td>
+      <td><input type="checkbox" data-active ${p.active ? 'checked' : ''} ${p.id === me.id ? 'disabled' : ''} aria-label="Active"></td>
+      <td><button type="button" class="sp-link" data-pw>Reset password</button></td></tr>`).join('');
+  }
+  $('#b-staff').addEventListener('click', () => { loadStaff(); dStaff.showModal(); });
+  $('[data-rows]', dStaff).addEventListener('change', async (e) => {
+    const cb = e.target as HTMLInputElement; const uid = cb.closest('tr')!.dataset.uid;
+    const { error } = await supa!.from('profiles').update({ active: cb.checked }).eq('id', uid);
+    if (error) { alert(error.message); cb.checked = !cb.checked; }
+  });
+  async function callAdmin(body: any) {
+    const { data: { session } } = await supa!.auth.getSession();
+    const r = await fetch('/.netlify/functions/staff-admin', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${session?.access_token}` }, body: JSON.stringify(body) });
+    return r.json().catch(() => ({ error: 'The staff service is not available. Is the site deployed on Netlify?' }));
+  }
+  $('[data-rows]', dStaff).addEventListener('click', async (e) => {
+    const b = (e.target as HTMLElement).closest('[data-pw]'); if (!b) return;
+    const uid = b.closest('tr')!.getAttribute('data-uid');
+    const pw = prompt('New password (at least 8 characters):'); if (!pw) return;
+    const r = await callAdmin({ action: 'password', userId: uid, password: pw });
+    alert(r.ok ? 'Password changed. Share it with them privately.' : r.error);
+  });
+  $<HTMLFormElement>('#f-staff').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.currentTarget as HTMLFormElement; const m = $('[data-msg]', f);
+    const body: any = Object.fromEntries(new FormData(f)); body.action = 'create';
+    msg(m, 'Creating…', '');
+    const r = await callAdmin(body);
+    if (!r.ok) return msg(m, r.error || 'Could not create.');
+    msg(m, `Staff ID "${r.staffId}" created. They can log in at ${site}/staff/`, 'ok');
+    f.reset(); loadStaff();
+  });
+
+  start();
+</script>
+
+<style is:global>
+  .sp { padding-top: 40px; min-height: 70vh; }
+  .sp h1 { font-size: 1.8rem; margin-bottom: 4px; }
+  .sp-login { max-width: 420px; margin: 0 auto; display: grid; gap: 12px; }
+  .sp-card { display: grid; gap: 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .sp-card h3 { margin: 0; font-size: 1.05rem; }
+  .sp-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; align-items: flex-end; margin-bottom: 18px; }
+  .sp-top__btns, .sp-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .sp-who { color: var(--muted); margin: 0; font-size: 0.9rem; }
+  .sp-tools { display: grid; gap: 10px; margin-bottom: 16px; }
+  @media (min-width: 760px) { .sp-tools { grid-template-columns: 1fr 260px auto; align-items: center; } }
+  .sp-list { display: grid; gap: 8px; }
+  .sp-row { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 6px 16px; grid-template-columns: 1fr auto; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .sp-row:hover, .sp-row:focus-visible { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,160,227,0.15); }
+  @media (min-width: 900px) { .sp-row { grid-template-columns: 130px 1fr 210px 150px; } }
+  .sp-row__code { font-weight: 700; color: var(--magenta-dark); letter-spacing: 0.03em; }
+  .sp-row small { display: block; color: var(--muted); font-size: 0.82rem; }
+  .sp-row__due { font-size: 0.88rem; color: var(--navy); }
+  .sp-badge { display: inline-block; justify-self: start; padding: 4px 10px; border-radius: 999px; background: #e6f6fd; color: var(--navy); font-size: 0.8rem; font-weight: 600; }
+  .sp-badge[data-s="received"] { background: #eef0f5; }
+  .sp-badge[data-s="approval"], .sp-badge[data-s="hold"] { background: #fff1c7; }
+  .sp-badge[data-s="dispatched"] { background: #fde2f0; }
+  .sp-badge[data-s="completed"] { background: #dff3e6; color: #135f33; }
+  .sp-badge[data-s="cancelled"] { background: #f5dce2; color: #8a0021; }
+  .sp-empty { color: var(--muted); padding: 30px 0; text-align: center; }
+  .sp-dlg { border: 0; border-radius: 12px; padding: 0; width: min(720px, calc(100vw - 24px)); max-height: calc(100vh - 32px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .sp-dlg--wide { width: min(1000px, calc(100vw - 24px)); }
+  .sp-dlg::backdrop { background: rgba(20,33,61,0.55); }
+  .sp-dlg form#f-order { padding: 24px; display: grid; gap: 16px; }
+  .sp-dlg h2 { font-size: 1.35rem; margin: 0; }
+  .sp-grid { display: grid; gap: 14px 18px; }
+  @media (min-width: 640px) { .sp-grid { grid-template-columns: 1fr 1fr; } .sp-full { grid-column: 1 / -1; } }
+  .sp-detail { padding: 24px; }
+  .sp-detail__head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
+  .sp-code { font-weight: 700; color: var(--magenta-dark); margin: 0; }
+  .sp-sub { margin: 6px 0 0; }
+  .sp-x { background: none; border: 0; cursor: pointer; padding: 6px; color: var(--navy); }
+  .sp-x .icon { width: 24px; height: 24px; }
+  .sp-cols { display: grid; gap: 24px; }
+  @media (min-width: 860px) { .sp-cols { grid-template-columns: 1fr 1fr; } }
+  .sp-dl { display: grid; grid-template-columns: 120px 1fr; gap: 8px 14px; margin: 0 0 18px; font-size: 0.95rem; }
+  .sp-dl dt { color: var(--muted); }
+  .sp-dl dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .sp-check { display: flex; gap: 8px; align-items: center; font-size: 0.92rem; }
+  .sp-check input { width: 18px; height: 18px; }
+  .sp-detail h3 { font-size: 1.05rem; margin: 22px 0 10px; }
+  .sp-card h3 { margin: 0; }
+  .sp-hist { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .sp-hist li { border-left: 3px solid var(--cyan); padding-left: 12px; }
+  .sp-hist time { display: block; font-size: 0.8rem; color: var(--muted); }
+  .sp-hist p { margin: 2px 0 0; font-size: 0.93rem; }
+  .sp-del { color: #8a0021; border-color: #8a0021; }
+  .sp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .sp-table th, .sp-table td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  .sp-link { background: none; border: 0; color: var(--magenta-dark); cursor: pointer; font: inherit; text-decoration: underline; padding: 0; }
+  .sp [hidden], .sp-dlg [hidden] { display: none !important; }
+</style>

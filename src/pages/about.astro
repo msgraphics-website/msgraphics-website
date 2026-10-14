@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import StatsCounter from '../components/StatsCounter.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { content, ph } from '../lib/site.js';
+const a = content.about;
+---
+<Base
+  title="About Us: Factory-Direct Branding Company in Delhi"
+  description="M.S. Graphics Studio is a Delhi-based print, branding and events company with its own production unit at Dwarka Mor, New Delhi. Meet the team behind it."
+>
+  <PageHero label="About" title="A printing studio that grew into a one-stop branding partner" text="Design se setup tak, sab ek jagah." crumbs={[{ href: '', label: 'About' }]} />
+
+  <section class="section">
+    <div class="container split">
+      <div class="reveal">
+        <SectionLabel>Who we are</SectionLabel>
+        <h2>Factory-direct branding from Dwarka, New Delhi</h2>
+        {a.paragraphs.map((p) => <p set:html={ph(p)} />)}
+      </div>
+      <div class="reveal"><Photo image={a.image} crop /></div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container"><StatsCounter stats={a.stats} /></div>
+  </section>
+
+  <section class="section">
+    <div class="container grid grid-2">
+      <div class="card vm reveal">
+        <span class="icon-badge"><Icon name="eye" /></span>
+        <h2>Vision</h2>
+        <p>{a.vision}</p>
+      </div>
+      <div class="card vm reveal">
+        <span class="icon-badge"><Icon name="target" /></span>
+        <h2>Mission</h2>
+        <ul class="checklist">{a.mission.map((m) => <li><Icon name="check" />{m}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="container founder">
+      <Photo image={a.founder.image} ratio="4 / 5" crop />
+      <div class="reveal">
+        <SectionLabel>From the founder</SectionLabel>
+        <blockquote set:html={ph(a.founder.message)} />
+        <p class="founder__name" set:html={ph(a.founder.name)} />
+        <p class="founder__role">{a.founder.role}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <SectionLabel>Our team</SectionLabel>
+        <h2>One in-house team, six functions</h2>
+      </div>
+      <div class="grid grid-3">
+        {a.teams.map((t) => (
+          <div class="card team reveal">
+            <div class="team__top"><span class="icon-badge"><Icon name={t.icon} /></span><span class="team__count" set:html={ph(t.count)} /></div>
+            <h3>{t.name}</h3>
+            <p>{t.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+<style>
+  .vm h2 { font-size: 1.5rem; margin-top: 16px; }
+  .founder { display: grid; gap: 32px; align-items: center; }
+  @media (min-width: 800px) { .founder { grid-template-columns: 340px 1fr; gap: 56px; } }
+  .founder blockquote { margin: 0 0 20px; font-size: clamp(1.2rem, 2.4vw, 1.6rem); font-weight: 300; color: #fff; line-height: 1.5; }
+  .founder__name { color: #fff; font-weight: 600; margin: 0; }
+  .founder__role { color: #aab3c9; margin: 0; }
+  .team__top { display: flex; justify-content: space-between; align-items: center; }
+  .team__count { font-size: 1.6rem; font-weight: 700; color: var(--navy); }
+</style>

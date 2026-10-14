@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import { content, business, config, telLink, mailLink, waLink, ph } from '../lib/site.js';
+---
+<Base
+  title="Contact & Get a Quote | Printing & Branding in Dwarka, Delhi"
+  description="Get a quote within 24 hours for printing, signage, in-store branding, hoardings or events. Visit us at Plot B-32, Dwarka Mor, New Delhi, call or WhatsApp +91 97162 14982."
+>
+  <PageHero label="Contact" title="Get a quote in 24 hours" text={content.contact.intro} crumbs={[{ href: '', label: 'Contact' }]} />
+  <section class="section">
+    <div class="container contact">
+      <div>
+        <h2 class="sr-only">Quote request form</h2>
+        <QuoteForm />
+      </div>
+      <aside class="info">
+        <h2>Talk to us directly</h2>
+        <ul class="info__list">
+          <li><Icon name="whatsapp" /><div><strong>WhatsApp</strong><a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">{business.phoneDisplay}</a></div></li>
+          <li><Icon name="phone" /><div><strong>Phone</strong><a href={telLink} data-track="call_click">{business.phoneDisplay}</a></div></li>
+          <li><Icon name="mail" /><div><strong>Email</strong><a href={mailLink}>{business.email}</a></div></li>
+          <li><Icon name="map-pin" /><div><strong>Production unit</strong><span>{business.address.full}</span><a href={config.mapLinkUrl} target="_blank" rel="noopener">Get directions</a></div></li>
+          <li><Icon name="clock" /><div><strong>Working hours</strong><span set:html={ph(business.workingHours)} /></div></li>
+          <li><Icon name="badge-check" /><div><strong>Registered business</strong><span>{business.registrations.join(' · ')}</span></div></li>
+        </ul>
+        <iframe class="map" src={config.mapEmbedUrl} title="Map: M.S. Graphics Studio, Dwarka Mor, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </aside>
+    </div>
+  </section>
+</Base>
+<style>
+  .contact { display: grid; gap: 40px; align-items: start; }
+  @media (min-width: 1000px) { .contact { grid-template-columns: 1.6fr 1fr; } }
+  .info h2 { font-size: 1.4rem; }
+  .info__list { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 18px; }
+  .info__list li { display: flex; gap: 14px; }
+  .info__list :global(.icon) { color: var(--cyan); margin-top: 3px; }
+  .info__list div { display: flex; flex-direction: column; }
+  .info__list strong { color: var(--navy); }
+  .map { width: 100%; height: 300px; border: 0; border-radius: var(--radius); }
+</style>

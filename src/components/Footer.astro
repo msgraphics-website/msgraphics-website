@@ -1,0 +1,92 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import Dots from './Dots.astro';
+import { services, business, config, telLink, mailLink, waLink, serviceUrl, ph, isPlaceholder } from '../lib/site.js';
+const year = new Date().getFullYear();
+const socials = (['facebook', 'instagram', 'youtube', 'x'] as const).map((k) => ({ key: k, url: (business.social as Record<string, string>)[k] }));
+const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube', x: 'X (Twitter)' };
+---
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__about">
+      <a href="/"><Logo variant="dark" /></a>
+      <p>{business.shortAbout}</p>
+      <p class="footer__hindi"><Dots /> {business.hindiLine}</p>
+      <ul class="footer__social">
+        {socials.map((s) => (
+          <li>
+            {isPlaceholder(s.url)
+              ? <span class="soc soc--off" title={`${names[s.key]} link not added yet`}><Icon name={s.key} label={`${names[s.key]} (link to be added)`} /></span>
+              : <a class="soc" href={s.url} target="_blank" rel="noopener"><Icon name={s.key} label={names[s.key]} /></a>}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2 class="footer__h">Quick links</h2>
+      <ul class="footer__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/services/">Services</a></li>
+        <li><a href="/our-unit/">Our Unit</a></li>
+        <li><a href="/work/">Work</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/contact/">Contact & Quote</a></li>
+        <li><a href="/track/">Track your order</a></li>
+        <li><a href={config.shopUrl}>Shop Print Products</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="footer__h">Services</h2>
+      <ul class="footer__links">
+        {services.map((s) => <li><a href={serviceUrl(s)}>{s.title}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2 class="footer__h">Visit our unit</h2>
+      <address class="footer__contact">
+        <p><Icon name="map-pin" /><span>{business.address.full}</span></p>
+        <p><Icon name="phone" /><a href={telLink} data-track="call_click">{business.phoneDisplay}</a></p>
+        <p><Icon name="whatsapp" /><a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">WhatsApp us</a></p>
+        <p><Icon name="mail" /><a href={mailLink}>{business.email}</a></p>
+        <p><Icon name="clock" /><span set:html={ph(business.workingHours)} /></p>
+        <ul class="footer__regs">{business.registrations.map((r) => <li><Icon name="badge-check" />{r}</li>)}</ul>
+      </address>
+      <iframe class="footer__map" src={config.mapEmbedUrl} title="Map: M.S. Graphics Studio, Dwarka Mor, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <p>© {year} M.S. Graphics Studio. All rights reserved.</p>
+    <p>{business.tagline} · <a href="/staff/" rel="nofollow" class="footer__staff">Staff login</a></p>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--navy); color: #c4cbdc; padding: 64px 0 96px; font-size: 0.93rem; }
+  .footer a { color: #e6e9f1; text-decoration: none; }
+  .footer a:hover { color: #fff; text-decoration: underline; }
+  .footer__grid { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1080px) { .footer__grid { grid-template-columns: 1.4fr 0.8fr 1.1fr 1.4fr; } }
+  .footer__about :global(.logo) { height: 46px; width: auto; margin-bottom: 18px; }
+  .footer__hindi { display: flex; gap: 10px; align-items: center; color: #fff; font-weight: 500; font-style: italic; }
+  .footer__h { color: #fff; font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+  .footer__links { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .footer__contact { font-style: normal; }
+  .footer__contact p { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+  .footer__contact :global(.icon) { width: 18px; height: 18px; color: var(--cyan); margin-top: 3px; }
+  .footer__map { width: 100%; height: 180px; border: 0; border-radius: var(--radius); margin-top: 8px; filter: grayscale(0.3); }
+  .footer__social { list-style: none; padding: 0; margin: 20px 0 0; display: flex; gap: 10px; }
+  .soc { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); display: grid; place-items: center; color: #fff; }
+  .soc :global(.icon) { width: 18px; height: 18px; }
+  a.soc:hover { background: var(--magenta); border-color: var(--magenta); }
+  .soc--off { opacity: 0.45; }
+  .footer :global(.ph) { background: var(--yellow); color: var(--navy); }
+  .footer__bottom { border-top: 1px solid rgba(255,255,255,0.12); margin-top: 48px; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+  .footer__bottom p { margin: 0; }
+  .footer__regs { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .footer__regs li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.85rem; font-weight: 500; }
+  .footer__regs :global(.icon) { width: 16px; height: 16px; color: var(--yellow); margin: 0; }
+  .footer__staff { text-decoration: underline !important; }
+</style>

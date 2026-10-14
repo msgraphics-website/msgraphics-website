@@ -1,0 +1,139 @@
+---
+import '@fontsource/poppins/latin-300.css';
+import '@fontsource/poppins/latin-400.css';
+import '@fontsource/poppins/latin-500.css';
+import '@fontsource/poppins/latin-600.css';
+import '@fontsource/poppins/latin-700.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { content, config, services, business } from '../lib/site.js';
+
+interface Props { title: string; description: string; image?: string; schema?: object[]; crumb?: string; type?: 'website' | 'article'; published?: Date; modified?: Date; noindex?: boolean }
+const { title, description, image = config.ogImage, schema = [], crumb, type = 'website', published, modified, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, config.siteUrl).href;
+const ogImage = new URL(image.endsWith('.svg') ? config.ogImage : image, config.siteUrl).href;
+const fullTitle = /M\.?S\.? Graphics/.test(title) || title.length > 52 ? title : `${title} | M.S. Graphics Studio`;
+
+// Breadcrumbs, built from the URL: /services/x/ → Home › Services › (page)
+const segNames: Record<string, string> = { services: 'Services', blog: 'Blog', 'our-unit': 'Our Unit', work: 'Work', about: 'About', contact: 'Contact' };
+const segs = Astro.url.pathname.split('/').filter(Boolean);
+const breadcrumb = segs.length ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Home', path: '/' }, ...segs.map((sg, i) => ({ name: i === segs.length - 1 ? (crumb ?? segNames[sg] ?? title) : (segNames[sg] ?? sg), path: '/' + segs.slice(0, i + 1).join('/') + '/' }))]
+    .map((b, i) => ({ '@type': 'ListItem', position: i + 1, name: b.name, item: new URL(b.path, config.siteUrl).href })),
+} : null;
+const isHome = segs.length === 0;
+
+const localBusiness: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${config.siteUrl}/#business`,
+  name: business.name,
+  slogan: business.tagline,
+  description: business.shortAbout,
+  url: config.siteUrl,
+  telephone: business.phone,
+  email: business.email,
+  image: new URL(config.ogImage, config.siteUrl).href,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${business.address.line1}, ${business.address.line2}`,
+    addressLocality: business.address.city,
+    addressRegion: business.address.region,
+    postalCode: business.address.postalCode,
+    addressCountry: business.address.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: config.geo.latitude, longitude: config.geo.longitude },
+  foundingDate: business.founded,
+  numberOfEmployees: { '@type': 'QuantitativeValue', minValue: 90 },
+  areaServed: [
+    { '@type': 'City', name: 'New Delhi' }, { '@type': 'City', name: 'Gurugram' }, { '@type': 'City', name: 'Noida' },
+    { '@type': 'City', name: 'Ghaziabad' }, { '@type': 'City', name: 'Faridabad' },
+    { '@type': 'Country', name: 'India' }, { '@type': 'Country', name: 'Nepal' },
+  ],
+  knowsAbout: ['In-store branding', 'POP and POSM printing', 'Glow sign boards', 'ACP and LED signage', 'Hoarding printing', 'Flex and vinyl printing', 'Vehicle branding', 'Exhibition stall fabrication', 'Event branding', 'BTL activation', 'Corporate gifts printing', 'Offset and digital printing'],
+  hasMap: config.mapLinkUrl,
+  makesOffer: services.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.title, url: `${config.siteUrl}/services/${s.slug}/` } })),
+};
+if (config.openingHours.length) {
+  localBusiness.openingHoursSpecification = config.openingHours.map((h: { days: string[]; opens: string; closes: string }) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: h.days, opens: h.opens, closes: h.closes }));
+}
+const sameAs = Object.values(business.social).filter((u) => /^https?:/.test(u));
+if (sameAs.length) localBusiness.sameAs = sameAs;
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${config.siteUrl}/#website`,
+  url: config.siteUrl,
+  name: business.name,
+  inLanguage: 'en-IN',
+  publisher: { '@id': `${config.siteUrl}/#business` },
+};
+const jsonLd = [localBusiness, ...(isHome ? [website] : []), ...(breadcrumb ? [breadcrumb] : []), ...schema];
+---
+<!doctype html>
+<html lang="en-IN" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="en-IN" href={canonical} />
+  <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+  <link rel="alternate" type="application/rss+xml" title="M.S. Graphics Studio Blog" href="/rss.xml" />
+  <meta name="geo.region" content="IN-DL" />
+  <meta name="geo.placename" content="Dwarka Mor, New Delhi" />
+  <meta name="geo.position" content={`${config.geo.latitude};${config.geo.longitude}`} />
+  <meta name="theme-color" content="#14213D" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:type" content={type} />
+  {published && <meta property="article:published_time" content={published.toISOString()} />}
+  {modified && <meta property="article:modified_time" content={modified.toISOString()} />}
+  <meta property="og:site_name" content="M.S. Graphics Studio" />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="M.S. Graphics Studio – Printed in-house. Delivered on-ground." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <script is:inline>document.documentElement.classList.remove('no-js');</script>
+  {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+  {config.ga4Id && (
+    <Fragment>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${config.ga4Id}`}></script>
+      <script is:inline define:vars={{ id: config.ga4Id }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag; gtag('js', new Date()); gtag('config', id);
+      </script>
+    </Fragment>
+  )}
+  {config.metaPixelId && (
+    <script is:inline define:vars={{ id: config.metaPixelId }}>
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', id); fbq('track', 'PageView');
+    </script>
+  )}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <Header />
+  <main id="main"><slot /></main>
+  <Footer />
+  <WhatsAppButton />
+  <script>
+    import { initSite } from '../scripts/site.ts';
+    initSite();
+  </script>
+</body>
+</html>

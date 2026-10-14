@@ -1,0 +1,236 @@
+{
+  "categories": [
+    {
+      "id": "in-store",
+      "name": "In-Store"
+    },
+    {
+      "id": "signage",
+      "name": "Out-Store & Signage"
+    },
+    {
+      "id": "outdoor",
+      "name": "Hoardings & Outdoor"
+    },
+    {
+      "id": "events",
+      "name": "Events"
+    },
+    {
+      "id": "print",
+      "name": "Print & Corporate"
+    }
+  ],
+  "items": [
+    {
+      "category": "in-store",
+      "caption": "In-store branding · Standees, danglers and shelf strips",
+      "image": {
+        "src": "/images/work-instore-1.webp",
+        "alt": "3D illustration of a retail store with standees, danglers and branded shelf strips",
+        "label": "PHOTO: In-store project 1"
+      }
+    },
+    {
+      "category": "in-store",
+      "caption": "In-store branding · Counter top display and POS material",
+      "image": {
+        "src": "/images/work-instore-2.webp",
+        "alt": "3D illustration of a branded counter display at a retail store",
+        "label": "PHOTO: In-store project 2"
+      }
+    },
+    {
+      "category": "signage",
+      "caption": "Signage · ACP shop front with LED letters",
+      "image": {
+        "src": "/images/work-signage-1.webp",
+        "alt": "3D illustration of a shop front with ACP board and LED letters",
+        "label": "PHOTO: Signage project 1"
+      }
+    },
+    {
+      "category": "signage",
+      "caption": "Signage · Glow sign board for a retail shop",
+      "image": {
+        "src": "/images/work-signage-2.webp",
+        "alt": "3D illustration of a shop front with a glow sign board",
+        "label": "PHOTO: Signage project 2"
+      }
+    },
+    {
+      "category": "outdoor",
+      "caption": "Outdoor · Hoarding printing and mounting",
+      "image": {
+        "src": "/images/work-outdoor-1.webp",
+        "alt": "3D illustration of a roadside hoarding",
+        "label": "PHOTO: Hoarding project 1"
+      }
+    },
+    {
+      "category": "outdoor",
+      "caption": "Outdoor · Auto and e-rickshaw branding",
+      "image": {
+        "src": "/images/work-outdoor-2.webp",
+        "alt": "3D illustration of a branded auto-rickshaw",
+        "label": "PHOTO: Vehicle branding project"
+      }
+    },
+    {
+      "category": "events",
+      "caption": "Events · Dealer meet stage and backdrop",
+      "image": {
+        "src": "/images/work-events-1.webp",
+        "alt": "3D illustration of an event stage with a branded backdrop",
+        "label": "PHOTO: Event project 1"
+      }
+    },
+    {
+      "category": "events",
+      "caption": "Events · Exhibition stall design and fabrication",
+      "image": {
+        "src": "/images/work-events-2.webp",
+        "alt": "3D illustration of an exhibition stall with promoters",
+        "label": "PHOTO: Exhibition stall project"
+      }
+    },
+    {
+      "category": "print",
+      "caption": "Print · Brochures, flyers and stationery",
+      "image": {
+        "src": "/images/work-print-1.webp",
+        "alt": "3D illustration of printed brochures, flyers and cards",
+        "label": "PHOTO: Print project 1"
+      }
+    },
+    {
+      "category": "print",
+      "caption": "Corporate · Branded T-shirts, mugs and diaries",
+      "image": {
+        "src": "/images/work-print-2.webp",
+        "alt": "3D illustration of branded corporate gifts",
+        "label": "PHOTO: Corporate gifts project"
+      }
+    },
+    {
+      "category": "in-store",
+      "caption": "In-store branding · Shelf and wall graphics across stores",
+      "image": {
+        "src": "/images/work-instore-3.webp",
+        "alt": "3D illustration of a store interior with branded shelves",
+        "label": "PHOTO: In-store project 3"
+      }
+    },
+    {
+      "category": "signage",
+      "caption": "Signage · Office wall branding",
+      "image": {
+        "src": "/images/work-signage-3.webp",
+        "alt": "3D illustration of office wall graphics above work desks",
+        "label": "PHOTO: Office signage project"
+      }
+    }
+  ],
+  "beforeAfter": [
+    {
+      "title": "[Shop front makeover — client type, location]",
+      "before": {
+        "src": "/images/shop-front-before.webp",
+        "alt": "3D illustration: illustration: Shop front before",
+        "label": "PHOTO: Shop front – BEFORE"
+      },
+      "after": {
+        "src": "/images/shop-front-after.webp",
+        "alt": "3D illustration: illustration: Shop front after new signage",
+        "label": "PHOTO: Shop front – AFTER"
+      }
+    },
+    {
+      "title": "[Store interior branding — client type, location]",
+      "before": {
+        "src": "/images/store-interior-before.webp",
+        "alt": "3D illustration: illustration: Store interior before",
+        "label": "PHOTO: Store interior – BEFORE"
+      },
+      "after": {
+        "src": "/images/store-interior-after.webp",
+        "alt": "3D illustration: illustration: Store interior after branding",
+        "label": "PHOTO: Store interior – AFTER"
+      }
+    }
+  ],
+  "caseStudies": [
+    {
+      "title": "[Case study 1 title]",
+      "client": "[Client name or type] · [Industry]",
+      "brief": "[The brief — to be filled. What did the client need, where, and by when?]",
+      "whatWeDid": "[What we did — to be filled. Design, printing, fabrication, installation details.]",
+      "result": "[Result — to be filled. Use real facts only: stores covered, days taken, client feedback.]",
+      "images": [
+        {
+          "src": "/images/case-1-photo-1.webp",
+          "alt": "3D illustration: case study illustration 1",
+          "label": "PHOTO: Case study 1 – photo 1"
+        },
+        {
+          "src": "/images/case-1-photo-2.webp",
+          "alt": "3D illustration: case study illustration 2",
+          "label": "PHOTO: Case study 1 – photo 2"
+        },
+        {
+          "src": "/images/case-1-photo-3.webp",
+          "alt": "3D illustration: case study illustration 3",
+          "label": "PHOTO: Case study 1 – photo 3"
+        }
+      ]
+    },
+    {
+      "title": "[Case study 2 title]",
+      "client": "[Client name or type] · [Industry]",
+      "brief": "[The brief — to be filled.]",
+      "whatWeDid": "[What we did — to be filled.]",
+      "result": "[Result — to be filled.]",
+      "images": [
+        {
+          "src": "/images/case-2-photo-1.webp",
+          "alt": "3D illustration: case study illustration 1",
+          "label": "PHOTO: Case study 2 – photo 1"
+        },
+        {
+          "src": "/images/case-2-photo-2.webp",
+          "alt": "3D illustration: case study illustration 2",
+          "label": "PHOTO: Case study 2 – photo 2"
+        }
+      ]
+    },
+    {
+      "title": "[Case study 3 title]",
+      "client": "[Client name or type] · [Industry]",
+      "brief": "[The brief — to be filled.]",
+      "whatWeDid": "[What we did — to be filled.]",
+      "result": "[Result — to be filled.]",
+      "images": [
+        {
+          "src": "/images/case-3-photo-1.webp",
+          "alt": "3D illustration: case study illustration 1",
+          "label": "PHOTO: Case study 3 – photo 1"
+        },
+        {
+          "src": "/images/case-3-photo-2.webp",
+          "alt": "3D illustration: case study illustration 2",
+          "label": "PHOTO: Case study 3 – photo 2"
+        },
+        {
+          "src": "/images/case-3-photo-3.webp",
+          "alt": "3D illustration: case study illustration 3",
+          "label": "PHOTO: Case study 3 – photo 3"
+        },
+        {
+          "src": "/images/case-3-photo-4.webp",
+          "alt": "3D illustration: case study illustration 4",
+          "label": "PHOTO: Case study 3 – photo 4"
+        }
+      ]
+    }
+  ]
+}

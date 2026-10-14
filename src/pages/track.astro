@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { business, telLink, waLink } from '../lib/site.js';
+import config from '../config/site.config.js';
+const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
+---
+<Base
+  title="Track Your Order | M.S. Graphics Studio"
+  description="Check the live status of your printing, signage or branding order with your order ID and the last 4 digits of your phone number."
+>
+  <PageHero label="Order tracking" title="Track your order" text="Enter the order ID we sent you and the last 4 digits of the phone number on the order." crumbs={[{ href: '', label: 'Track order' }]} />
+  <section class="section">
+    <div class="container track">
+      <form class="track__form" id="track-form" novalidate>
+        <label class="f"><span>Order ID</span><input name="code" id="t-code" required autocomplete="off" placeholder="e.g. MS2610-4821" autocapitalize="characters" /></label>
+        <label class="f"><span>Last 4 digits of your phone</span><input name="phone" id="t-phone" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="e.g. 3210" /></label>
+        <button class="btn btn--primary" type="submit"><Icon name="search" /> Check status</button>
+        <p class="notice" id="t-msg" role="status" hidden></p>
+        {!connected && <p class="notice">Online tracking is being set up. Until then, WhatsApp your order ID to <a href={waLink('Hi, please share the status of my order ')}>{business.phoneDisplay}</a>.</p>}
+      </form>
+
+      <div class="track__result" id="t-result" hidden>
+        <div class="track__head">
+          <div><p class="track__code" id="r-code"></p><h2 id="r-title"></h2><p class="track__meta" id="r-meta"></p></div>
+          <p class="track__badge" id="r-badge"></p>
+        </div>
+        <ol class="tsteps" id="r-steps"></ol>
+        <h3>Updates</h3>
+        <ul class="thist" id="r-thist"></ul>
+        <p class="track__help">Questions about this order? <a href={telLink}>Call {business.phoneDisplay}</a> or <a id="r-wa" data-wa={business.whatsappNumber} href={waLink()} target="_blank" rel="noopener">WhatsApp us</a>.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { supa, esc, fmtDate } from '../lib/supa.js';
+  import { steps, stepLabel, allSteps } from '../config/order-steps.js';
+  const form = document.getElementById('track-form') as HTMLFormElement;
+  const msg = document.getElementById('t-msg')!;
+  const out = document.getElementById('t-result')!;
+  const code = document.getElementById('t-code') as HTMLInputElement;
+  const phone = document.getElementById('t-phone') as HTMLInputElement;
+  const say = (t: string, type = '') => { msg.textContent = t; msg.className = 'notice' + (type ? ' notice--' + type : ''); msg.hidden = !t; };
+  const q = new URLSearchParams(location.search);
+  if (q.get('id')) code.value = q.get('id')!.toUpperCase();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    out.hidden = true;
+    const c = code.value.trim().toUpperCase(), p = phone.value.replace(/\D/g, '');
+    if (!c || p.length !== 4) return say('Please enter the order ID and exactly 4 digits.', 'err');
+    if (!supa) return say('Online tracking is not connected yet. Please WhatsApp us your order ID.', 'err');
+    say('Checking…');
+    const { data, error } = await supa.rpc('track_order', { p_code: c, p_phone_last4: p });
+    if (error) return say('Could not check right now. Please try again in a minute.', 'err');
+    if (!data) return say('No order matches that ID and phone number. Check both and try again.', 'err');
+    say('');
+    show(data);
+  });
+
+  function show(o: any) {
+    document.getElementById('r-code')!.textContent = 'Order ' + o.order_code;
+    document.getElementById('r-title')!.textContent = o.service || 'Your order';
+    document.getElementById('r-meta')!.textContent = [o.client_name && 'For ' + o.client_name, 'Placed ' + fmtDate(o.created_at), o.due_date && 'Expected by ' + fmtDate(o.due_date)].filter(Boolean).join(' · ');
+    const badge = document.getElementById('r-badge')!;
+    badge.textContent = stepLabel(o.status); badge.dataset.s = o.status;
+    const cur = steps.findIndex((s) => s.key === o.status);
+    const reached = new Set(o.events.map((e: any) => e.status));
+    const lastFlow = cur >= 0 ? cur : Math.max(-1, ...o.events.map((e: any) => steps.findIndex((s) => s.key === e.status)));
+    document.getElementById('r-steps')!.innerHTML = steps.map((s, i) => {
+      const state = i < lastFlow || (i === lastFlow && o.status === 'completed') ? 'done' : i === lastFlow ? 'now' : 'todo';
+      // optional steps this order skipped are left out
+      if (i < lastFlow && !reached.has(s.key) && ['design', 'approval', 'fabrication'].includes(s.key)) return '';
+      return `<li class="tstep tstep--${state}"><span class="tstep__dot" aria-hidden="true"></span><span class="tstep__txt"><strong>${esc(s.label)}</strong>${state === 'now' ? `<small>${esc(s.client)}</small>` : ''}</span><span class="sr-only">${state === 'done' ? '(done)' : state === 'now' ? '(current step)' : ''}</span></li>`;
+    }).join('');
+    const extra = allSteps.find((s) => s.key === o.status && !steps.includes(s));
+    if (extra) document.getElementById('r-steps')!.insertAdjacentHTML('afterbegin', `<li class="tstep tstep--hold"><span class="tstep__dot"></span><span class="tstep__txt"><strong>${esc(extra.label)}</strong><small>${esc(extra.client)}</small></span></li>`);
+    document.getElementById('r-thist')!.innerHTML = [...o.events].reverse().map((e: any) => `<li><time>${esc(fmtDate(e.at, true))}</time><strong>${esc(stepLabel(e.status))}</strong>${e.note ? `<p>${esc(e.note)}</p>` : ''}</li>`).join('');
+    const wa = document.getElementById('r-wa') as HTMLAnchorElement;
+    wa.href = `https://wa.me/${wa.dataset.wa}?text=${encodeURIComponent('Hi, I have a question about order ' + o.order_code)}`;
+    out.hidden = false;
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  if (code.value && phone.value) form.requestSubmit();
+</script>
+
+<style is:global>
+  .track { display: grid; gap: 32px; max-width: 860px; }
+  .track__form .notice a { color: var(--magenta-dark); font-weight: 600; }
+  .track__form { display: grid; gap: 16px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 4vw, 32px); box-shadow: var(--shadow); }
+  @media (min-width: 720px) { .track__form { grid-template-columns: 1.3fr 1fr auto; align-items: end; } .track__form .notice { grid-column: 1 / -1; } }
+  .track__result { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 4vw, 32px); }
+  .track__result[hidden] { display: none; }
+  .track__head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; align-items: flex-start; border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 22px; }
+  .track__head h2 { font-size: 1.4rem; margin: 2px 0 4px; }
+  .track__code { font-weight: 600; color: var(--magenta-dark); letter-spacing: 0.04em; margin: 0; }
+  .track__meta { color: var(--muted); margin: 0; font-size: 0.92rem; }
+  .track__badge { margin: 0; padding: 6px 14px; border-radius: 999px; background: var(--navy); color: #fff; font-weight: 600; font-size: 0.88rem; }
+  .track__badge[data-s="completed"] { background: #1a8c4a; }
+  .track__badge[data-s="hold"], .track__badge[data-s="approval"] { background: var(--yellow); color: var(--navy); }
+  .track__badge[data-s="cancelled"] { background: #8a0021; }
+  .tsteps { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 0; }
+  .tstep { display: grid; grid-template-columns: 28px 1fr; gap: 12px; position: relative; padding-bottom: 18px; }
+  .tstep:not(:last-child)::before { content: ""; position: absolute; left: 13px; top: 24px; bottom: -2px; width: 2px; background: var(--line); }
+  .tstep--done:not(:last-child)::before { background: var(--cyan); }
+  .tstep__dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #cfcabd; background: #fff; display: block; }
+  .tstep--done .tstep__dot { background: var(--cyan); border-color: var(--cyan); box-shadow: inset 0 0 0 6px #fff; }
+  .tstep--now .tstep__dot { background: var(--magenta); border-color: var(--magenta); box-shadow: 0 0 0 5px rgba(230,0,126,0.18); }
+  .tstep--hold .tstep__dot { background: var(--yellow); border-color: var(--yellow); }
+  .tstep__txt { display: flex; flex-direction: column; padding-top: 3px; }
+  .tstep--todo .tstep__txt { color: var(--muted); }
+  .tstep--todo strong { font-weight: 500; }
+  .tstep small { color: var(--graphite); font-size: 0.9rem; }
+  .track__result h3 { font-size: 1.05rem; }
+  .thist { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 12px; }
+  .thist li { border-left: 3px solid var(--cyan); padding: 2px 0 2px 14px; }
+  .thist time { display: block; font-size: 0.82rem; color: var(--muted); }
+  .thist p { margin: 2px 0 0; font-size: 0.95rem; }
+  .track__help { margin: 0; color: var(--muted); font-size: 0.92rem; }
+</style>
