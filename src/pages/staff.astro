@@ -277,7 +277,9 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   async function callAdmin(body: any) {
     const { data: { session } } = await supa!.auth.getSession();
     const r = await fetch('/.netlify/functions/staff-admin', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${session?.access_token}` }, body: JSON.stringify(body) });
-    return r.json().catch(() => ({ error: 'The staff service is not available. Is the site deployed on Netlify?' }));
+    const out = await r.json().catch(() => ({ error: `The staff service is not available (error ${r.status}).` }));
+    if (!out.ok && !out.error) out.error = out.errorMessage || `The staff service failed (error ${r.status}).`;
+    return out;
   }
   $('[data-rows]', dStaff).addEventListener('click', async (e) => {
     const b = (e.target as HTMLElement).closest('[data-pw]'); if (!b) return;
@@ -290,6 +292,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
     e.preventDefault();
     const f = e.currentTarget as HTMLFormElement; const m = $('[data-msg]', f);
     const body: any = Object.fromEntries(new FormData(f)); body.action = 'create';
+    if (String(body.password || '').length < 8) return msg(m, 'Password must be at least 8 characters.');
     msg(m, 'Creating…', '');
     const r = await callAdmin(body);
     if (!r.ok) return msg(m, r.error || 'Could not create.');

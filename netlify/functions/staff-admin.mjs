@@ -9,16 +9,25 @@ const json = (status, body) => new Response(JSON.stringify(body), { status, head
 const cleanId = (s) => String(s || '').trim().toLowerCase();
 
 export default async (req) => {
+  try {
+    return await handle(req);
+  } catch (e) {
+    console.error(e);
+    return json(500, { error: 'Server error: ' + (e?.message || String(e)) });
+  }
+};
+
+async function handle(req) {
   if (req.method !== 'POST') return json(405, { error: 'Use POST' });
-  const url = process.env.SUPABASE_URL || config.supabaseUrl;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = (process.env.SUPABASE_URL || config.supabaseUrl || '').trim();
+  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
   if (!url || !key) return json(500, { error: 'The server is missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. See SETUP-ADMIN-AND-ORDERS.md.' });
   const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 
   // Who is calling?
   const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
-  const { data: who } = await sb.auth.getUser(token);
-  if (!who?.user) return json(401, { error: 'Please log in again.' });
+  const { data: who, error: whoErr } = await sb.auth.getUser(token);
+  if (!who?.user) return json(401, { error: /api key/i.test(whoErr?.message || '') ? 'The Supabase secret key in Netlify is not valid. Copy it again from Supabase → Project Settings → API Keys.' : 'Please log in again.' });
   const { data: me } = await sb.from('profiles').select('role, active').eq('id', who.user.id).maybeSingle();
   if (!me || !me.active || me.role !== 'admin') return json(403, { error: 'Only an admin can manage staff.' });
 
@@ -51,5 +60,4 @@ export default async (req) => {
   }
 
   return json(400, { error: 'Unknown action' });
-};
-
+}
