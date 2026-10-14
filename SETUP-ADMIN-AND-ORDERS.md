@@ -40,7 +40,7 @@ From now on, every change saved to GitHub (by you or the admin panel) republishe
 ## Part 3: Orders and staff (Supabase)
 
 1. Create a free account at [supabase.com](https://supabase.com) and a *New project* (region: Mumbai). Save the database password somewhere safe.
-2. In the project, open *SQL Editor → New query*, paste the whole of `supabase/schema.sql`, and click *Run*. It should say "Success".
+2. In the project, open *SQL Editor → New query*, paste the whole of `supabase/schema.sql`, and click *Run*. It should say "Success". Whenever `schema.sql` is updated later, run the whole file again the same way: it keeps all existing orders and only adds what is new.
 3. Turn off public sign-ups so only you can create logins: *Authentication → Sign In / Providers → Email*: switch off **Allow new users to sign up** and **Confirm email**, then save.
 4. Create your own owner login: *Authentication → Users → Add user → Create new user*. Enter your email and a strong password and tick **Auto Confirm User**.
 5. Make that login the admin: in *SQL Editor*, run (with your email):
@@ -67,6 +67,14 @@ Staff log in at `/staff/` with their Staff ID (no email needed). When someone le
 **Updating an order:** click the order → *Update status* → choose the step, add a short note → *Save update*. Untick **Show this update to the client** for internal notes. Every update is kept in the history with who made it and when. The status can only change through an update, so nothing is lost.
 
 The steps are: Order received → Design in progress → Waiting for your approval → Printing / production → Fabrication → Quality check & packing → Out for delivery / installation → Completed, plus On hold and Cancelled. To rename a step, edit the `label` in `src/config/order-steps.js`.
+
+**Products:** *Products* (top of `/staff/`) holds your categories (Flex, Vinyl, Standee, Canopy to start) and the qualities under each (Flex → Normal, Black Out, Star Flex). Anyone on staff can add a category or a quality and set an optional default rate; it is saved for good and shows up in every new order. Only an admin can delete one. Old orders keep their items even if a product is deleted later.
+
+**Bill items:** in *New order* / *Edit details*, click *Add item*, choose the category and quality, enter width × height in feet (for sq ft items) and the quantity. The rate fills in from Products and can be changed. Add a discount, GST and the advance received; the total and balance are worked out automatically.
+
+**Generate bill:** open an order → *Generate bill*. An A5 bill opens in a new tab; click *Print / Save as PDF*. To print your GSTIN on bills (it is never shown on the website), fill `billGstin` in `src/config/site.config.js`; the bill is then titled "Tax Invoice". Lines such as bank details go in `billNotes`.
+
+**Today's report:** *Today's report* at the top of `/staff/` shows the day's new orders, every status update with who made it, a count per staff member and the orders due today or overdue. Pick another date at the top to see an older day. *Share on WhatsApp* sends a text summary to whoever you choose (e.g. the owner); *Print / Save as PDF* makes a PDF.
 
 **What clients see** at `/track/`: the job, the current step, the expected date and the updates you marked as visible. They never see the phone number, amount, internal notes or staff-only updates.
 

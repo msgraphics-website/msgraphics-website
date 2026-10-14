@@ -28,6 +28,8 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
           <div><h1>Orders</h1><p class="sp-who" id="who"></p></div>
           <div class="sp-top__btns">
             <button class="btn btn--primary btn--sm" id="b-new" type="button"><Icon name="plus" /> New order</button>
+            <a class="btn btn--outline btn--sm" href="/staff/report/"><Icon name="file-text" /> Today's report</a>
+            <button class="btn btn--outline btn--sm" id="b-prod" type="button"><Icon name="layers" /> Products</button>
             <button class="btn btn--outline btn--sm" id="b-staff" type="button" hidden><Icon name="users" /> Staff</button>
             <button class="btn btn--outline btn--sm" id="b-out" type="button">Log out</button>
           </div>
@@ -46,7 +48,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   </section>
 
   <!-- New / edit order -->
-  <dialog id="d-order" class="sp-dlg">
+  <dialog id="d-order" class="sp-dlg sp-dlg--wide">
     <form id="f-order" method="dialog" novalidate>
       <h2 data-title>New order</h2>
       <div class="sp-grid">
@@ -58,9 +60,20 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
         <label class="f"><span>Quantity</span><input name="quantity" placeholder="e.g. 500 pcs, 12 stores" /></label>
         <label class="f sp-full"><span>Job description (client can see this)</span><textarea name="description" rows="3"></textarea></label>
         <label class="f"><span>Expected delivery date</span><input name="due_date" type="date" /></label>
-        <label class="f"><span>Amount (₹, staff only)</span><input name="amount" type="number" min="0" step="0.01" /></label>
-        <label class="f sp-full"><span>Internal notes (staff only)</span><textarea name="internal_notes" rows="2"></textarea></label>
+        <label class="f"><span>Advance received (₹)</span><input name="advance" type="number" min="0" step="0.01" /></label>
       </div>
+      <fieldset class="it-box">
+        <legend>Bill items <small>(staff only)</small></legend>
+        <div class="it-list" data-items></div>
+        <button class="btn btn--outline btn--sm" type="button" data-add-item><Icon name="plus" /> Add item</button>
+        <div class="it-sum">
+          <label class="f" data-manual><span>Total amount (₹)</span><input name="amount" type="number" min="0" step="0.01" /><small>Or add bill items above and the total is worked out.</small></label>
+          <label class="f" data-onitems><span>Discount (₹)</span><input name="discount" type="number" min="0" step="0.01" /></label>
+          <label class="f" data-onitems><span>GST</span><select name="gst_percent"><option value="0">No GST</option><option value="5">5%</option><option value="12">12%</option><option value="18">18%</option><option value="28">28%</option></select></label>
+          <dl class="it-tot" data-tot></dl>
+        </div>
+      </fieldset>
+      <label class="f"><span>Internal notes (staff only)</span><textarea name="internal_notes" rows="2"></textarea></label>
       <p class="notice notice--err" data-msg hidden></p>
       <div class="sp-btns"><button class="btn btn--primary" type="submit" value="save">Save order</button><button class="btn btn--outline" type="button" data-close>Cancel</button></div>
     </form>
@@ -76,8 +89,10 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
       <div class="sp-cols">
         <div>
           <dl class="sp-dl" data-info></dl>
+          <div data-items-view></div>
           <div class="sp-btns">
             <a class="btn btn--primary btn--sm" data-wa target="_blank" rel="noopener"><Icon name="whatsapp" /> Send tracking link</a>
+            <a class="btn btn--outline btn--sm" data-bill target="_blank" rel="noopener"><Icon name="receipt" /> Generate bill</a>
             <button class="btn btn--outline btn--sm" type="button" data-copy><Icon name="copy" /> Copy link</button>
             <button class="btn btn--outline btn--sm" type="button" data-edit><Icon name="pencil" /> Edit details</button>
             <button class="btn btn--outline btn--sm sp-del" type="button" data-del hidden><Icon name="trash-2" /> Delete</button>
@@ -117,12 +132,30 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
       </div>
     </div>
   </dialog>
+  <!-- Products (categories and qualities) -->
+  <dialog id="d-prod" class="sp-dlg sp-dlg--wide">
+    <div class="sp-detail">
+      <div class="sp-detail__head"><div><h2>Products</h2><p class="sp-sub">Categories (Flex, Vinyl…) and their qualities. Saved for every future order. The rate is optional and fills in automatically on new bill items.</p></div><button class="sp-x" type="button" data-close aria-label="Close"><Icon name="x" /></button></div>
+      <div class="pr-list" data-plist></div>
+      <form class="sp-card pr-add" id="f-cat" novalidate>
+        <h3>Add a category</h3>
+        <div class="pr-add__row">
+          <label class="f"><span>Name</span><input name="name" required placeholder="e.g. Sunboard" /></label>
+          <label class="f"><span>Sold by</span><select name="unit"><option value="sqft">Sq ft</option><option value="pcs">Pcs</option><option value="rft">Running ft</option><option value="set">Set</option></select></label>
+          <label class="f"><span>Rate (₹, optional)</span><input name="rate" type="number" min="0" step="0.01" /></label>
+          <button class="btn btn--primary btn--sm" type="submit"><Icon name="plus" /> Add</button>
+        </div>
+        <p class="notice notice--err" data-msg hidden></p>
+      </form>
+    </div>
+  </dialog>
 </Base>
 
 <script>
   import { supa, esc, fmtDate } from '../lib/supa.js';
   import { allSteps, stepLabel } from '../config/order-steps.js';
   import config from '../config/site.config.js';
+  import { UNITS, unitLabel, itemAmount, totals, inr } from '../lib/billing.js';
 
   const $ = <T extends HTMLElement = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector(s) as T;
   const msg = (el: HTMLElement, t: string, type = 'err') => { el.textContent = t; el.className = 'notice' + (type ? ' notice--' + type : ''); el.hidden = !t; };
@@ -130,7 +163,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   const trackUrl = (code: string) => `${site}/track/?id=${encodeURIComponent(code)}`;
   const OPEN = new Set(['received', 'design', 'approval', 'production', 'fabrication', 'qc', 'dispatched', 'hold']);
 
-  let me: any = null; let orders: any[] = []; let current: any = null;
+  let me: any = null; let orders: any[] = []; let current: any = null; let products: any[] = [];
 
   document.querySelectorAll('dialog [data-close]').forEach((b) => b.addEventListener('click', () => (b.closest('dialog') as HTMLDialogElement).close()));
 
@@ -165,7 +198,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
     $('#who').textContent = `Logged in as ${prof.full_name} (${prof.staff_id}, ${prof.role})`;
     $('#b-staff').hidden = prof.role !== 'admin';
     $('#v-login').hidden = true; $('#v-app').hidden = false;
-    load();
+    load(); loadProducts();
   }
 
   // ---------- list ----------
@@ -196,28 +229,109 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
 
   // ---------- new / edit ----------
   const dOrder = $<HTMLDialogElement>('#d-order'); const fOrder = $<HTMLFormElement>('#f-order');
-  const FIELDS = ['client_name', 'client_phone', 'client_company', 'client_email', 'service', 'quantity', 'description', 'due_date', 'amount', 'internal_notes'];
-  function openForm(o: any = null) {
+  const FIELDS = ['client_name', 'client_phone', 'client_company', 'client_email', 'service', 'quantity', 'description', 'due_date', 'advance', 'amount', 'discount', 'gst_percent', 'internal_notes'];
+  const field = (k: string) => fOrder.elements.namedItem(k) as HTMLInputElement;
+  const itemsBox = $('[data-items]', fOrder);
+  async function openForm(o: any = null) {
     fOrder.reset(); fOrder.dataset.id = o?.id || '';
     $('[data-title]', fOrder).textContent = o ? `Edit ${o.order_code}` : 'New order';
-    if (o) FIELDS.forEach((k) => ((fOrder.elements.namedItem(k) as HTMLInputElement).value = o[k] ?? ''));
+    if (o) FIELDS.forEach((k) => (field(k).value = o[k] ?? ''));
+    if (o && !Number(o.discount)) field('discount').value = '';
+    if (o && !Number(o.advance)) field('advance').value = '';
+    field('gst_percent').value = String(Number(o?.gst_percent || 0));
     msg($('[data-msg]', fOrder), '');
+    itemsBox.innerHTML = '';
+    if (o) { const { data } = await supa!.from('order_items').select('*').eq('order_id', o.id).order('sort'); (data || []).forEach((it: any) => addItem(it)); }
+    recalc();
     dOrder.showModal();
   }
   $('#b-new').addEventListener('click', () => openForm());
+
+  // bill item rows
+  const cats = () => products.filter((p) => !p.parent_id).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
+  const catBy = (name: string) => cats().find((c) => c.name === name);
+  const qualsOf = (name: string) => { const c = catBy(name); return c ? products.filter((p) => p.parent_id === c.id).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name)) : []; };
+  const opts = (list: string[], cur: string, blank: string) => `<option value="">${blank}</option>` + [...list, ...(cur && !list.includes(cur) ? [cur] : [])].map((n) => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('');
+  const val = (v: any) => (v == null ? '' : esc(v));
+  function addItem(it: any = {}) {
+    const unit = it.unit || 'sqft';
+    itemsBox.insertAdjacentHTML('beforeend', `<div class="it" data-row>
+      <label class="f"><span>Category</span><select data-k="category">${opts(cats().map((c) => c.name), it.category || '', 'Choose…')}</select></label>
+      <label class="f"><span>Quality</span><select data-k="quality">${opts(qualsOf(it.category || '').map((q) => q.name), it.quality || '', '—')}</select></label>
+      <label class="f it-det"><span>Details</span><input data-k="details" value="${val(it.details)}" placeholder="e.g. shop front board" /></label>
+      <label class="f"><span>Unit</span><select data-k="unit">${UNITS.map((u) => `<option value="${u.key}"${u.key === unit ? ' selected' : ''}>${u.label}</option>`).join('')}</select></label>
+      <label class="f" data-size><span>Width (ft)</span><input data-k="width" type="number" min="0" step="0.01" value="${val(it.width)}" /></label>
+      <label class="f" data-size><span>Height (ft)</span><input data-k="height" type="number" min="0" step="0.01" value="${val(it.height)}" /></label>
+      <label class="f"><span>Qty</span><input data-k="qty" type="number" min="0" step="any" value="${val(it.qty ?? 1)}" /></label>
+      <label class="f"><span>Rate (₹)</span><input data-k="rate" type="number" min="0" step="0.01" value="${val(it.rate)}" /></label>
+      <p class="it-amt"><span>Amount</span><strong data-amt></strong></p>
+      <button type="button" class="it-rm" data-rm aria-label="Remove item">✕</button>
+    </div>`);
+  }
+  const rowVal = (row: Element, k: string) => (row.querySelector(`[data-k="${k}"]`) as HTMLInputElement).value.trim();
+  function readItems() {
+    return [...itemsBox.querySelectorAll('[data-row]')].map((row, i) => {
+      const unit = rowVal(row, 'unit'); const n = (k: string) => (rowVal(row, k) === '' ? null : Number(rowVal(row, k)));
+      return { category: rowVal(row, 'category'), quality: rowVal(row, 'quality'), details: rowVal(row, 'details'), unit, width: unit === 'sqft' ? n('width') : null, height: unit === 'sqft' ? n('height') : null, qty: n('qty') ?? 1, rate: n('rate') ?? 0, sort: i };
+    });
+  }
+  function recalc() {
+    const rows = [...itemsBox.querySelectorAll<HTMLElement>('[data-row]')];
+    const items = readItems();
+    rows.forEach((row, i) => {
+      row.querySelectorAll<HTMLElement>('[data-size]').forEach((el) => (el.hidden = items[i].unit !== 'sqft'));
+      const sq = items[i].unit === 'sqft' && items[i].width && items[i].height ? ` (${+(items[i].width! * items[i].height! * items[i].qty).toFixed(2)} sq ft)` : '';
+      $('[data-amt]', row).textContent = inr(itemAmount(items[i])) + sq;
+    });
+    const has = items.length > 0;
+    fOrder.querySelectorAll<HTMLElement>('[data-onitems]').forEach((el) => (el.hidden = !has));
+    $('[data-manual]', fOrder).hidden = has;
+    const t = totals(items, { discount: field('discount').value, gst_percent: field('gst_percent').value, advance: field('advance').value, amount: field('amount').value });
+    const r = (k: string, v: string, cls = '') => `<dt class="${cls}">${k}</dt><dd class="${cls}">${v}</dd>`;
+    $('[data-tot]', fOrder).innerHTML = (has ? r('Subtotal', inr(t.subtotal)) + (t.discount ? r('Discount', '− ' + inr(t.discount)) : '') + (t.gstPercent ? r(`GST ${t.gstPercent}%`, inr(t.gst)) : '') : '')
+      + r('Total', inr(t.total), 'it-big') + (t.advance ? r('Advance', '− ' + inr(t.advance)) + r('Balance', inr(t.balance), 'it-big') : '');
+  }
+  $('[data-add-item]', fOrder).addEventListener('click', () => { addItem(); recalc(); (itemsBox.lastElementChild!.querySelector('select') as HTMLSelectElement).focus(); });
+  itemsBox.addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest('[data-rm]'); if (b) { b.closest('[data-row]')!.remove(); recalc(); } });
+  itemsBox.addEventListener('change', (e) => {
+    const el = e.target as HTMLSelectElement; const row = el.closest('[data-row]')!;
+    const set = (k: string, v: any) => ((row.querySelector(`[data-k="${k}"]`) as HTMLInputElement).value = v);
+    if (el.dataset.k === 'category') {
+      const c = catBy(el.value);
+      (row.querySelector('[data-k="quality"]') as HTMLSelectElement).innerHTML = opts(qualsOf(el.value).map((q) => q.name), '', '—');
+      if (c) { set('unit', c.unit); if (c.rate != null) set('rate', c.rate); }
+    }
+    if (el.dataset.k === 'quality') {
+      const c = catBy(rowVal(row, 'category')); const q = qualsOf(rowVal(row, 'category')).find((x) => x.name === el.value);
+      const rate = q?.rate ?? c?.rate; if (rate != null) set('rate', rate);
+    }
+    recalc();
+  });
+  fOrder.addEventListener('input', recalc);
+
   fOrder.addEventListener('submit', async (e) => {
     e.preventDefault();
     const m = $('[data-msg]', fOrder);
-    const v: any = Object.fromEntries(FIELDS.map((k) => [k, (fOrder.elements.namedItem(k) as HTMLInputElement).value.trim()]));
+    const v: any = Object.fromEntries(FIELDS.map((k) => [k, field(k).value.trim()]));
     if (!v.client_name || !v.client_phone) return msg(m, 'Client name and phone are needed.');
     if (v.client_phone.replace(/\D/g, '').length < 10) return msg(m, 'Enter the full phone number (at least 10 digits).');
-    v.due_date = v.due_date || null; v.amount = v.amount === '' ? null : Number(v.amount);
+    const items = readItems();
+    if (items.some((it) => !it.category && !it.details)) return msg(m, 'Each bill item needs a category or details.');
+    if (items.some((it) => !(it.qty > 0))) return msg(m, 'Each bill item needs a quantity above 0.');
+    const n = (x: string) => (x === '' ? 0 : Number(x));
+    v.due_date = v.due_date || null; v.discount = n(v.discount); v.advance = n(v.advance); v.gst_percent = n(v.gst_percent);
+    if (items.length) delete v.amount; else v.amount = v.amount === '' ? null : Number(v.amount);
+    msg(m, 'Saving…', '');
     const id = fOrder.dataset.id;
     const res = id ? await supa!.from('orders').update(v).eq('id', id).select().single() : await supa!.from('orders').insert(v).select().single();
     if (res.error) return msg(m, 'Could not save: ' + res.error.message);
+    const oid = res.data.id;
+    if (id) { const d = await supa!.from('order_items').delete().eq('order_id', oid); if (d.error) return msg(m, 'Order saved, but items could not be updated: ' + d.error.message); }
+    if (items.length) { const ins = await supa!.from('order_items').insert(items.map((it) => ({ ...it, order_id: oid }))); if (ins.error) return msg(m, 'Order saved, but items could not be saved: ' + ins.error.message); }
+    msg(m, '');
     dOrder.close();
     await load();
-    openDetail(res.data.id, !id);
+    openDetail(oid, !id);
   });
 
   // ---------- detail ----------
@@ -229,11 +343,19 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
     $('[data-client]', dDet).textContent = o.client_name;
     $('[data-sub]', dDet).innerHTML = `<span class="sp-badge" data-s="${o.status}">${esc(stepLabel(o.status))}</span>`;
     const row = (k: string, v: any) => (v || v === 0 ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '');
-    $('[data-info]', dDet).innerHTML = row('Phone', o.client_phone) + row('Company', o.client_company) + row('Email', o.client_email) + row('Service', o.service) + row('Quantity', o.quantity) + row('Job', o.description) + row('Due', fmtDate(o.due_date)) + row('Amount', o.amount != null ? '₹' + Number(o.amount).toLocaleString('en-IN') : '') + row('Internal notes', o.internal_notes) + row('Created', fmtDate(o.created_at, true));
+    $('[data-info]', dDet).innerHTML = row('Phone', o.client_phone) + row('Company', o.client_company) + row('Email', o.client_email) + row('Service', o.service) + row('Quantity', o.quantity) + row('Job', o.description) + row('Due', fmtDate(o.due_date)) + row('Amount', o.amount != null ? inr(o.amount) : '') + row('Advance', Number(o.advance) ? inr(o.advance) : '') + row('Internal notes', o.internal_notes) + row('Created', fmtDate(o.created_at, true));
     const phone = o.client_phone.replace(/\D/g, '');
     const text = `Hello ${o.client_name.split(' ')[0]}, your order with M.S. Graphics Studio is confirmed.\nOrder ID: ${o.order_code}\nTrack it here: ${trackUrl(o.order_code)}\n(Use the last 4 digits of this phone number to view it.)`;
     ($('[data-wa]', dDet) as HTMLAnchorElement).href = `https://wa.me/${phone.length === 10 ? '91' + phone : phone}?text=${encodeURIComponent(text)}`;
     $('[data-del]', dDet).hidden = me?.role !== 'admin';
+    ($('[data-bill]', dDet) as HTMLAnchorElement).href = `/staff/bill/?id=${encodeURIComponent(o.id)}`;
+    $('[data-items-view]', dDet).innerHTML = '';
+    supa!.from('order_items').select('*').eq('order_id', id).order('sort').then(({ data }) => {
+      if (current?.id !== id || !data?.length) return;
+      const t = totals(data, o);
+      $('[data-items-view]', dDet).innerHTML = `<table class="sp-table sp-items"><thead><tr><th>Item</th><th>Size / qty</th><th>Amount</th></tr></thead><tbody>${data.map((it: any) => `<tr><td>${esc([it.category, it.quality].filter(Boolean).join(' – '))}${it.details ? `<small>${esc(it.details)}</small>` : ''}</td><td>${it.unit === 'sqft' && it.width && it.height ? `${+it.width} × ${+it.height} ft × ${+it.qty}` : `${+it.qty} ${esc(unitLabel(it.unit))}`} @ ₹${(+it.rate).toLocaleString('en-IN')}</td><td>${inr(itemAmount(it))}</td></tr>`).join('')}</tbody></table>
+        <dl class="it-tot">${t.discount ? `<dt>Discount</dt><dd>− ${inr(t.discount)}</dd>` : ''}${t.gstPercent ? `<dt>GST ${t.gstPercent}%</dt><dd>${inr(t.gst)}</dd>` : ''}<dt class="it-big">Total</dt><dd class="it-big">${inr(t.total)}</dd>${t.advance ? `<dt>Advance</dt><dd>− ${inr(t.advance)}</dd><dt class="it-big">Balance</dt><dd class="it-big">${inr(t.balance)}</dd>` : ''}</dl>`;
+    });
     const fS = $<HTMLFormElement>('#f-status'); fS.reset(); (fS.elements.namedItem('status') as HTMLSelectElement).value = nextStatus(o.status); msg($('[data-msg]', fS), '');
     $('[data-hist]', dDet).innerHTML = '<li>Loading…</li>';
     if (!dDet.open) dDet.showModal();
@@ -258,6 +380,62 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
     const { error } = await supa!.from('order_events').insert({ order_id: current.id, status, note, show_to_client: show });
     if (error) return msg(m, 'Could not save: ' + error.message);
     await load(); openDetail(current.id);
+  });
+
+  // ---------- products ----------
+  const dProd = $<HTMLDialogElement>('#d-prod');
+  async function loadProducts() {
+    const { data, error } = await supa!.from('products').select('*').order('sort').order('name');
+    if (!error) products = data || [];
+    return error;
+  }
+  function renderProducts() {
+    const admin = me?.role === 'admin';
+    const del = (id: number, what: string) => (admin ? `<button type="button" class="sp-link pr-del" data-del-p="${id}" data-what="${esc(what)}">Delete</button>` : '');
+    const unitSel = (u: string) => `<select data-f="unit" aria-label="Sold by">${UNITS.map((x) => `<option value="${x.key}"${x.key === u ? ' selected' : ''}>${x.label}</option>`).join('')}</select>`;
+    const rate = (r: any) => `<input data-f="rate" type="number" min="0" step="0.01" placeholder="Rate ₹" aria-label="Rate" value="${r == null ? '' : esc(r)}" />`;
+    $('[data-plist]', dProd).innerHTML = cats().map((c) => `<div class="pr-cat">
+      <div class="pr-line" data-pid="${c.id}"><input data-f="name" class="pr-name" value="${esc(c.name)}" aria-label="Category name" />${unitSel(c.unit)}${rate(c.rate)}${del(c.id, c.name)}</div>
+      <ul class="pr-q">${qualsOf(c.name).map((q) => `<li class="pr-line" data-pid="${q.id}"><input data-f="name" value="${esc(q.name)}" aria-label="Quality name" />${rate(q.rate)}${del(q.id, c.name + ' – ' + q.name)}</li>`).join('')}
+        <li><form class="pr-qadd" data-parent="${c.id}"><input name="q" placeholder="Add a ${esc(c.name)} quality, e.g. Normal" aria-label="New quality" /><button class="btn btn--outline btn--sm" type="submit">Add</button></form></li></ul>
+    </div>`).join('') || '<p class="sp-empty">No products yet. Add a category below.</p>';
+  }
+  const dupMsg = (e: any) => (/duplicate|unique/i.test(e.message) ? 'That name already exists.' : e.message);
+  $('#b-prod').addEventListener('click', async () => { $('[data-plist]', dProd).innerHTML = '<p>Loading…</p>'; dProd.showModal(); const err = await loadProducts(); if (err) return ($('[data-plist]', dProd).innerHTML = `<p class="notice notice--err">Could not load products: ${esc(err.message)}. Has the latest supabase/schema.sql been run?</p>`); renderProducts(); });
+  $('[data-plist]', dProd).addEventListener('change', async (e) => {
+    const el = e.target as HTMLInputElement; const line = el.closest('[data-pid]') as HTMLElement; if (!line || !el.dataset.f) return;
+    let v: any = el.value.trim();
+    if (el.dataset.f === 'rate') v = v === '' ? null : Number(v);
+    if (el.dataset.f === 'name' && !v) { await loadProducts(); return renderProducts(); }
+    const { error } = await supa!.from('products').update({ [el.dataset.f]: v }).eq('id', line.dataset.pid);
+    if (error) alert('Could not save: ' + dupMsg(error));
+    await loadProducts(); renderProducts();
+  });
+  $('[data-plist]', dProd).addEventListener('click', async (e) => {
+    const b = (e.target as HTMLElement).closest('[data-del-p]') as HTMLElement; if (!b) return;
+    if (!confirm(`Delete "${b.dataset.what}"${products.some((p) => String(p.parent_id) === b.dataset.delP) ? ' and all its qualities' : ''}? Old orders keep their items.`)) return;
+    const { error } = await supa!.from('products').delete().eq('id', b.dataset.delP);
+    if (error) alert('Could not delete: ' + error.message);
+    await loadProducts(); renderProducts();
+  });
+  $('[data-plist]', dProd).addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target as HTMLFormElement; const name = (f.elements.namedItem('q') as HTMLInputElement).value.trim(); if (!name) return;
+    const parent = products.find((p) => String(p.id) === f.dataset.parent);
+    const { error } = await supa!.from('products').insert({ parent_id: parent.id, name, unit: parent.unit, sort: qualsOf(parent.name).length + 1 });
+    if (error) return alert('Could not add: ' + dupMsg(error));
+    await loadProducts(); renderProducts();
+    (dProd.querySelector(`form[data-parent="${parent.id}"] input`) as HTMLInputElement)?.focus();
+  });
+  $<HTMLFormElement>('#f-cat').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.currentTarget as HTMLFormElement; const m = $('[data-msg]', f);
+    const name = (f.elements.namedItem('name') as HTMLInputElement).value.trim();
+    const rate = (f.elements.namedItem('rate') as HTMLInputElement).value;
+    if (!name) return msg(m, 'Enter a name.');
+    const { error } = await supa!.from('products').insert({ name, unit: (f.elements.namedItem('unit') as HTMLSelectElement).value, rate: rate === '' ? null : Number(rate), sort: cats().length + 1 });
+    if (error) return msg(m, 'Could not add: ' + dupMsg(error));
+    msg(m, ''); f.reset(); await loadProducts(); renderProducts();
   });
 
   // ---------- staff (admin) ----------
@@ -358,5 +536,41 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   .sp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
   .sp-table th, .sp-table td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
   .sp-link { background: none; border: 0; color: var(--magenta-dark); cursor: pointer; font: inherit; text-decoration: underline; padding: 0; }
+  .sp-dlg form#f-order > .f { margin: 0; }
+  .it-box { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin: 0; display: grid; gap: 12px; min-width: 0; }
+  .it-box legend { font-weight: 600; padding: 0 6px; }
+  .it-box legend small { font-weight: 400; color: var(--muted); }
+  .it-list { display: grid; gap: 10px; }
+  .it { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; padding: 12px 40px 12px 12px; background: #faf9f6; border: 1px solid var(--line); border-radius: 8px; }
+  .it .f span { font-size: 0.78rem; }
+  .it .f input, .it .f select { padding: 8px 10px; min-height: 40px; }
+  .it-det { grid-column: 1 / -1; }
+  .it-amt { margin: 0; display: flex; flex-direction: column; justify-content: flex-end; font-size: 0.78rem; color: var(--muted); }
+  .it-amt strong { font-size: 0.98rem; color: var(--navy); }
+  .it-rm { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: #f1dfe5; color: #8a0021; cursor: pointer; font-size: 0.9rem; }
+  @media (min-width: 700px) { .it { grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; } .it > .f:nth-child(-n+3) { grid-column: span 2; } }
+  .it-sum { display: grid; gap: 12px; }
+  @media (min-width: 640px) { .it-sum { grid-template-columns: 1fr 1fr 1.2fr; align-items: start; } }
+  .it-tot { display: grid; grid-template-columns: auto auto; justify-content: end; gap: 4px 18px; margin: 0; font-size: 0.93rem; grid-column: -2 / -1; }
+  .it-tot dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .it-tot .it-big { font-weight: 700; color: var(--navy); }
+  .sp-items { margin-bottom: 10px; }
+  .sp-items small { display: block; color: var(--muted); }
+  .sp-items td:last-child, .sp-items th:last-child { text-align: right; white-space: nowrap; }
+  .sp-detail [data-items-view] .it-tot { margin-bottom: 18px; }
+  .pr-list { display: grid; gap: 12px; margin-bottom: 20px; }
+  @media (min-width: 860px) { .pr-list { grid-template-columns: 1fr 1fr; } }
+  .pr-cat { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; background: #fff; }
+  .pr-line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .pr-line input, .pr-line select, .pr-qadd input { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; min-height: 38px; min-width: 0; }
+  .pr-line input[data-f="name"] { flex: 1 1 140px; }
+  .pr-line input[data-f="rate"] { width: 100px; }
+  .pr-name { font-weight: 600; }
+  .pr-q { list-style: none; margin: 10px 0 0; padding: 0 0 0 16px; border-left: 3px solid var(--cyan); display: grid; gap: 6px; }
+  .pr-qadd { display: flex; gap: 8px; }
+  .pr-qadd input { flex: 1; }
+  .pr-del { color: #8a0021; font-size: 0.85rem; }
+  .pr-add__row { display: grid; gap: 10px; }
+  @media (min-width: 700px) { .pr-add__row { grid-template-columns: 1.4fr 1fr 1fr auto; align-items: end; } }
   .sp [hidden], .sp-dlg [hidden] { display: none !important; }
 </style>

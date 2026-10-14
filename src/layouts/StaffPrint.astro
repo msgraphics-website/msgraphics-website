@@ -1,0 +1,38 @@
+---
+// Bare page for printable staff documents (bill, daily report): no site header or footer.
+import '@fontsource/poppins/latin-400.css';
+import '@fontsource/poppins/latin-500.css';
+import '@fontsource/poppins/latin-600.css';
+import '@fontsource/poppins/latin-700.css';
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root { --navy: #14213d; --cyan: #00a0e3; --magenta: #e6007e; --magenta-dark: #b8005f; --yellow: #ffc20e; --ink: #1d2433; --muted: #5b6475; --line: #dcd8cf; --bg: #efede8; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: Poppins, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tb { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; padding: 10px 16px; background: var(--navy); color: #fff; }
+  .tb a, .tb button, .tb input { font: inherit; font-size: 0.9rem; }
+  .tb a, .tb button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: #fff; text-decoration: none; cursor: pointer; }
+  .tb .tb-main { background: var(--magenta); border-color: var(--magenta); font-weight: 600; }
+  .tb input { padding: 7px 10px; border-radius: 8px; border: 0; }
+  .pmsg { max-width: 640px; margin: 40px auto; padding: 0 16px; text-align: center; }
+  .pmsg a { color: var(--magenta-dark); font-weight: 600; }
+  [hidden] { display: none !important; }
+  @media print { body { background: #fff; } .tb, .no-print { display: none !important; } }
+</style>

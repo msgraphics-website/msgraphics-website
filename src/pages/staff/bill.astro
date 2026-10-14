@@ -1,0 +1,143 @@
+---
+import StaffPrint from '../../layouts/StaffPrint.astro';
+import Logo from '../../components/Logo.astro';
+import { business } from '../../lib/site.js';
+import config from '../../config/site.config.js';
+const title = config.billGstin ? 'Tax Invoice' : 'Bill';
+---
+<StaffPrint title="Bill | M.S. Graphics Studio">
+  <div class="tb">
+    <button type="button" class="tb-main" id="b-print">Print / Save as PDF</button>
+    <a href="/staff/">Back to orders</a>
+  </div>
+  <p class="pmsg" id="p-msg">Loading the bill…</p>
+
+  <article class="sheet" id="sheet" hidden>
+    <header class="bh">
+      <div class="bh-left">
+        <Logo class="bh-logo" />
+        <p class="bh-addr">{business.address.full.replace(', India', '')}<br />{business.phoneDisplay} · {business.email}</p>
+        <p class="bh-reg">{business.registrations.join(' · ')}{config.billGstin && <> · GSTIN {config.billGstin}</>}</p>
+      </div>
+      <div class="bh-right">
+        <h1>{title}</h1>
+        <dl>
+          <dt>Bill no.</dt><dd data-f="code"></dd>
+          <dt>Bill date</dt><dd data-f="date"></dd>
+          <dt>Order date</dt><dd data-f="odate"></dd>
+        </dl>
+      </div>
+    </header>
+    <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+    <section class="bto">
+      <p class="lbl">Bill to</p>
+      <p class="bto-name" data-f="client"></p>
+      <p data-f="clientsub"></p>
+    </section>
+
+    <table class="bt">
+      <thead><tr><th>#</th><th>Description</th><th>Size / Qty</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
+      <tbody data-f="rows"></tbody>
+    </table>
+
+    <div class="bsum">
+      <p class="words"><span class="lbl">Amount in words</span><span data-f="words"></span></p>
+      <dl class="tot" data-f="tot"></dl>
+    </div>
+
+    <footer class="bf">
+      {config.billNotes.length > 0 && <ul class="notes">{config.billNotes.map((n) => <li>{n}</li>)}</ul>}
+      <div class="bf-row">
+        <p class="thanks">Thank you for your business.<br /><span data-f="track"></span></p>
+        <p class="sign">For {business.name}<br /><br /><br /><span>Authorised signatory</span></p>
+      </div>
+    </footer>
+  </article>
+</StaffPrint>
+
+<script>
+  import { supa, esc, fmtDate } from '../../lib/supa.js';
+  import { totals, itemAmount, inr, amountInWords, unitLabel, todayIST } from '../../lib/billing.js';
+  const pmsg = document.getElementById('p-msg')!;
+  const sheet = document.getElementById('sheet')!;
+  const f = (k: string) => sheet.querySelector(`[data-f="${k}"]`) as HTMLElement;
+  document.getElementById('b-print')!.addEventListener('click', () => window.print());
+  const fail = (html: string) => { pmsg.innerHTML = html; pmsg.hidden = false; };
+
+  (async () => {
+    const id = new URLSearchParams(location.search).get('id');
+    if (!supa) return fail('The order system is not connected yet.');
+    const { data: { session } } = await supa.auth.getSession();
+    if (!session) return fail('Please <a href="/staff/">log in to the staff panel</a> first, then open the bill again.');
+    if (!id) return fail('No order chosen. Open an order in the <a href="/staff/">staff panel</a> and click Generate bill.');
+    const [{ data: o, error }, { data: items }] = await Promise.all([
+      supa.from('orders').select('*').eq('id', id).maybeSingle(),
+      supa.from('order_items').select('*').eq('order_id', id).order('sort'),
+    ]);
+    if (error || !o) return fail('This order could not be found. <a href="/staff/">Back to orders</a>');
+    const list: any[] = items || [];
+    const t = totals(list, o);
+    document.title = `Bill ${o.order_code} – ${o.client_name}`;
+    f('code').textContent = o.order_code;
+    f('date').textContent = fmtDate(todayIST() + 'T12:00:00+05:30');
+    f('odate').textContent = fmtDate(o.created_at);
+    f('client').textContent = o.client_company || o.client_name;
+    f('clientsub').innerHTML = [o.client_company ? esc(o.client_name) : '', esc(o.client_phone), esc(o.client_email)].filter(Boolean).join(' · ');
+    const size = (it: any) => (it.unit === 'sqft' && Number(it.width) && Number(it.height)
+      ? `${+it.width} × ${+it.height} ft${+it.qty !== 1 ? ` × ${+it.qty}` : ''}<small>${+(it.width * it.height * it.qty).toFixed(2)} sq ft</small>`
+      : `${+it.qty} ${esc(unitLabel(it.unit))}`);
+    f('rows').innerHTML = list.length
+      ? list.map((it, i) => `<tr><td>${i + 1}</td><td><strong>${esc([it.category, it.quality].filter(Boolean).join(' – ') || it.details)}</strong>${it.category && it.details ? `<small>${esc(it.details)}</small>` : ''}</td><td>${size(it)}</td><td class="r">${inr(it.rate)}${it.unit === 'sqft' && Number(it.width) && Number(it.height) ? '<small>per sq ft</small>' : ''}</td><td class="r">${inr(itemAmount(it))}</td></tr>`).join('')
+      : `<tr><td>1</td><td><strong>${esc(o.service || 'Job')}</strong>${o.description ? `<small>${esc(o.description)}</small>` : ''}</td><td>${esc(o.quantity || '')}</td><td class="r"></td><td class="r">${o.amount != null ? inr(o.amount) : ''}</td></tr>`;
+    const r = (k: string, v: string, cls = '') => `<dt class="${cls}">${k}</dt><dd class="${cls}">${v}</dd>`;
+    f('tot').innerHTML = (list.length ? r('Subtotal', inr(t.subtotal)) + (t.discount ? r('Discount', '− ' + inr(t.discount)) : '') + (t.gstPercent ? r('Taxable value', inr(t.taxable)) + r(`GST @ ${t.gstPercent}%`, inr(t.gst)) : '') : '')
+      + r('Total', inr(t.total), 'big') + (t.advance ? r('Advance received', '− ' + inr(t.advance)) + r('Balance due', inr(t.balance), 'big due') : '');
+    f('words').textContent = amountInWords(t.total);
+    f('track').textContent = `Track this order: ${location.host}/track/?id=${o.order_code}`;
+    pmsg.hidden = true; sheet.hidden = false;
+  })();
+</script>
+
+<style is:global>
+  @page { size: A5 portrait; margin: 0; }
+  .sheet { width: 148mm; min-height: 210mm; margin: 20px auto 40px; padding: 9mm 9mm 8mm; background: #fff; box-shadow: 0 6px 30px rgba(20,33,61,0.18); font-size: 8.6pt; display: flex; flex-direction: column; }
+  @media (max-width: 600px) { .sheet { width: auto; min-height: 0; margin: 12px; padding: 16px; } }
+  @media print { .sheet { margin: 0; box-shadow: none; width: 148mm; height: 210mm; overflow: hidden; } }
+  .bh { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .bh-logo { height: 34px; width: auto; display: block; }
+  .bh-addr { margin: 6px 0 2px; color: var(--muted); font-size: 7.6pt; line-height: 1.4; }
+  .bh-reg { margin: 0; font-size: 7.4pt; font-weight: 600; color: var(--navy); }
+  .bh-right { text-align: right; flex-shrink: 0; }
+  .bh-right h1 { margin: 0 0 4px; font-size: 15pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta-dark); }
+  .bh-right dl { display: grid; grid-template-columns: auto auto; gap: 1px 10px; margin: 0; font-size: 7.8pt; }
+  .bh-right dt { color: var(--muted); }
+  .bh-right dd { margin: 0; font-weight: 600; }
+  .cmyk { display: grid; grid-template-columns: repeat(4, 1fr); height: 3px; margin: 8px 0 10px; }
+  .cmyk i:nth-child(1) { background: var(--cyan); } .cmyk i:nth-child(2) { background: var(--magenta); } .cmyk i:nth-child(3) { background: var(--yellow); } .cmyk i:nth-child(4) { background: var(--navy); }
+  .lbl { display: block; font-size: 6.8pt; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 1px; }
+  .bto { margin-bottom: 10px; }
+  .bto p { margin: 0; }
+  .bto-name { font-weight: 700; font-size: 10pt; color: var(--navy); }
+  .bt { width: 100%; border-collapse: collapse; }
+  .bt th { background: var(--navy); color: #fff; font-weight: 600; font-size: 7.4pt; text-align: left; padding: 4px 5px; }
+  .bt td { padding: 5px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .bt td:first-child { width: 16px; color: var(--muted); }
+  .bt small { display: block; color: var(--muted); font-size: 7pt; }
+  .bt .r { text-align: right; white-space: nowrap; }
+  .bt tbody tr:nth-child(even) td { background: #faf9f6; }
+  .bsum { display: flex; justify-content: space-between; gap: 14px; margin-top: 8px; align-items: flex-start; }
+  .words { margin: 0; max-width: 52%; font-size: 7.6pt; font-style: italic; }
+  .tot { display: grid; grid-template-columns: auto auto; gap: 2px 14px; margin: 0; min-width: 45%; }
+  .tot dt { color: var(--muted); }
+  .tot dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .tot .big { color: var(--navy); font-weight: 700; font-size: 9.6pt; border-top: 1px solid var(--line); padding-top: 3px; }
+  .tot .due { color: var(--magenta-dark); }
+  .bf { margin-top: auto; padding-top: 12px; }
+  .notes { margin: 0 0 8px; padding-left: 14px; font-size: 7pt; color: var(--muted); }
+  .bf-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+  .thanks { margin: 0; font-size: 7.6pt; color: var(--muted); }
+  .thanks span { font-size: 7pt; }
+  .sign { margin: 0; text-align: right; font-weight: 600; font-size: 7.8pt; }
+  .sign span { display: inline-block; border-top: 1px solid var(--ink); padding-top: 2px; font-weight: 400; color: var(--muted); }
+</style>

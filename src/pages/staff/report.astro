@@ -1,0 +1,141 @@
+---
+import StaffPrint from '../../layouts/StaffPrint.astro';
+import Logo from '../../components/Logo.astro';
+---
+<StaffPrint title="Daily report | M.S. Graphics Studio">
+  <div class="tb">
+    <label class="sr">Report date <input type="date" id="r-date" /></label>
+    <button type="button" class="tb-main" id="b-wa">Share on WhatsApp</button>
+    <button type="button" id="b-copy">Copy text</button>
+    <button type="button" id="b-print">Print / Save as PDF</button>
+    <a href="/staff/">Back to orders</a>
+  </div>
+  <p class="pmsg" id="p-msg">Loading the report…</p>
+
+  <article class="rep" id="rep" hidden>
+    <header class="rh">
+      <Logo class="rh-logo" />
+      <div><h1>Daily work report</h1><p data-f="when"></p></div>
+    </header>
+    <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="tiles" data-f="tiles"></div>
+
+    <h2>New orders</h2>
+    <div data-f="new"></div>
+    <h2>Work done (status updates)</h2>
+    <div data-f="work"></div>
+    <h2>By staff</h2>
+    <div data-f="staff"></div>
+    <h2>Due today or overdue (not completed)</h2>
+    <div data-f="due"></div>
+  </article>
+</StaffPrint>
+
+<script>
+  import { supa, esc, fmtDate } from '../../lib/supa.js';
+  import { stepLabel } from '../../config/order-steps.js';
+  import { inr, todayIST, dayRangeIST } from '../../lib/billing.js';
+  const pmsg = document.getElementById('p-msg')!;
+  const rep = document.getElementById('rep')!;
+  const dateIn = document.getElementById('r-date') as HTMLInputElement;
+  const f = (k: string) => rep.querySelector(`[data-f="${k}"]`) as HTMLElement;
+  const fail = (html: string) => { pmsg.innerHTML = html; pmsg.hidden = false; rep.hidden = true; };
+  const time = (d: string) => new Date(d).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+  const table = (head: string[], rows: string[][], right: number[] = []) => rows.length
+    ? `<table class="rt"><thead><tr>${head.map((h, i) => `<th${right.includes(i) ? ' class="r"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td${right.includes(i) ? ' class="r"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`
+    : '<p class="none">Nothing for this day.</p>';
+  let shareText = '';
+
+  const q = new URLSearchParams(location.search);
+  dateIn.value = /^\d{4}-\d{2}-\d{2}$/.test(q.get('date') || '') ? q.get('date')! : todayIST();
+  dateIn.addEventListener('change', () => { if (dateIn.value) { history.replaceState(null, '', `?date=${dateIn.value}`); run(); } });
+  document.getElementById('b-print')!.addEventListener('click', () => window.print());
+  document.getElementById('b-wa')!.addEventListener('click', () => window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank', 'noopener'));
+  document.getElementById('b-copy')!.addEventListener('click', async (e) => {
+    const b = e.currentTarget as HTMLButtonElement;
+    try { await navigator.clipboard.writeText(shareText); b.textContent = 'Copied'; } catch { b.textContent = 'Copy failed'; }
+    setTimeout(() => (b.textContent = 'Copy text'), 2000);
+  });
+
+  async function run() {
+    if (!supa) return fail('The order system is not connected yet.');
+    const { data: { session } } = await supa.auth.getSession();
+    if (!session) return fail('Please <a href="/staff/">log in to the staff panel</a> first, then open the report again.');
+    pmsg.textContent = 'Loading the report…'; pmsg.hidden = false;
+    const day = dateIn.value;
+    const { from, to } = dayRangeIST(day);
+    const [newRes, evRes, dueRes, profRes] = await Promise.all([
+      supa.from('orders').select('*').gte('created_at', from).lt('created_at', to).order('created_at'),
+      supa.from('order_events').select('*, orders(order_code, client_name, created_at)').gte('created_at', from).lt('created_at', to).order('created_at'),
+      supa.from('orders').select('*').lte('due_date', day).not('status', 'in', '(completed,cancelled)').order('due_date'),
+      supa.from('profiles').select('id, full_name, staff_id'),
+    ]);
+    const err = newRes.error || evRes.error || dueRes.error;
+    if (err) return fail('Could not load the report: ' + esc(err.message));
+    const created: any[] = newRes.data || [];
+    const names = new Map((profRes.data || []).map((p: any) => [p.id, p.full_name || p.staff_id]));
+    // The automatic "Order received" entry of each new order is already counted under New orders.
+    const events: any[] = (evRes.data || []).filter((e: any) => !(e.status === 'received' && !e.note && e.orders && e.orders.created_at >= from && e.orders.created_at < to));
+    const due: any[] = dueRes.data || [];
+    const items = created.length ? (await supa.from('order_items').select('order_id, category, quality').in('order_id', created.map((o) => o.id))).data || [] : [];
+    const what = (o: any) => { const it = items.filter((i: any) => i.order_id === o.id).map((i: any) => [i.category, i.quality].filter(Boolean).join(' ')); return [...new Set(it)].join(', ') || [o.service, o.quantity].filter(Boolean).join(' · '); };
+
+    const value = created.reduce((s, o) => s + Number(o.amount || 0), 0);
+    const advance = created.reduce((s, o) => s + Number(o.advance || 0), 0);
+    const count = (st: string) => events.filter((e) => e.status === st).length;
+    const tiles = [
+      ['New orders', String(created.length)], ['Value of new orders', inr(value, false)], ['Advance on new orders', inr(advance, false)],
+      ['Status updates', String(events.length)], ['Out for delivery / installation', String(count('dispatched'))], ['Completed', String(count('completed'))],
+    ];
+    const dayLabel = fmtDate(day + 'T12:00:00+05:30');
+    f('when').textContent = `${dayLabel} · made ${fmtDate(new Date().toISOString(), true)}`;
+    f('tiles').innerHTML = tiles.map(([k, v]) => `<div class="tile"><strong>${v}</strong><span>${k}</span></div>`).join('');
+    f('new').innerHTML = table(['Order', 'Client', 'Work', 'Amount', 'Added by'],
+      created.map((o) => [esc(o.order_code), esc(o.client_name) + (o.client_company ? `<small>${esc(o.client_company)}</small>` : ''), esc(what(o)), o.amount != null ? inr(o.amount, false) : '–', esc(names.get(o.created_by) || '')]), [3]);
+    f('work').innerHTML = table(['Time', 'Order', 'Update', 'By'],
+      events.map((e) => [time(e.created_at), esc(e.orders?.order_code || '') + `<small>${esc(e.orders?.client_name || '')}</small>`, `<strong>${esc(stepLabel(e.status))}</strong>${e.note ? `<small>${esc(e.note)}</small>` : ''}${e.show_to_client ? '' : '<small><em>staff only</em></small>'}`, esc(e.created_by_name || names.get(e.created_by) || '')]));
+    const per = new Map<string, { n: number; u: number }>();
+    created.forEach((o) => { const k = names.get(o.created_by) || 'Unknown'; per.set(k, { n: (per.get(k)?.n || 0) + 1, u: per.get(k)?.u || 0 }); });
+    events.forEach((e) => { const k = e.created_by_name || names.get(e.created_by) || 'Unknown'; per.set(k, { n: per.get(k)?.n || 0, u: (per.get(k)?.u || 0) + 1 }); });
+    f('staff').innerHTML = table(['Staff', 'New orders', 'Status updates'], [...per].map(([k, v]) => [esc(k), String(v.n), String(v.u)]), [1, 2]);
+    f('due').innerHTML = table(['Order', 'Client', 'Due', 'Status'],
+      due.map((o) => [esc(o.order_code), esc(o.client_name), `${esc(fmtDate(o.due_date))}${o.due_date < day ? ' <em class="late">overdue</em>' : ''}`, esc(stepLabel(o.status))]));
+
+    const L: string[] = [`*M.S. Graphics Studio: daily report*`, dayLabel, ''];
+    tiles.forEach(([k, v]) => L.push(`${k}: ${v}`));
+    if (created.length) { L.push('', '*New orders*'); created.forEach((o) => L.push(`• ${o.order_code} – ${o.client_name}${what(o) ? ' – ' + what(o) : ''}${o.amount != null ? ' – ' + inr(o.amount, false) : ''}`)); }
+    if (events.length) { L.push('', '*Work done*'); events.forEach((e) => L.push(`• ${time(e.created_at)} ${e.orders?.order_code || ''} ${e.orders?.client_name ? '(' + e.orders.client_name + ')' : ''}: ${stepLabel(e.status)}${e.note ? ' – ' + e.note : ''}${e.created_by_name ? ' [' + e.created_by_name + ']' : ''}`)); }
+    if (due.length) { L.push('', '*Due today / overdue*'); due.forEach((o) => L.push(`• ${o.order_code} – ${o.client_name} – due ${fmtDate(o.due_date)} – ${stepLabel(o.status)}`)); }
+    L.push('', `Full report: ${location.origin}/staff/report/?date=${day}`);
+    shareText = L.join('\n');
+    pmsg.hidden = true; rep.hidden = false;
+  }
+  run();
+</script>
+
+<style is:global>
+  @page { size: A4 portrait; margin: 12mm; }
+  .sr { display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+  .rep { max-width: 210mm; margin: 20px auto 40px; padding: 28px; background: #fff; box-shadow: 0 6px 30px rgba(20,33,61,0.18); font-size: 0.92rem; }
+  @media (max-width: 600px) { .rep { margin: 12px; padding: 16px; } }
+  @media print { .rep { margin: 0; padding: 0; box-shadow: none; max-width: none; font-size: 9.5pt; } }
+  .rh { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .rh-logo { height: 40px; width: auto; }
+  .rh h1 { margin: 0; font-size: 1.35rem; color: var(--navy); text-align: right; }
+  .rh p { margin: 0; color: var(--muted); font-size: 0.85rem; text-align: right; }
+  .cmyk { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; margin: 12px 0 16px; }
+  .cmyk i:nth-child(1) { background: var(--cyan); } .cmyk i:nth-child(2) { background: var(--magenta); } .cmyk i:nth-child(3) { background: var(--yellow); } .cmyk i:nth-child(4) { background: var(--navy); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+  .tile { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; break-inside: avoid; }
+  .tile strong { display: block; font-size: 1.3rem; color: var(--navy); }
+  .tile span { font-size: 0.78rem; color: var(--muted); }
+  .rep h2 { font-size: 1rem; margin: 22px 0 8px; color: var(--magenta-dark); break-after: avoid; }
+  .rt { width: 100%; border-collapse: collapse; }
+  .rt th { text-align: left; font-size: 0.78rem; font-weight: 600; background: #f3f1ec; padding: 6px 8px; }
+  .rt td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .rt tr { break-inside: avoid; }
+  .rt small { display: block; color: var(--muted); font-size: 0.8rem; }
+  .rt .r { text-align: right; }
+  .none { color: var(--muted); margin: 0; }
+  .late { color: #8a0021; font-style: normal; font-weight: 600; font-size: 0.8rem; }
+</style>
