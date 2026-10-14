@@ -60,7 +60,7 @@ export default {
   // ---- Bills (staff panel → Generate bill) ------------------------------
   // GSTIN printed on bills only (never on the website). With a GSTIN the bill
   // is titled "Tax Invoice"; without one it is titled "Bill".
-  billGstin: "",
+  billGstin: "07BKGPA2958E2ZD",
   // Short lines printed at the bottom of every bill, e.g. bank details or
   // "Goods once sold will not be taken back." Leave [] for none.
   billNotes: [],
