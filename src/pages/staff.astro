@@ -254,13 +254,16 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   const cats = () => products.filter((p) => !p.parent_id).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name));
   const catBy = (name: string) => cats().find((c) => c.name === name);
   const qualsOf = (name: string) => { const c = catBy(name); return c ? products.filter((p) => p.parent_id === c.id).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name)) : []; };
-  const opts = (list: string[], cur: string, blank: string) => `<option value="">${blank}</option>` + [...list, ...(cur && !list.includes(cur) ? [cur] : [])].map((n) => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('');
+  const ADD = '__add';
+  const opts = (list: string[], cur: string, blank: string, addLabel = '') => `<option value="">${blank}</option>` + [...list, ...(cur && !list.includes(cur) ? [cur] : [])].map((n) => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('') + (addLabel ? `<option value="${ADD}">${addLabel}</option>` : '');
+  const catOpts = (cur: string) => opts(cats().map((c) => c.name), cur, cats().length ? 'Choose…' : 'Choose…', '+ Add new product type…');
+  const qualOpts = (cat: string, cur: string) => opts(qualsOf(cat).map((q) => q.name), cur, '—', cat && catBy(cat) ? `+ Add new ${esc(cat)} quality…` : '');
   const val = (v: any) => (v == null ? '' : esc(v));
   function addItem(it: any = {}) {
     const unit = it.unit || 'sqft';
     itemsBox.insertAdjacentHTML('beforeend', `<div class="it" data-row>
-      <label class="f"><span>Category</span><select data-k="category">${opts(cats().map((c) => c.name), it.category || '', cats().length ? 'Choose…' : 'No products yet: add them in Products')}</select></label>
-      <label class="f"><span>Quality</span><select data-k="quality">${opts(qualsOf(it.category || '').map((q) => q.name), it.quality || '', '—')}</select></label>
+      <label class="f"><span>Category</span><select data-k="category" data-prev="${val(it.category)}">${catOpts(it.category || '')}</select></label>
+      <label class="f"><span>Quality</span><select data-k="quality" data-prev="${val(it.quality)}">${qualOpts(it.category || '', it.quality || '')}</select></label>
       <label class="f it-det"><span>Details</span><input data-k="details" value="${val(it.details)}" placeholder="e.g. shop front board" /></label>
       <label class="f"><span>Unit</span><select data-k="unit">${UNITS.map((u) => `<option value="${u.key}"${u.key === unit ? ' selected' : ''}>${u.label}</option>`).join('')}</select></label>
       <label class="f" data-size><span>Width (ft)</span><input data-k="width" type="number" min="0" step="0.01" value="${val(it.width)}" /></label>
@@ -296,12 +299,36 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   }
   $('[data-add-item]', fOrder).addEventListener('click', () => { addItem(); recalc(); (itemsBox.lastElementChild!.querySelector('select') as HTMLSelectElement).focus(); });
   itemsBox.addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest('[data-rm]'); if (b) { b.closest('[data-row]')!.remove(); recalc(); } });
-  itemsBox.addEventListener('change', (e) => {
+  // "+ Add new…" in a Category or Quality list saves the new name to Products for good.
+  async function addFromList(el: HTMLSelectElement, row: Element) {
+    const isCat = el.dataset.k === 'category'; const cat = rowVal(row, 'category');
+    const name = (prompt(isCat ? 'New product type (e.g. Sunboard, ACP, Banner):' : `New quality for ${cat} (e.g. Matt, Glossy):`) || '').trim();
+    if (!name) { el.value = el.dataset.prev || ''; return false; }
+    const parent = isCat ? null : catBy(cat);
+    const { error } = await supa!.from('products').insert(isCat
+      ? { name, unit: rowVal(row, 'unit') || 'sqft', sort: cats().length + 1 }
+      : { name, parent_id: parent.id, unit: parent.unit, sort: qualsOf(cat).length + 1 });
+    if (error && !/duplicate|unique/i.test(error.message)) { alert('Could not save: ' + error.message); el.value = el.dataset.prev || ''; return false; }
+    await loadProducts();
+    // Use the saved spelling if the name already existed.
+    const saved = (isCat ? cats() : qualsOf(cat)).find((p) => p.name.toLowerCase() === name.toLowerCase())?.name || name;
+    itemsBox.querySelectorAll<HTMLElement>('[data-row]').forEach((r) => {
+      const c = r.querySelector('[data-k="category"]') as HTMLSelectElement; const q = r.querySelector('[data-k="quality"]') as HTMLSelectElement;
+      const cv = r === row && isCat ? saved : c.value === ADD ? c.dataset.prev || '' : c.value;
+      const qv = r === row && isCat ? '' : r === row ? saved : q.value === ADD ? q.dataset.prev || '' : q.value;
+      c.innerHTML = catOpts(cv); q.innerHTML = qualOpts(cv, qv);
+    });
+    return true;
+  }
+  itemsBox.addEventListener('change', async (e) => {
     const el = e.target as HTMLSelectElement; const row = el.closest('[data-row]')!;
+    if (el.value === ADD && !(await addFromList(el, row))) return recalc();
     const set = (k: string, v: any) => ((row.querySelector(`[data-k="${k}"]`) as HTMLInputElement).value = v);
+    if (el.dataset.k === 'category' || el.dataset.k === 'quality') el.dataset.prev = el.value;
     if (el.dataset.k === 'category') {
       const c = catBy(el.value);
-      (row.querySelector('[data-k="quality"]') as HTMLSelectElement).innerHTML = opts(qualsOf(el.value).map((q) => q.name), '', '—');
+      const qs = row.querySelector('[data-k="quality"]') as HTMLSelectElement;
+      qs.innerHTML = qualOpts(el.value, ''); qs.dataset.prev = '';
       if (c) { set('unit', c.unit); if (c.rate != null) set('rate', c.rate); }
     }
     if (el.dataset.k === 'quality') {
