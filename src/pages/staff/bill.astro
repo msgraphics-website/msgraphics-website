@@ -3,14 +3,14 @@ import StaffPrint from '../../layouts/StaffPrint.astro';
 import Logo from '../../components/Logo.astro';
 import { business } from '../../lib/site.js';
 import config from '../../config/site.config.js';
-const title = config.billGstin ? 'Tax Invoice' : 'Bill';
+const title = config.billTitle || 'Challan';
 ---
-<StaffPrint title="Bill | M.S. Graphics Studio">
+<StaffPrint title={`${title} | M.S. Graphics Studio`}>
   <div class="tb">
     <button type="button" class="tb-main" id="b-print">Print / Save as PDF</button>
     <a href="/staff/">Back to orders</a>
   </div>
-  <p class="pmsg" id="p-msg">Loading the bill…</p>
+  <p class="pmsg" id="p-msg">Loading…</p>
 
   <article class="sheet" id="sheet" hidden>
     <header class="bh">
@@ -22,8 +22,8 @@ const title = config.billGstin ? 'Tax Invoice' : 'Bill';
       <div class="bh-right">
         <h1>{title}</h1>
         <dl>
-          <dt>Bill no.</dt><dd data-f="code"></dd>
-          <dt>Bill date</dt><dd data-f="date"></dd>
+          <dt>{title} no.</dt><dd data-f="code"></dd>
+          <dt>Date</dt><dd data-f="date"></dd>
           <dt>Order date</dt><dd data-f="odate"></dd>
         </dl>
       </div>
@@ -31,7 +31,7 @@ const title = config.billGstin ? 'Tax Invoice' : 'Bill';
     <div class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
     <section class="bto">
-      <p class="lbl">Bill to</p>
+      <p class="lbl">Party / Client</p>
       <p class="bto-name" data-f="client"></p>
       <p data-f="clientsub"></p>
     </section>
@@ -49,7 +49,7 @@ const title = config.billGstin ? 'Tax Invoice' : 'Bill';
     <footer class="bf">
       {config.billNotes.length > 0 && <ul class="notes">{config.billNotes.map((n) => <li>{n}</li>)}</ul>}
       <div class="bf-row">
-        <p class="thanks">Thank you for your business.<br /><span data-f="track"></span></p>
+        <p class="thanks">This is a challan, not a tax invoice.<br />Thank you for your business.<br /><span data-f="track"></span></p>
         <p class="sign">For {business.name}<br /><br /><br /><span>Authorised signatory</span></p>
       </div>
     </footer>
@@ -69,8 +69,8 @@ const title = config.billGstin ? 'Tax Invoice' : 'Bill';
     const id = new URLSearchParams(location.search).get('id');
     if (!supa) return fail('The order system is not connected yet.');
     const { data: { session } } = await supa.auth.getSession();
-    if (!session) return fail('Please <a href="/staff/">log in to the staff panel</a> first, then open the bill again.');
-    if (!id) return fail('No order chosen. Open an order in the <a href="/staff/">staff panel</a> and click Generate bill.');
+    if (!session) return fail('Please <a href="/staff/">log in to the staff panel</a> first, then open it again.');
+    if (!id) return fail('No order chosen. Open an order in the <a href="/staff/">staff panel</a> and click Generate challan.');
     const [{ data: o, error }, { data: items }] = await Promise.all([
       supa.from('orders').select('*').eq('id', id).maybeSingle(),
       supa.from('order_items').select('*').eq('order_id', id).order('sort'),
@@ -78,7 +78,7 @@ const title = config.billGstin ? 'Tax Invoice' : 'Bill';
     if (error || !o) return fail('This order could not be found. <a href="/staff/">Back to orders</a>');
     const list: any[] = items || [];
     const t = totals(list, o);
-    document.title = `Bill ${o.order_code} – ${o.client_name}`;
+    document.title = `${document.title.split(' |')[0]} ${o.order_code} – ${o.client_name}`;
     f('code').textContent = o.order_code;
     f('date').textContent = fmtDate(todayIST() + 'T12:00:00+05:30');
     f('odate').textContent = fmtDate(o.created_at);

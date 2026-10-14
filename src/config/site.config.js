@@ -57,9 +57,10 @@ export default {
   supabaseUrl: "https://mqfttcyzshuamcxkfteg.supabase.co",
   supabaseAnonKey: "sb_publishable_Xq72ugp1YTxeXDgWJ-U74A_L9DxbGic",
 
-  // ---- Bills (staff panel → Generate bill) ------------------------------
-  // GSTIN printed on bills only (never on the website). With a GSTIN the bill
-  // is titled "Tax Invoice"; without one it is titled "Bill".
+  // ---- Challan (staff panel → Generate challan) --------------------------
+  // Title printed at the top, e.g. "Challan", "Delivery Challan", "Estimate".
+  billTitle: "Challan",
+  // GSTIN printed on the challan only (never on the website). "" to hide.
   billGstin: "07BKGPA2958E2ZD",
   // Short lines printed at the bottom of every bill, e.g. bank details or
   // "Goods once sold will not be taken back." Leave [] for none.

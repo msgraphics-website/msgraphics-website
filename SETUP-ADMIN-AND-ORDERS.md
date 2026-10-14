@@ -72,7 +72,7 @@ The steps are: Order received → Design in progress → Waiting for your approv
 
 **Bill items:** in *New order* / *Edit details*, click *Add item*, choose the category and quality, enter width × height in feet (for sq ft items) and the quantity. The rate fills in from Products and can be changed. Add a discount, GST and the advance received; the total and balance are worked out automatically.
 
-**Generate bill:** open an order → *Generate bill*. An A5 bill opens in a new tab; click *Print / Save as PDF*. To print your GSTIN on bills (it is never shown on the website), fill `billGstin` in `src/config/site.config.js`; the bill is then titled "Tax Invoice". Lines such as bank details go in `billNotes`.
+**Generate challan:** open an order → *Generate challan*. An A5 challan opens in a new tab; click *Print / Save as PDF*. It is a challan, not a tax invoice. The title (`billTitle`), the GSTIN printed on it (`billGstin`, never shown on the website) and any bottom lines such as bank details (`billNotes`) are set in `src/config/site.config.js`.
 
 **Today's report:** *Today's report* at the top of `/staff/` shows the day's new orders, every status update with who made it, a count per staff member and the orders due today or overdue. Pick another date at the top to see an older day. *Share on WhatsApp* sends a text summary to whoever you choose (e.g. the owner); *Print / Save as PDF* makes a PDF.
 
