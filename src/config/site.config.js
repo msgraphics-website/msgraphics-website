@@ -54,8 +54,8 @@ export default {
   // From Supabase → Project Settings → API. Both values are safe to publish
   // (the database rules decide what each visitor can see). Leave "" to show
   // "tracking not connected yet" on /track/ and /staff/.
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://mqfttcyzshuamcxkfteg.supabase.co",
+  supabaseAnonKey: "sb_publishable_Xq72ugp1YTxeXDgWJ-U74A_L9DxbGic",
 
   // Staff log in with a short Staff ID (e.g. "ravi"). Behind the scenes it is
   // stored as ravi@<staffEmailDomain>. No email is ever sent to this address.
