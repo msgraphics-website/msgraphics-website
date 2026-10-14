@@ -22,7 +22,8 @@ async function handle(req) {
   const url = (process.env.SUPABASE_URL || config.supabaseUrl || '').trim();
   const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
   if (!url || !key) return json(500, { error: 'The server is missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. See SETUP-ADMIN-AND-ORDERS.md.' });
-  const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  // Realtime is never used here; the stand-in transport keeps older Node versions (no built-in WebSocket) working.
+  const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false }, realtime: { transport: globalThis.WebSocket || class NoWebSocket {} } });
 
   // Who is calling?
   const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
