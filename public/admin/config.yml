@@ -2,7 +2,7 @@
 {
   "backend": {
     "name": "github",
-    "repo": "[github-username]/msgraphics-website",
+    "repo": "msgraphics-website/msgraphics-website",
     "branch": "main",
     "commit_messages": {
       "update": "Update {{collection}} “{{slug}}” from admin panel",

@@ -63,6 +63,6 @@ export default {
 
   // ---- Admin panel (Decap CMS at /admin/) --------------------------------
   // The GitHub repository that holds this website, as "username/repository".
-  cmsRepo: "[github-username]/msgraphics-website",
+  cmsRepo: "msgraphics-website/msgraphics-website",
   cmsBranch: "main",
 };
