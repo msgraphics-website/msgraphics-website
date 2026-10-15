@@ -1,6 +1,7 @@
 ---
 title: "Planning an exhibition stall in Delhi: a timeline that actually works"
 description: "A step-by-step plan for exhibitors at Bharat Mandapam, Yashobhoomi and India Expo Mart: space type, design approval, fabrication, branding and build-up day."
+summary: "Plan an exhibition stall in Delhi by working backwards from the organiser's deadlines: read the exhibitor manual when you book, finish the design and get it approved before the drawing deadline, then leave enough time for fabrication, printing and a trial fit before build-up day at Bharat Mandapam, Yashobhoomi or India Expo Mart."
 date: 2026-10-14
 keywords: ["exhibition stall fabrication Delhi", "exhibition stall design Delhi", "trade show booth Delhi", "event branding Delhi"]
 cover: { src: "/images/events-exhibition-stall.webp", alt: "3D illustration of an exhibition stall with promoters" }

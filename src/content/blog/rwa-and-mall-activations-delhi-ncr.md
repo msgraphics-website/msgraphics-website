@@ -1,6 +1,7 @@
 ---
 title: "RWA and mall activations in Delhi NCR: what to plan before the weekend"
 description: "A practical guide to BTL activations in housing societies, malls and corporate parks around Delhi: permissions, setup, staff, sampling and how to measure results."
+summary: "A successful RWA or mall activation in Delhi NCR starts with written permission from the society or mall management, a clear setup plan for the canopy, standees and promo table, trained staff and a simple way to record leads or samples given. Weekend mornings and evenings are usually the best times to meet families in housing societies."
 date: 2026-10-14
 keywords: ["BTL activation agency Delhi", "RWA activation Delhi", "mall activation Delhi NCR", "society activation"]
 cover: { src: "/images/events-rwa-activation.webp", alt: "3D illustration of a canopy and promo table at a society activation" }

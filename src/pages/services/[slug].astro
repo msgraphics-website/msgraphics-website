@@ -5,7 +5,7 @@ import SectionLabel from '../../components/SectionLabel.astro';
 import Photo from '../../components/Photo.astro';
 import Icon from '../../components/Icon.astro';
 import QuoteForm from '../../components/QuoteForm.astro';
-import { services, config, waLink, serviceUrl, ph } from '../../lib/site.js';
+import { services, config, waLink, serviceUrl, ph, business } from '../../lib/site.js';
 import PostCard from '../../components/PostCard.astro';
 import { getPosts } from '../../lib/blog.js';
 
@@ -26,7 +26,7 @@ const serviceSchema = {
   name: s.title,
   description: s.metaDescription,
   serviceType: s.title,
-  areaServed: 'Delhi NCR',
+  areaServed: [{ '@type': 'AdministrativeArea', name: 'Delhi NCR' }, ...(business.areasServed || []).map((name) => ({ '@type': 'Place', name }))],
   url: `${config.siteUrl}${serviceUrl(s)}`,
   provider: { '@id': `${config.siteUrl}/#business` },
 };
@@ -110,8 +110,21 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
     </div>
   </section>
 
+  {s.areasHeading && (
+    <section class="section section--paper areas">
+      <div class="container">
+        <div class="section-head">
+          <SectionLabel>Areas we serve</SectionLabel>
+          <h2>{s.areasHeading}</h2>
+          {s.areasText && <p class="lead">{s.areasText}</p>}
+        </div>
+        <ul class="areas__list">{(business.areasServed || []).map((a) => <li><Icon name="map-pin" />{a}</li>)}</ul>
+      </div>
+    </section>
+  )}
+
   {guides.length > 0 && (
-    <section class="section section--paper">
+    <section class="section">
       <div class="container">
         <div class="section-head"><SectionLabel>Guides</SectionLabel><h2>Helpful reading before you order</h2></div>
         <div class="grid grid-3">{guides.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
@@ -138,6 +151,9 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
   @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
   #quote .split { align-items: start; }
   .others-h { margin-top: 32px; font-size: 1rem; }
+  .areas__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .areas__list li { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 0.92rem; }
+  .areas__list :global(.icon) { width: 16px; height: 16px; color: var(--magenta); }
   .others { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
   .others a { color: #dfe4ef; text-decoration: none; display: inline-flex; gap: 10px; align-items: center; }
   .others a:hover { color: #fff; text-decoration: underline; }

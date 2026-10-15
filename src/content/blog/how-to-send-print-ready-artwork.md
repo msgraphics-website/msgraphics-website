@@ -1,6 +1,7 @@
 ---
 title: "How to send print-ready artwork (and get an accurate quote the first time)"
 description: "A simple checklist for print files and print briefs: size, bleed, CMYK, resolution, fonts, quantity, paper and finish. Fewer corrections, faster printing."
+summary: "Print-ready artwork is a PDF at the final size with 3 mm bleed, CMYK colours, images at around 300 dpi for close viewing, and fonts outlined or embedded. Send it with a short brief covering quantity, material or paper, finish and deadline, and a Delhi printer can quote accurately and print without corrections."
 date: 2026-10-14
 keywords: ["print ready file checklist", "POP material printing Delhi", "printing press Dwarka", "brochure printing Delhi"]
 cover: { src: "/images/printing-brochures.webp", alt: "3D illustration of printed brochures and cards" }

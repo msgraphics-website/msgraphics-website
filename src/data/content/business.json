@@ -41,5 +41,28 @@
     "instagram": "[Instagram profile URL]",
     "youtube": "[YouTube channel URL]",
     "x": "[X profile URL]"
-  }
+  },
+  "areasServed": [
+    "Dwarka",
+    "Dwarka Mor",
+    "Uttam Nagar",
+    "Janakpuri",
+    "Palam",
+    "Najafgarh",
+    "Vikaspuri",
+    "Rajouri Garden",
+    "Punjabi Bagh",
+    "Karol Bagh",
+    "Connaught Place",
+    "Saket",
+    "Lajpat Nagar",
+    "Nehru Place",
+    "Greater Kailash",
+    "Hauz Khas",
+    "Gurgaon (Gurugram)",
+    "Noida",
+    "Greater Noida",
+    "Faridabad",
+    "Ghaziabad"
+  ]
 }

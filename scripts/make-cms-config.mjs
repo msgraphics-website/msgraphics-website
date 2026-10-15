@@ -78,6 +78,7 @@ const cms = {
       fields: [
         { name: 'title', label: 'Title', widget: 'string', hint: 'Under 65 characters works best on Google.' },
         { name: 'description', label: 'Short description (Google and social media)', widget: 'text', hint: '140–160 characters.' },
+        { name: 'summary', label: 'Quick answer (2–3 sentences shown at the top, read by Google and AI search)', widget: 'text', required: false },
         { name: 'date', label: 'Published', widget: 'datetime', date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD' },
         { name: 'updated', label: 'Updated', widget: 'datetime', date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD', required: false },
         { name: 'keywords', label: 'Keywords', widget: 'list', required: false },

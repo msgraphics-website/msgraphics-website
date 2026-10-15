@@ -1,6 +1,7 @@
 ---
 title: "Rolling out in-store branding across many stores: a practical checklist"
 description: "How brands and distributors in Delhi NCR can plan POP and in-store branding rollouts across 10, 50 or 500 outlets without wrong sizes, missing pieces or colour mismatch."
+summary: "To roll out in-store branding across many outlets in Delhi NCR, measure every store first, build a master list of sizes per location, approve one colour proof, then print, pack and label kits store by store. Ask for photo proof of each installation so missing or wrong pieces are caught quickly."
 date: 2026-10-14
 keywords: ["in-store branding Delhi", "POP material printing Delhi", "retail branding company Delhi NCR", "POSM rollout"]
 cover: { src: "/images/instore-standee-dangler.webp", alt: "3D illustration of a retail store with standees and danglers" }

@@ -84,7 +84,9 @@
           "q": "Do you deliver outside Delhi?",
           "a": "Yes. Bulk orders can be shipped pan-India. Delivery charges are shown in the quote."
         }
-      ]
+      ],
+      "areasHeading": "Printing in Dwarka for all of Delhi NCR",
+      "areasText": "Everything is printed at our own unit at Dwarka Mor, so shops and offices in West Delhi can collect or get same-area delivery, and we dispatch bulk orders across Delhi, Gurgaon, Noida, Faridabad and Ghaziabad."
     },
     {
       "slug": "in-store-branding-pop-posm",
@@ -166,7 +168,9 @@
           "q": "Can you install outside Delhi NCR?",
           "a": "Yes. We have installed across 20+ cities in India and Nepal. For far-off locations we can also dispatch store-wise kits with installation guides."
         }
-      ]
+      ],
+      "areasHeading": "In-store branding across Delhi NCR",
+      "areasText": "Our team installs POP and store branding in markets, malls and retail chains across Delhi NCR, from West Delhi and Dwarka to South Delhi, Gurgaon and Noida, and rolls out multi-store jobs to 20+ cities."
     },
     {
       "slug": "signage-out-store-branding",
@@ -252,7 +256,9 @@
           "q": "Do you repair or replace old boards?",
           "a": "[Confirm.] We can remove old signage and install the new board in the same visit."
         }
-      ]
+      ],
+      "areasHeading": "Glow sign boards and shop signage across Delhi NCR",
+      "areasText": "From our fabrication unit at Dwarka Mor we survey, build and install glow sign boards, ACP boards and LED letters in Dwarka and West Delhi, South Delhi markets, Gurgaon, Noida, Faridabad and the rest of Delhi NCR. The same in-house team does the survey, fabrication and installation."
     },
     {
       "slug": "outdoor-advertising-hoardings",
@@ -334,7 +340,9 @@
           "q": "What material is used for hoardings?",
           "a": "Usually flex or vinyl, chosen by size, duration and lighting. We recommend the right one in the quote."
         }
-      ]
+      ],
+      "areasHeading": "Hoardings and outdoor branding across Delhi NCR",
+      "areasText": "We print and mount hoardings, pole kiosks, site branding and vehicle graphics across Delhi, Gurgaon, Noida, Faridabad and Ghaziabad, with large-format printing done in-house at Dwarka Mor."
     },
     {
       "slug": "events-btl-activation",
@@ -416,7 +424,9 @@
           "q": "How early should we book?",
           "a": "As early as possible for exhibitions. For urgent events, call or WhatsApp us and we will tell you what is possible."
         }
-      ]
+      ],
+      "areasHeading": "Events and BTL activations across Delhi NCR",
+      "areasText": "We set up stages, stalls, canopies and society or mall activations across Delhi NCR, including Dwarka, Aerocity, Pragati Maidan, South Delhi, Gurgaon and Noida, with branding printed and fabricated in our own unit."
     },
     {
       "slug": "corporate-branding-gifts-digital",
@@ -497,7 +507,9 @@
           "q": "Do you run digital marketing as well?",
           "a": "Yes. We handle social media, Google Ads, SEO and websites. Ask for a separate proposal."
         }
-      ]
+      ],
+      "areasHeading": "Corporate branding for offices across Delhi NCR",
+      "areasText": "We brand offices and deliver printed gifts and kits to companies in Dwarka, Aerocity, Nehru Place, Connaught Place, Gurgaon, Noida and across Delhi NCR."
     }
   ]
 }

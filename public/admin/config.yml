@@ -205,6 +205,17 @@
                   "widget": "string"
                 }
               ]
+            },
+            {
+              "name": "areasServed",
+              "label": "Areas Served",
+              "required": false,
+              "widget": "list",
+              "field": {
+                "name": "item",
+                "label": "Areas Served",
+                "widget": "string"
+              }
             }
           ]
         },
@@ -714,6 +725,18 @@
                       "widget": "string"
                     }
                   ]
+                },
+                {
+                  "name": "areasHeading",
+                  "label": "Areas Heading",
+                  "required": false,
+                  "widget": "string"
+                },
+                {
+                  "name": "areasText",
+                  "label": "Areas Text",
+                  "required": false,
+                  "widget": "text"
                 }
               ]
             }
@@ -1412,6 +1435,12 @@
           "label": "Short description (Google and social media)",
           "widget": "text",
           "hint": "140–160 characters."
+        },
+        {
+          "name": "summary",
+          "label": "Quick answer (2–3 sentences shown at the top, read by Google and AI search)",
+          "widget": "text",
+          "required": false
         },
         {
           "name": "date",

@@ -25,13 +25,15 @@ const schema: object[] = [{
   '@type': 'BlogPosting',
   headline: d.title,
   description: d.description,
+  abstract: d.summary,
   url,
   mainEntityOfPage: url,
   datePublished: d.date.toISOString(),
   dateModified: (d.updated ?? d.date).toISOString(),
   inLanguage: 'en-IN',
   keywords: d.keywords.join(', '),
-  image: new URL(config.ogImage, config.siteUrl).href,
+  image: new URL(d.cover.src.endsWith('.svg') ? config.ogImage : d.cover.src, config.siteUrl).href,
+  speakable: d.summary ? { '@type': 'SpeakableSpecification', cssSelector: ['.quick-answer'] } : undefined,
   author: { '@type': 'Organization', name: business.name, url: config.siteUrl },
   publisher: { '@id': `${config.siteUrl}/#business` },
   about: service ? { '@type': 'Service', name: service.title, url: `${config.siteUrl}${serviceUrl(service)}` } : undefined,
@@ -52,6 +54,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
     <div class="container article">
       <div class="article__main">
         <p class="summary">{d.description}</p>
+        {d.summary && <aside class="quick-answer" aria-label="Quick answer"><strong>Quick answer</strong><p>{d.summary}</p></aside>}
         <Photo image={d.cover} ratio="16 / 9" crop eager />
         {toc.length > 2 && (
           <nav class="toc" aria-label="In this article">
@@ -63,7 +66,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
 
         {d.faq.length > 0 && (
           <section class="qa" aria-labelledby="qa-h">
-            <h2 id="qa-h">Quick answers</h2>
+            <h2 id="qa-h">Common questions</h2>
             <div class="faq">
               {d.faq.map((f) => <details><summary>{f.q}</summary><div><p>{f.a}</p></div></details>)}
             </div>
@@ -106,6 +109,9 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
   @media (min-width: 1000px) { .article { grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; } }
   .article__main { min-width: 0; max-width: 760px; }
   .summary { font-size: 1.15rem; font-weight: 300; color: var(--muted); }
+  .quick-answer { background: #e6f6fd; border-left: 4px solid var(--cyan); border-radius: var(--radius); padding: 16px 20px; margin: 0 0 24px; }
+  .quick-answer strong { display: block; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+  .quick-answer p { margin: 0; color: var(--graphite); }
   .toc { margin: 28px 0; padding: 20px 24px; background: var(--paper); border-radius: var(--radius); }
   .toc__h { font-weight: 600; color: var(--navy); margin-bottom: 8px; }
   .toc ol { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }

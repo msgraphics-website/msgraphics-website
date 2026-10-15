@@ -1,6 +1,7 @@
 ---
 title: "Glow sign board, ACP or LED letters: which shop sign should you choose?"
 description: "A plain comparison of glow sign boards, ACP boards and LED letters for shops in Delhi: how each is made, where it works best, how long it lasts and what drives the cost."
+summary: "For a shop sign in Delhi, a glow sign board is the most economical lit option and easy to reprint, an ACP board with letters gives a clean, long-lasting front, and LED letters suit premium stores where the brand name must stand out. In Dwarka and other busy markets, choose by visibility, budget and how often you change branding."
 date: 2026-10-14
 keywords: ["glow sign board maker Dwarka", "ACP signage Delhi", "LED letter board", "shop sign board Delhi"]
 cover: { src: "/images/signage-glow-sign.webp", alt: "3D illustration of a shop front with a glow sign board" }

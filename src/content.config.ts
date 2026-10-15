@@ -7,6 +7,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    summary: z.string().optional(), // "Quick answer" box at the top; also read by AI search
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
     keywords: z.array(z.string()).default([]),

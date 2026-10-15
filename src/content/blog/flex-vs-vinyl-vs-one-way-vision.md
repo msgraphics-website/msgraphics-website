@@ -1,6 +1,7 @@
 ---
 title: "Flex, vinyl or one-way vision? Picking the right material for outdoor printing"
 description: "Frontlit flex, backlit flex, vinyl, one-way vision and canvas explained for Delhi businesses: where each material works, how long it lasts and what to ask your printer."
+summary: "For outdoor printing in Delhi, use frontlit flex for hoardings and banners, backlit flex for glow sign boards, vinyl for sharp graphics stuck on boards, walls or vehicles, and one-way vision for glass that must stay see-through from inside. Choose by where it goes, whether it is lit and how long it must last."
 date: 2026-10-14
 keywords: ["flex printing Dwarka", "hoarding printing Delhi", "vinyl printing Delhi", "one way vision printing"]
 cover: { src: "/images/printing-flex-vinyl.webp", alt: "3D illustration of a large-format printer printing flex" }

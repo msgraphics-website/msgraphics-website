@@ -1,6 +1,7 @@
 ---
 title: "Corporate gifts people actually keep: a printing guide for Delhi companies"
 description: "How to choose branded corporate gifts for employees, dealers and clients: which items get used, which printing method suits each one, and how to plan bulk orders."
+summary: "The best corporate gifts for Delhi companies are items people use daily, such as T-shirts, mugs, diaries, bottles and bags, printed with a method that suits the material: screen printing or DTF for apparel, sublimation for mugs, and foil or debossing for diaries. Fix quantities and artwork early, especially before Diwali."
 date: 2026-10-14
 keywords: ["corporate gifts printing Delhi", "branded T-shirts Delhi", "custom mugs printing", "corporate gift kits"]
 cover: { src: "/images/corporate-gift-kit.webp", alt: "3D illustration of a branded T-shirt, mug and diary" }
