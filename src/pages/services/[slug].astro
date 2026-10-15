@@ -28,7 +28,7 @@ const serviceSchema = {
   name: s.title,
   description: s.metaDescription,
   serviceType: s.title,
-  areaServed: [{ '@type': 'AdministrativeArea', name: 'Delhi NCR' }, ...(business.areasServed || []).map((name) => ({ '@type': 'Place', name }))],
+  areaServed: [{ '@type': 'AdministrativeArea', name: 'Delhi NCR' }, { '@type': 'Country', name: 'India' }, { '@type': 'Country', name: 'Nepal' }, ...(business.areasServed || []).map((name) => ({ '@type': 'Place', name }))],
   url: `${config.siteUrl}${serviceUrl(s)}`,
   provider: { '@id': `${config.siteUrl}/#business` },
 };
@@ -120,6 +120,8 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
           <h2>{s.areasHeading}</h2>
           {s.areasText && <p class="lead">{s.areasText}</p>}
         </div>
+        {business.reach && <ul class="areas__reach">{business.reach.map((r) => <li><strong>{r.value}</strong><span>{r.label}</span></li>)}</ul>}
+        <h3 class="areas__h">Delhi NCR areas</h3>
         <ul class="areas__list">{(business.areasServed || []).map((a) => <li><Icon name="map-pin" />{a}</li>)}</ul>
       </div>
     </section>
@@ -148,7 +150,7 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
         <div class="qcontact">
           <a href={telLink} data-track="call_click"><Icon name="phone" /><span><small>Call</small>{business.phoneDisplay}</span></a>
           <a href={waLink(`Hi M.S. Graphics Studio, I need a quote for ${s.title}.`)} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /><span><small>WhatsApp</small>Chat with us</span></a>
-          <a href={mailLink}><Icon name="mail" /><span><small>Email</small><Fragment set:html={business.email.replace('@', '<wbr>@')} /></span></a>
+          <div class="qmail"><Icon name="mail" /><span><small>Email</small>{business.salesEmail && <><a href={`mailto:${business.salesEmail}`}><Fragment set:html={business.salesEmail.replace('@', '<wbr>@')} /></a><br /></>}<a href={mailLink}><Fragment set:html={business.email.replace('@', '<wbr>@')} /></a></span></div>
           <p><Icon name="clock" /><span><small>Working hours</small>{business.workingHours}</span></p>
         </div>
         <ul class="qbadges">
@@ -168,6 +170,11 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
   @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
   #quote .split { align-items: start; }
   .others-h { margin-top: 32px; font-size: 1rem; }
+  .areas__reach { list-style: none; margin: 0 0 28px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 720px; }
+  .areas__reach li { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .areas__reach strong { display: block; font-size: 1.8rem; line-height: 1.1; color: var(--magenta); }
+  .areas__reach span { font-size: 0.88rem; color: var(--muted); }
+  .areas__h { font-size: 1rem; margin: 0 0 12px; }
   .areas__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .areas__list li { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 0.92rem; }
   .areas__list :global(.icon) { width: 16px; height: 16px; color: var(--magenta); }
@@ -180,8 +187,9 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
   .qsteps strong { display: block; color: #fff; font-weight: 600; }
   .qcontact { margin-top: 28px; display: grid; gap: 10px; grid-template-columns: 1fr; }
   @media (min-width: 560px) { .qcontact { grid-template-columns: 1fr 1fr; } }
-  .qcontact a, .qcontact p { margin: 0; display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: var(--radius); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); color: #fff; text-decoration: none; font-weight: 500; font-size: 0.92rem; min-width: 0; }
-  .qcontact a:hover { background: rgba(255,255,255,0.12); }
+  .qcontact a, .qcontact p, .qcontact .qmail { margin: 0; display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: var(--radius); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); color: #fff; text-decoration: none; font-weight: 500; font-size: 0.92rem; min-width: 0; }
+  .qmail a { color: #fff; font-size: 0.84rem; padding: 0 !important; background: none !important; border: 0 !important; display: inline !important; }
+  .qcontact > a:hover { background: rgba(255,255,255,0.12); }
   .qcontact span { min-width: 0; overflow-wrap: break-word; }
   .qcontact small { display: block; font-size: 0.75rem; color: #9fa9c0; font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; }
   .qcontact :global(.icon) { flex: none; width: 22px; height: 22px; color: var(--cyan); }

@@ -7,6 +7,7 @@
   "phoneDisplay": "+91 97162 14982",
   "whatsappNumber": "919716214982",
   "email": "msgraphicsstudio@gmail.com",
+  "salesEmail": "sales@msgraphicsstudio.com",
   "address": {
     "line1": "Plot No. B-32, Dwarka Mor",
     "line2": "Patel Garden Extn.",
@@ -64,5 +65,19 @@
     "Greater Noida",
     "Faridabad",
     "Ghaziabad"
+  ],
+  "reach": [
+    {
+      "value": "20+",
+      "label": "cities"
+    },
+    {
+      "value": "18+",
+      "label": "states across India"
+    },
+    {
+      "value": "2+",
+      "label": "countries (India & Nepal)"
+    }
   ]
 }

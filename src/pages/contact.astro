@@ -21,7 +21,7 @@ import { content, business, config, telLink, mailLink, waLink, ph } from '../lib
         <ul class="info__list">
           <li><Icon name="whatsapp" /><div><strong>WhatsApp</strong><a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">{business.phoneDisplay}</a></div></li>
           <li><Icon name="phone" /><div><strong>Phone</strong><a href={telLink} data-track="call_click">{business.phoneDisplay}</a></div></li>
-          <li><Icon name="mail" /><div><strong>Email</strong><a href={mailLink}>{business.email}</a></div></li>
+          <li><Icon name="mail" /><div><strong>Email</strong>{business.salesEmail && <><a href={`mailto:${business.salesEmail}`}>{business.salesEmail}</a> (sales)<br /></>}<a href={mailLink}>{business.email}</a></div></li>
           <li><Icon name="map-pin" /><div><strong>Production unit</strong><span>{business.address.full}</span><a href={config.mapLinkUrl} target="_blank" rel="noopener">Get directions</a></div></li>
           <li><Icon name="clock" /><div><strong>Working hours</strong><span set:html={ph(business.workingHours)} /></div></li>
           <li><Icon name="badge-check" /><div><strong>Registered business</strong><span>{business.registrations.join(' · ')}</span></div></li>

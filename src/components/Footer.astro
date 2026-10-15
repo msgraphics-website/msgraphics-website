@@ -77,13 +77,13 @@ const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube'
     <a class="fc" href={config.mapLinkUrl || '/contact/'} target="_blank" rel="noopener"><Icon name="map-pin" /><span><small>Visit our unit</small>{business.address.full}</span></a>
     <a class="fc" href={telLink} data-track="call_click"><Icon name="phone" /><span><small>Call us</small>{business.phoneDisplay}</span></a>
     <a class="fc" href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /><span><small>WhatsApp</small>{business.phoneDisplay}</span></a>
-    <a class="fc" href={mailLink}><Icon name="mail" /><span><small>Email</small><Fragment set:html={business.email.replace('@', '<wbr>@')} /></span></a>
+    <div class="fc fc--mail"><Icon name="mail" /><span><small>Email</small>{business.salesEmail && <><a href={`mailto:${business.salesEmail}`}><Fragment set:html={business.salesEmail.replace('@', '<wbr>@')} /></a><br /></>}<a href={mailLink}><Fragment set:html={business.email.replace('@', '<wbr>@')} /></a></span></div>
     <p class="fc"><Icon name="clock" /><span><small>Working hours</small><span set:html={ph(business.workingHours)} /></span></p>
     <iframe class="footer__map" src={config.mapEmbedUrl} title="Map: M.S. Graphics Studio, Dwarka Mor, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
 
   <div class="container footer__areas">
-    <p><strong>Serving:</strong> {(business.areasServed || []).join(' · ')}</p>
+    <p><strong>Serving:</strong> {(business.reach || []).map((r) => `${r.value} ${r.label}`).join(' · ')}. In Delhi NCR: {(business.areasServed || []).join(' · ')}</p>
   </div>
 
   <div class="container footer__bottom">
@@ -114,6 +114,7 @@ const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube'
   @media (min-width: 700px) { .footer__contact { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1080px) { .footer__contact { grid-template-columns: repeat(3, 1fr) 1.3fr; grid-template-rows: auto auto; } .footer__map { grid-column: 4; grid-row: 1 / span 2; } .footer__contact .fc:first-child { grid-column: span 2; } }
   .fc { margin: 0; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #fff !important; text-decoration: none !important; min-width: 0; }
+  .fc--mail a { color: #fff; font-size: 0.84rem; }
   a.fc:hover { background: rgba(255,255,255,0.1); }
   .fc > span { min-width: 0; overflow-wrap: break-word; }
   .fc small { display: block; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9fa9c0; margin-bottom: 2px; }

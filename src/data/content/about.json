@@ -41,6 +41,16 @@
       "label": "Cities in India & Nepal",
       "value": "20",
       "suffix": "+"
+    },
+    {
+      "label": "States across India",
+      "value": "18",
+      "suffix": "+"
+    },
+    {
+      "label": "Countries (India & Nepal)",
+      "value": "2",
+      "suffix": "+"
     }
   ],
   "founder": {
