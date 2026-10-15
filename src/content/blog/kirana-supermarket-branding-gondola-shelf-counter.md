@@ -93,4 +93,4 @@ Shelves, counters and gondolas vary a lot between stores, even in the same marke
 
 Branding that is left at the store "to be fixed later" is rarely fixed. Plan for a team to install it, take a photo of each completed store and note any store that refused or needed a change. That record is useful when you plan the next round.
 
-M.S. Graphics Studio has been doing in-store branding since 2014, with our own design, printing, fabrication and installation teams working from our unit at Dwarka Mor. We cover stores across Delhi NCR and 20+ cities. Tell us how many stores you want to brand and share a few store photos on WhatsApp, and we will suggest a kit that shopkeepers are likely to accept, with a quote.
+M.S. Graphics Studio has been doing in-store branding since 2014, with our own design, printing, fabrication and installation teams working from our unit at Dwarka Mor. We cover stores across Delhi NCR and 80+ cities. Tell us how many stores you want to brand and share a few store photos on WhatsApp, and we will suggest a kit that shopkeepers are likely to accept, with a quote.

@@ -2,7 +2,7 @@
   "paragraphs": [
     "M.S. Graphics Studio is a Delhi-based print, branding and events company, operating from our own production unit at Dwarka Mor, New Delhi since 2014.",
     "What started as a printing studio has grown into a one-stop partner for brands that need their marketing to show up in the real world — on shop counters, store fronts, roadside hoardings, office walls and event stages.",
-    "Unlike agencies that outsource production, we print on our own machines. Our in-house team of 90+ designers, printers, fabricators and installers handles every job from concept to installation, across 20+ cities in India and Nepal."
+    "Unlike agencies that outsource production, we print on our own machines. Our in-house team of 90+ designers, printers, fabricators and installers handles every job from concept to installation, across 80+ cities in India and Nepal."
   ],
   "image": {
     "src": "/images/about-team-at-unit.webp",
@@ -39,7 +39,7 @@
     },
     {
       "label": "Cities in India & Nepal",
-      "value": "20",
+      "value": "80",
       "suffix": "+"
     },
     {

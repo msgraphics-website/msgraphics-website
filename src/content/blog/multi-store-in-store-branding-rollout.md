@@ -81,4 +81,4 @@ To get an accurate quote for a multi-store rollout, share:
 - The target date for the rollout to finish
 - Any mall or landlord rules you already know about
 
-M.S. Graphics Studio handles rollouts from our own unit in Dwarka: survey, master artwork, printing, fabrication of displays, store-wise packing, installation and photo reporting, all with one team. We have worked across 20+ cities in India and Nepal. If you have a rollout coming up, send us the store list and we will plan it with you.
+M.S. Graphics Studio handles rollouts from our own unit in Dwarka: survey, master artwork, printing, fabrication of displays, store-wise packing, installation and photo reporting, all with one team. We have worked across 80+ cities in India and Nepal. If you have a rollout coming up, send us the store list and we will plan it with you.

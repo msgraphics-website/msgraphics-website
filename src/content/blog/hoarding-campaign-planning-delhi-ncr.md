@@ -97,4 +97,4 @@ Festive seasons are busy for both sites and printers, so start earlier around th
 
 ## Getting your campaign printed and mounted
 
-We have been printing and mounting hoardings since 2014, with large-format printing at our own unit at Dwarka Mor and our own mounting team. We work across Delhi NCR and in 20+ cities. If you are planning a hoarding campaign, share the sites, sizes and go-live date on WhatsApp, and we will send you a plan and quote for printing and mounting.
+We have been printing and mounting hoardings since 2014, with large-format printing at our own unit at Dwarka Mor and our own mounting team. We work across Delhi NCR and in 80+ cities. If you are planning a hoarding campaign, share the sites, sizes and go-live date on WhatsApp, and we will send you a plan and quote for printing and mounting.
