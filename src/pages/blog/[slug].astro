@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import SectionLabel from '../../components/SectionLabel.astro';
 import Photo from '../../components/Photo.astro';
 import Icon from '../../components/Icon.astro';
-import PostCard from '../../components/PostCard.astro';
+import GuideRail from '../../components/GuideRail.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { getPosts, readingTime, fmtDate } from '../../lib/blog.js';
 import { services, config, business, waLink, serviceUrl } from '../../lib/site.js';
@@ -18,7 +18,7 @@ const { Content, headings } = await render(post);
 const d = post.data;
 const url = `${config.siteUrl}/blog/${post.id}/`;
 const service = services.find((s) => s.slug === d.service);
-const related = all.filter((p) => p.id !== post.id).sort((a, b) => (b.data.service === d.service ? 1 : 0) - (a.data.service === d.service ? 1 : 0)).slice(0, 3);
+const related = all.filter((p) => p.id !== post.id).sort((a, b) => (b.data.service === d.service ? 1 : 0) - (a.data.service === d.service ? 1 : 0));
 const toc = headings.filter((h) => h.depth === 2);
 const schema: object[] = [{
   '@context': 'https://schema.org',
@@ -98,7 +98,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
   <section class="section section--paper">
     <div class="container">
       <div class="section-head"><SectionLabel>Keep reading</SectionLabel><h2>More guides</h2></div>
-      <div class="grid grid-3">{related.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
+      <GuideRail posts={related} maxMore={9} />
     </div>
   </section>
   <CtaBand />

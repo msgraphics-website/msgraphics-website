@@ -1,0 +1,64 @@
+---
+// Articles block: the first `show` posts as cards, the rest in a swipeable row,
+// then a button to the blog.
+import PostCard from './PostCard.astro';
+import Icon from './Icon.astro';
+interface Props { posts: any[]; show?: number; maxMore?: number; moreLabel?: string; light?: boolean }
+const { posts, show = 3, maxMore = 12, moreLabel = 'More guides' } = Astro.props;
+const top = posts.slice(0, show);
+const more = posts.slice(show, show + maxMore);
+---
+<div class="gr">
+  <div class="grid grid-3">{top.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
+  {more.length > 0 && (
+    <div class="gr__more" data-rail>
+      <div class="gr__bar">
+        <h3 class="gr__h">{moreLabel}</h3>
+        <div class="gr__nav">
+          <button type="button" class="gr__btn" data-dir="-1" aria-label="Previous articles"><Icon name="chevron-left" /></button>
+          <button type="button" class="gr__btn" data-dir="1" aria-label="Next articles"><Icon name="chevron-right" /></button>
+        </div>
+      </div>
+      <ul class="gr__track" tabindex="0" aria-label={moreLabel}>
+        {more.map((p) => (
+          <li class="gr__item">
+            <a class="gr__card" href={`/blog/${p.id}/`}>
+              <img src={p.data.cover.src} alt="" loading="lazy" width="400" height="250" />
+              <span class="gr__title">{p.data.title}</span>
+              <span class="gr__read">Read article <Icon name="arrow-right" /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+  <p class="gr__all"><a href="/blog/" class="btn btn--outline">Read more articles <Icon name="arrow-right" /></a></p>
+</div>
+<style>
+  .gr__more { margin-top: 40px; }
+  .gr__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .gr__h { margin: 0; font-size: 1.1rem; }
+  .gr__nav { display: flex; gap: 8px; }
+  .gr__btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--navy); background: #fff; color: var(--navy); display: grid; place-items: center; cursor: pointer; }
+  .gr__btn:hover { background: var(--navy); color: #fff; }
+  .gr__btn :global(.icon) { width: 20px; height: 20px; }
+  .gr__track { list-style: none; margin: 0; padding: 4px 4px 10px; display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 280px); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  .gr__item { scroll-snap-align: start; }
+  .gr__card { height: 100%; display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; text-decoration: none; color: var(--navy); }
+  .gr__card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+  .gr__title { padding: 14px 16px 6px; font-weight: 600; line-height: 1.35; flex: 1; font-size: 0.98rem; }
+  .gr__read { padding: 0 16px 16px; color: var(--magenta-dark); font-weight: 600; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 6px; }
+  .gr__read :global(.icon) { width: 16px; height: 16px; }
+  .gr__card:hover .gr__title { color: var(--magenta-dark); }
+  .gr__card:focus-visible { outline: 3px solid var(--cyan); }
+  .gr__all { margin: 32px 0 0; text-align: center; }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((c) => {
+    const track = c.querySelector<HTMLElement>('.gr__track')!;
+    c.querySelectorAll<HTMLButtonElement>('.gr__btn').forEach((b) => b.addEventListener('click', () => {
+      const item = track.querySelector<HTMLElement>('.gr__item');
+      track.scrollBy({ left: (+b.dataset.dir!) * ((item?.offsetWidth ?? 280) + 16) * 2, behavior: 'smooth' });
+    }));
+  });
+</script>

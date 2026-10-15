@@ -2,8 +2,19 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import Dots from './Dots.astro';
+import { getPosts } from '../lib/blog.js';
 import { services, business, config, telLink, mailLink, waLink, serviceUrl, ph, isPlaceholder } from '../lib/site.js';
 const year = new Date().getFullYear();
+// Six guides for the footer; slugs that no longer exist are skipped.
+const allPosts = await getPosts();
+const guides = [
+  ['glow-sign-board-shop-dwarka', 'Glow sign boards in Dwarka'],
+  ['shop-signage-gurgaon-markets-malls', 'Shop signage in Gurgaon'],
+  ['shop-board-south-delhi-markets', 'Shop boards in South Delhi'],
+  ['exhibition-stall-planning-delhi', 'Exhibition stall planning'],
+  ['bulk-flex-banner-printing-delhi-ncr', 'Bulk flex banner printing'],
+  ['visiting-card-printing-paper-finishes-quantities', 'Visiting card printing'],
+].filter(([id]) => allPosts.some((p) => p.id === id)).map(([id, label]) => ({ id, label }));
 const socials = (['facebook', 'instagram', 'youtube', 'x'] as const).map((k) => ({ key: k, url: (business.social as Record<string, string>)[k] }));
 const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube', x: 'X (Twitter)' };
 ---
@@ -13,6 +24,7 @@ const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube'
       <a href="/"><Logo variant="dark" /></a>
       <p>{business.shortAbout}</p>
       <p class="footer__hindi"><Dots /> {business.hindiLine}</p>
+      <ul class="footer__regs">{business.registrations.map((r) => <li><Icon name="badge-check" />{r}</li>)}<li><Icon name="calendar-check" />Since {business.founded}</li></ul>
       <ul class="footer__social">
         {socials.map((s) => (
           <li>
@@ -23,42 +35,60 @@ const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube'
         ))}
       </ul>
     </div>
-    <div>
-      <h2 class="footer__h">Quick links</h2>
-      <ul class="footer__links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/services/">Services</a></li>
-        <li><a href="/our-unit/">Our Unit</a></li>
-        <li><a href="/work/">Work</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/contact/">Contact & Quote</a></li>
-        <li><a href="/track/">Track your order</a></li>
-        <li><a href={config.shopUrl}>Shop Print Products</a></li>
-      </ul>
-    </div>
-    <div>
-      <h2 class="footer__h">Services</h2>
-      <ul class="footer__links">
-        {services.map((s) => <li><a href={serviceUrl(s)}>{s.title}</a></li>)}
-      </ul>
-    </div>
-    <div>
-      <h2 class="footer__h">Visit our unit</h2>
-      <address class="footer__contact">
-        <p><Icon name="map-pin" /><span>{business.address.full}</span></p>
-        <p><Icon name="phone" /><a href={telLink} data-track="call_click">{business.phoneDisplay}</a></p>
-        <p><Icon name="whatsapp" /><a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">WhatsApp us</a></p>
-        <p><Icon name="mail" /><a href={mailLink}>{business.email}</a></p>
-        <p><Icon name="clock" /><span set:html={ph(business.workingHours)} /></p>
-        <ul class="footer__regs">{business.registrations.map((r) => <li><Icon name="badge-check" />{r}</li>)}</ul>
-      </address>
-      <iframe class="footer__map" src={config.mapEmbedUrl} title="Map: M.S. Graphics Studio, Dwarka Mor, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
+    <nav class="footer__nav" aria-label="Footer">
+      <div>
+        <h2 class="footer__h">Company</h2>
+        <ul class="footer__links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/our-unit/">Our printing unit</a></li>
+          <li><a href="/work/">Our work</a></li>
+          <li><a href="/blog/">Blog & guides</a></li>
+          <li><a href="/contact/">Contact us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer__h">Services</h2>
+        <ul class="footer__links">
+          {services.map((s) => <li><a href={serviceUrl(s)}>{s.title}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer__h">Shop & orders</h2>
+        <ul class="footer__links">
+          <li><a href={config.shopUrl}>Shop print products</a></li>
+          <li><a href="/contact/">Get a quote</a></li>
+          <li><a href="/track/">Track your order</a></li>
+          <li><a href={waLink('Hi M.S. Graphics Studio, I want to send artwork for printing.')} target="_blank" rel="noopener" data-track="whatsapp_click">Send artwork on WhatsApp</a></li>
+          <li><a href="/#testimonials">Client testimonials</a></li>
+          <li><a href="/staff/" rel="nofollow">Staff login</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer__h">Popular guides</h2>
+        <ul class="footer__links">
+          {guides.map((g) => <li><a href={`/blog/${g.id}/`}>{g.label}</a></li>)}
+        </ul>
+      </div>
+    </nav>
   </div>
+
+  <div class="container footer__contact">
+    <a class="fc" href={config.mapLinkUrl || '/contact/'} target="_blank" rel="noopener"><Icon name="map-pin" /><span><small>Visit our unit</small>{business.address.full}</span></a>
+    <a class="fc" href={telLink} data-track="call_click"><Icon name="phone" /><span><small>Call us</small>{business.phoneDisplay}</span></a>
+    <a class="fc" href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /><span><small>WhatsApp</small>{business.phoneDisplay}</span></a>
+    <a class="fc" href={mailLink}><Icon name="mail" /><span><small>Email</small><Fragment set:html={business.email.replace('@', '<wbr>@')} /></span></a>
+    <p class="fc"><Icon name="clock" /><span><small>Working hours</small><span set:html={ph(business.workingHours)} /></span></p>
+    <iframe class="footer__map" src={config.mapEmbedUrl} title="Map: M.S. Graphics Studio, Dwarka Mor, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="container footer__areas">
+    <p><strong>Serving:</strong> {(business.areasServed || []).join(' · ')}</p>
+  </div>
+
   <div class="container footer__bottom">
     <p>© {year} M.S. Graphics Studio. All rights reserved.</p>
-    <p>{business.tagline} · <a href="/staff/" rel="nofollow" class="footer__staff">Staff login</a></p>
+    <p>{business.tagline}</p>
   </div>
 </footer>
 
@@ -67,26 +97,40 @@ const names = { facebook: 'Facebook', instagram: 'Instagram', youtube: 'YouTube'
   .footer a { color: #e6e9f1; text-decoration: none; }
   .footer a:hover { color: #fff; text-decoration: underline; }
   .footer__grid { display: grid; gap: 40px; grid-template-columns: 1fr; }
-  @media (min-width: 700px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1080px) { .footer__grid { grid-template-columns: 1.4fr 0.8fr 1.1fr 1.4fr; } }
+  @media (min-width: 1080px) { .footer__grid { grid-template-columns: 1.15fr 3fr; gap: 56px; } }
   .footer__about :global(.logo) { height: 46px; width: auto; margin-bottom: 18px; }
+  .footer__about p { margin-bottom: 14px; }
   .footer__hindi { display: flex; gap: 10px; align-items: center; color: #fff; font-weight: 500; font-style: italic; }
-  .footer__h { color: #fff; font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
-  .footer__links { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-  .footer__contact { font-style: normal; }
-  .footer__contact p { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
-  .footer__contact :global(.icon) { width: 18px; height: 18px; color: var(--cyan); margin-top: 3px; }
-  .footer__map { width: 100%; height: 180px; border: 0; border-radius: var(--radius); margin-top: 8px; filter: grayscale(0.3); }
+  .footer__nav { display: grid; gap: 32px 24px; grid-template-columns: 1fr 1fr; }
+  @media (min-width: 760px) { .footer__nav { grid-template-columns: repeat(4, 1fr); } }
+  .footer__h { color: #fff; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; position: relative; }
+  .footer__h::after { content: ""; position: absolute; left: 0; bottom: 0; width: 28px; height: 3px; border-radius: 2px; background: var(--cyan); }
+  .footer__nav > div:nth-child(2) .footer__h::after { background: var(--magenta); }
+  .footer__nav > div:nth-child(3) .footer__h::after { background: var(--yellow); }
+  .footer__nav > div:nth-child(4) .footer__h::after { background: #fff; }
+  .footer__links { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .footer__links a { display: inline-block; line-height: 1.4; }
+  .footer__contact { margin-top: 48px; display: grid; gap: 12px; grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .footer__contact { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1080px) { .footer__contact { grid-template-columns: repeat(3, 1fr) 1.3fr; grid-template-rows: auto auto; } .footer__map { grid-column: 4; grid-row: 1 / span 2; } .footer__contact .fc:first-child { grid-column: span 2; } }
+  .fc { margin: 0; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #fff !important; text-decoration: none !important; min-width: 0; }
+  a.fc:hover { background: rgba(255,255,255,0.1); }
+  .fc > span { min-width: 0; overflow-wrap: break-word; }
+  .fc small { display: block; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9fa9c0; margin-bottom: 2px; }
+  .fc :global(.icon) { flex: none; width: 20px; height: 20px; color: var(--cyan); margin-top: 2px; }
+  .footer__map { width: 100%; height: 100%; min-height: 180px; border: 0; border-radius: var(--radius); filter: grayscale(0.3); }
+  @media (min-width: 700px) and (max-width: 1079px) { .footer__map { grid-column: 1 / -1; } }
+  .footer__areas p { margin: 28px 0 0; font-size: 0.85rem; color: #9fa9c0; line-height: 1.7; }
+  .footer__areas strong { color: #fff; font-weight: 600; }
   .footer__social { list-style: none; padding: 0; margin: 20px 0 0; display: flex; gap: 10px; }
   .soc { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); display: grid; place-items: center; color: #fff; }
   .soc :global(.icon) { width: 18px; height: 18px; }
   a.soc:hover { background: var(--magenta); border-color: var(--magenta); }
   .soc--off { opacity: 0.45; }
   .footer :global(.ph) { background: var(--yellow); color: var(--navy); }
-  .footer__bottom { border-top: 1px solid rgba(255,255,255,0.12); margin-top: 48px; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+  .footer__bottom { border-top: 1px solid rgba(255,255,255,0.12); margin-top: 28px; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
   .footer__bottom p { margin: 0; }
   .footer__regs { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .footer__regs li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.85rem; font-weight: 500; }
+  .footer__regs li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.82rem; font-weight: 500; }
   .footer__regs :global(.icon) { width: 16px; height: 16px; color: var(--yellow); margin: 0; }
-  .footer__staff { text-decoration: underline !important; }
 </style>

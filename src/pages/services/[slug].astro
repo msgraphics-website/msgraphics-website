@@ -5,8 +5,8 @@ import SectionLabel from '../../components/SectionLabel.astro';
 import Photo from '../../components/Photo.astro';
 import Icon from '../../components/Icon.astro';
 import QuoteForm from '../../components/QuoteForm.astro';
-import { services, config, waLink, serviceUrl, ph, business } from '../../lib/site.js';
-import PostCard from '../../components/PostCard.astro';
+import { services, config, waLink, telLink, mailLink, serviceUrl, ph, business } from '../../lib/site.js';
+import GuideRail from '../../components/GuideRail.astro';
 import { getPosts } from '../../lib/blog.js';
 
 export function getStaticPaths() {
@@ -14,7 +14,9 @@ export function getStaticPaths() {
 }
 const { service: s } = Astro.props;
 const others = services.filter((x) => x.slug !== s.slug);
-const guides = (await getPosts()).filter((p) => p.data.service === s.slug);
+const allPosts = await getPosts();
+// This service's guides first, then the rest (for the swipe row).
+const guides = [...allPosts.filter((p) => p.data.service === s.slug), ...allPosts.filter((p) => p.data.service !== s.slug)];
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -127,7 +129,7 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
     <section class="section">
       <div class="container">
         <div class="section-head"><SectionLabel>Guides</SectionLabel><h2>Helpful reading before you order</h2></div>
-        <div class="grid grid-3">{guides.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
+        <GuideRail posts={guides} />
       </div>
     </section>
   )}
@@ -138,6 +140,21 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
         <SectionLabel>Get a quote</SectionLabel>
         <h2>Get a quote for {s.title}</h2>
         <p class="lead">Share the details. We'll reply with a clear quote within 24 hours.</p>
+        <ol class="qsteps">
+          <li><span>1</span><div><strong>Send your brief</strong>What you need, where, how many and by when. Add artwork or a photo of the site if you have one.</div></li>
+          <li><span>2</span><div><strong>Get a clear quote</strong>Our team replies within 24 hours with the price and what is included.</div></li>
+          <li><span>3</span><div><strong>We make and deliver</strong>Produced in our own unit at Dwarka Mor and installed by our own crew.</div></li>
+        </ol>
+        <div class="qcontact">
+          <a href={telLink} data-track="call_click"><Icon name="phone" /><span><small>Call</small>{business.phoneDisplay}</span></a>
+          <a href={waLink(`Hi M.S. Graphics Studio, I need a quote for ${s.title}.`)} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /><span><small>WhatsApp</small>Chat with us</span></a>
+          <a href={mailLink}><Icon name="mail" /><span><small>Email</small><Fragment set:html={business.email.replace('@', '<wbr>@')} /></span></a>
+          <p><Icon name="clock" /><span><small>Working hours</small>{business.workingHours}</span></p>
+        </div>
+        <ul class="qbadges">
+          <li><Icon name="factory" />Own unit since {business.founded}</li>
+          {business.registrations.map((r) => <li><Icon name="badge-check" />{r}</li>)}
+        </ul>
         <h3 class="others-h">Other services</h3>
         <ul class="others">{others.map((o) => <li><a href={serviceUrl(o)}><Icon name={o.icon} />{o.title}</a></li>)}</ul>
       </div>
@@ -154,7 +171,25 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
   .areas__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .areas__list li { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 0.92rem; }
   .areas__list :global(.icon) { width: 16px; height: 16px; color: var(--magenta); }
+  .qsteps { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 16px; }
+  .qsteps li { display: flex; gap: 14px; align-items: flex-start; }
+  .qsteps span { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: var(--navy); background: var(--yellow); }
+  .qsteps li:nth-child(1) span { background: var(--cyan); color: #fff; }
+  .qsteps li:nth-child(2) span { background: var(--magenta); color: #fff; }
+  .qsteps div { color: #c4cbdc; font-size: 0.95rem; }
+  .qsteps strong { display: block; color: #fff; font-weight: 600; }
+  .qcontact { margin-top: 28px; display: grid; gap: 10px; grid-template-columns: 1fr; }
+  @media (min-width: 560px) { .qcontact { grid-template-columns: 1fr 1fr; } }
+  .qcontact a, .qcontact p { margin: 0; display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: var(--radius); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); color: #fff; text-decoration: none; font-weight: 500; font-size: 0.92rem; min-width: 0; }
+  .qcontact a:hover { background: rgba(255,255,255,0.12); }
+  .qcontact span { min-width: 0; overflow-wrap: break-word; }
+  .qcontact small { display: block; font-size: 0.75rem; color: #9fa9c0; font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; }
+  .qcontact :global(.icon) { flex: none; width: 22px; height: 22px; color: var(--cyan); }
+  .qbadges { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .qbadges li { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 0.85rem; font-weight: 500; }
+  .qbadges :global(.icon) { width: 16px; height: 16px; color: var(--yellow); }
   .others { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  @media (min-width: 560px) { .others { grid-template-columns: 1fr 1fr; } }
   .others a { color: #dfe4ef; text-decoration: none; display: inline-flex; gap: 10px; align-items: center; }
   .others a:hover { color: #fff; text-decoration: underline; }
   .others :global(.icon) { color: var(--cyan); width: 20px; height: 20px; }

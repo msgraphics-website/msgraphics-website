@@ -10,12 +10,12 @@ import Gallery from '../components/Gallery.astro';
 import Testimonials from '../components/Testimonials.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { content, services, business, waLink, ph } from '../lib/site.js';
-import PostCard from '../components/PostCard.astro';
+import GuideRail from '../components/GuideRail.astro';
 import { getPosts } from '../lib/blog.js';
 const h = content.home;
 const ba = content.work.beforeAfter[0];
 const featured = content.work.items.slice(0, 6);
-const posts = (await getPosts()).slice(0, 3);
+const posts = await getPosts();
 const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: h.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }];
 ---
 <Base
@@ -172,11 +172,18 @@ const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainE
   </section>
 
   <!-- 10. TESTIMONIALS -->
-  <section class="section section--paper">
-    <div class="container">
-      <div class="section-head">
-        <SectionLabel>Testimonials</SectionLabel>
+  <section class="section section--paper" id="testimonials">
+    <div class="container tsec">
+      <div class="tsec__intro">
+        <SectionLabel>Client testimonials</SectionLabel>
         <h2>What clients say</h2>
+        <p class="lead">From national brands to the shop next door, {business.name} has served 9,500+ clients since {business.founded}.</p>
+        <ul class="tsec__stats">
+          <li><strong>10K+</strong><span>projects delivered</span></li>
+          <li><strong>9.5K+</strong><span>clients</span></li>
+          <li><strong>20+</strong><span>cities, incl. Nepal</span></li>
+        </ul>
+        <a class="btn btn--outline" href={waLink('Hi M.S. Graphics Studio, I would like to share feedback about my order: ')} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> Worked with us? Share feedback</a>
       </div>
       <Testimonials items={content.testimonials} />
     </div>
@@ -203,8 +210,7 @@ const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainE
         <SectionLabel>From the blog</SectionLabel>
         <h2>Guides for signage, printing and events</h2>
       </div>
-      <div class="grid grid-3">{posts.map((p) => <PostCard post={p} headingLevel="h3" />)}</div>
-      <p style="margin-top:28px"><a href="/blog/" class="link-arrow">All articles <Icon name="arrow-right" /></a></p>
+      <GuideRail posts={posts} maxMore={9} />
     </div>
   </section>
 
@@ -213,6 +219,14 @@ const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainE
 </Base>
 
 <style>
+  .tsec { display: grid; gap: 32px; align-items: center; }
+  @media (min-width: 960px) { .tsec { grid-template-columns: 0.9fr 1.3fr; gap: 48px; } }
+  .tsec__intro h2 { margin-bottom: 12px; }
+  .tsec__stats { list-style: none; padding: 0; margin: 0 0 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tsec__stats li { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 12px; }
+  .tsec__stats strong { display: block; font-size: 1.5rem; color: var(--magenta); line-height: 1.1; }
+  .tsec__stats span { font-size: 0.82rem; color: var(--muted); }
+  .tsec :global(.tst) { min-width: 0; }
   .faq-wrap { display: grid; gap: 32px; }
   @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
   .hero { position: relative; color: #fff; background: var(--navy); min-height: min(88vh, 760px); display: flex; align-items: center; padding: 80px 0 120px; overflow: hidden; }
