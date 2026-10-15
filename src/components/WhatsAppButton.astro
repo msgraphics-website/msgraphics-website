@@ -2,14 +2,14 @@
 import Icon from './Icon.astro';
 import { waLink, telLink, business } from '../lib/site.js';
 ---
-<div class="float-actions">
+<aside class="float-actions" aria-label="Quick contact">
   <a class="float-call" href={telLink} data-track="call_click" aria-label={`Call now: ${business.phoneDisplay}`}>
     <Icon name="phone" /><span>Call now</span>
   </a>
   <a class="float-wa" href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click" aria-label="Chat with us on WhatsApp">
     <Icon name="whatsapp" />
   </a>
-</div>
+</aside>
 <style>
   .float-actions { position: fixed; right: 16px; bottom: 16px; z-index: 90; display: flex; align-items: flex-end; gap: 10px; }
   .float-wa { width: 58px; height: 58px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,0.22); transition: transform 0.2s; }

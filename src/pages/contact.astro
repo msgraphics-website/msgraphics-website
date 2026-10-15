@@ -16,7 +16,7 @@ import { content, business, config, telLink, mailLink, waLink, ph } from '../lib
         <h2 class="sr-only">Quote request form</h2>
         <QuoteForm />
       </div>
-      <aside class="info">
+      <div class="info">
         <h2>Talk to us directly</h2>
         <ul class="info__list">
           <li><Icon name="whatsapp" /><div><strong>WhatsApp</strong><a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">{business.phoneDisplay}</a></div></li>
@@ -27,7 +27,7 @@ import { content, business, config, telLink, mailLink, waLink, ph } from '../lib
           <li><Icon name="badge-check" /><div><strong>Registered business</strong><span>{business.registrations.join(' · ')}</span></div></li>
         </ul>
         <iframe class="map" src={config.mapEmbedUrl} title="Map: M.S. Graphics Studio, Dwarka Mor, New Delhi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </aside>
+      </div>
     </div>
   </section>
 </Base>

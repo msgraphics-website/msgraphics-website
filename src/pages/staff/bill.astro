@@ -20,7 +20,7 @@ const title = config.billTitle || 'Challan';
         <p class="bh-reg">{business.registrations.join(' · ')}{config.billGstin && <> · GSTIN {config.billGstin}</>}</p>
       </div>
       <div class="bh-right">
-        <h1>{title}</h1>
+        <h2 class="bh-title">{title}</h2>
         <dl>
           <dt>{title} no.</dt><dd data-f="code"></dd>
           <dt>Date</dt><dd data-f="date"></dd>
@@ -109,7 +109,7 @@ const title = config.billTitle || 'Challan';
   .bh-addr { margin: 6px 0 2px; color: var(--muted); font-size: 7.6pt; line-height: 1.4; }
   .bh-reg { margin: 0; font-size: 7.4pt; font-weight: 600; color: var(--navy); }
   .bh-right { text-align: right; flex-shrink: 0; }
-  .bh-right h1 { margin: 0 0 4px; font-size: 15pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta-dark); }
+  .bh-right .bh-title { margin: 0 0 4px; font-size: 15pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta-dark); }
   .bh-right dl { display: grid; grid-template-columns: auto auto; gap: 1px 10px; margin: 0; font-size: 7.8pt; }
   .bh-right dt { color: var(--muted); }
   .bh-right dd { margin: 0; font-weight: 600; }

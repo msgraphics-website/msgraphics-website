@@ -12,7 +12,7 @@ const links = [
   { href: '/contact/', label: 'Contact' },
 ];
 ---
-<div class="topbar">
+<aside class="topbar" aria-label="Contact details">
   <div class="container topbar__in">
     <span class="topbar__left">
       <a href={telLink} data-track="call_click"><Icon name="phone" /> {business.phoneDisplay}</a>
@@ -23,7 +23,7 @@ const links = [
       <span class="topbar__hours"><Icon name="clock" /> {business.workingHours}</span>
     </span>
   </div>
-</div>
+</aside>
 <header class="header" id="top">
   <div class="container header__in">
     <a href="/" class="header__logo"><Logo /></a>

@@ -54,7 +54,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
     <div class="container article">
       <div class="article__main">
         <p class="summary">{d.description}</p>
-        {d.summary && <aside class="quick-answer" aria-label="Quick answer"><strong>Quick answer</strong><p>{d.summary}</p></aside>}
+        {d.summary && <div class="quick-answer" role="note" aria-label="Quick answer"><strong>Quick answer</strong><p>{d.summary}</p></div>}
         <Photo image={d.cover} ratio="16 / 9" crop eager />
         {toc.length > 2 && (
           <nav class="toc" aria-label="In this article">
@@ -74,7 +74,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
         )}
       </div>
 
-      <aside class="article__side">
+      <div class="article__side">
         {service && (
           <div class="side-card">
             <p class="side-card__label">Related service</p>
@@ -91,7 +91,7 @@ if (d.faq.length) schema.push({ '@context': 'https://schema.org', '@type': 'FAQP
             <a class="btn btn--ghost-light btn--sm" href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> WhatsApp</a>
           </div>
         </div>
-      </aside>
+      </div>
     </div>
   </article>
 

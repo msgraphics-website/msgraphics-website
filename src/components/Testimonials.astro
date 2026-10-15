@@ -39,7 +39,7 @@ const { items } = Astro.props;
     const track = c.querySelector<HTMLElement>('.tst__track')!;
     c.querySelectorAll<HTMLButtonElement>('.tst__btn').forEach((b) => b.addEventListener('click', () => {
       const item = track.querySelector<HTMLElement>('.tst__item');
-      track.scrollBy({ left: (+b.dataset.dir!) * ((item?.offsetWidth ?? 300) + 20), behavior: 'smooth' });
+      track.scrollBy({ left: (+b.dataset.dir!) * ((item?.offsetWidth ?? 300) + 20), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     }));
   });
 </script>

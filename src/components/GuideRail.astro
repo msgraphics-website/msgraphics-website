@@ -58,7 +58,7 @@ const more = posts.slice(show, show + maxMore);
     const track = c.querySelector<HTMLElement>('.gr__track')!;
     c.querySelectorAll<HTMLButtonElement>('.gr__btn').forEach((b) => b.addEventListener('click', () => {
       const item = track.querySelector<HTMLElement>('.gr__item');
-      track.scrollBy({ left: (+b.dataset.dir!) * ((item?.offsetWidth ?? 280) + 16) * 2, behavior: 'smooth' });
+      track.scrollBy({ left: (+b.dataset.dir!) * ((item?.offsetWidth ?? 280) + 16) * 2, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     }));
   });
 </script>
