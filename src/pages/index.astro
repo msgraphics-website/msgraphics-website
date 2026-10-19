@@ -13,6 +13,8 @@ import { content, services, business, waLink, ph } from '../lib/site.js';
 import GuideRail from '../components/GuideRail.astro';
 import { getPosts } from '../lib/blog.js';
 const h = content.home;
+// Only show quotes that have been filled in (no [placeholder] text).
+const realTestimonials = content.testimonials.filter((t) => !/\[/.test(t.quote + t.name));
 const ba = content.work.beforeAfter[0];
 const featured = content.work.items.slice(0, 6);
 const posts = await getPosts();
@@ -171,12 +173,12 @@ const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainE
     </div>
   </section>
 
-  <!-- 10. TESTIMONIALS -->
+  <!-- 10. CLIENT PROJECT HIGHLIGHTS + TESTIMONIALS -->
   <section class="section section--paper" id="testimonials">
     <div class="container tsec">
       <div class="tsec__intro">
-        <SectionLabel>Client testimonials</SectionLabel>
-        <h2>What clients say</h2>
+        <SectionLabel>Clients & projects</SectionLabel>
+        <h2>Work we have done for brands you know</h2>
         <p class="lead">From national brands to the shop next door, {business.name} has served 9,500+ clients since {business.founded}.</p>
         <ul class="tsec__stats">
           <li><strong>10K+</strong><span>projects delivered</span></li>
@@ -185,8 +187,22 @@ const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainE
         </ul>
         <a class="btn btn--outline" href={waLink('Hi M.S. Graphics Studio, I would like to share feedback about my order: ')} target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> Worked with us? Share feedback</a>
       </div>
-      <Testimonials items={content.testimonials} />
+      <ul class="hl">
+        {(h.highlights || []).map((x, i) => (
+          <li class={`hl__item hl__item--${i % 4}`}>
+            <p class="hl__client">{x.client}</p>
+            <p class="hl__loc"><Icon name="map-pin" />{x.location}</p>
+            <p class="hl__work" set:html={ph(x.work)} />
+          </li>
+        ))}
+      </ul>
     </div>
+    {realTestimonials.length > 0 && (
+      <div class="container tsec__quotes">
+        <h3>What clients say</h3>
+        <Testimonials items={realTestimonials} />
+      </div>
+    )}
   </section>
 
   <!-- FAQ -->
@@ -227,6 +243,17 @@ const faqSchema = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainE
   .tsec__stats strong { display: block; font-size: 1.5rem; color: var(--magenta); line-height: 1.1; }
   .tsec__stats span { font-size: 0.82rem; color: var(--muted); }
   .tsec :global(.tst) { min-width: 0; }
+  .hl { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .hl { grid-template-columns: 1fr 1fr; } }
+  .hl__item { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--cyan); border-radius: var(--radius); padding: 22px; }
+  .hl__item--1 { border-top-color: var(--magenta); }
+  .hl__item--2 { border-top-color: var(--yellow); }
+  .hl__item--3 { border-top-color: var(--navy); }
+  .hl__client { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--navy); }
+  .hl__loc { margin: 4px 0 12px; display: flex; align-items: center; gap: 6px; font-size: 0.88rem; color: var(--muted); }
+  .hl__loc :global(.icon) { width: 16px; height: 16px; color: var(--magenta-dark); }
+  .hl__work { margin: 0; font-size: 0.95rem; }
+  .tsec__quotes { margin-top: 48px; }
   .faq-wrap { display: grid; gap: 32px; }
   @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
   .hero { position: relative; color: #fff; background: var(--navy); min-height: min(88vh, 760px); display: flex; align-items: center; padding: 80px 0 120px; overflow: hidden; }

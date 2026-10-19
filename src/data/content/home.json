@@ -230,5 +230,27 @@
       "q": "Do you give GST invoices?",
       "a": "Yes. We are GST registered and MSME registered, and every job is billed with a proper GST invoice."
     }
+  ],
+  "highlights": [
+    {
+      "client": "LIC India",
+      "location": "Dwarka Mor branch, New Delhi",
+      "work": "[What we did for this branch, e.g. branch signage, glow sign board, posters]"
+    },
+    {
+      "client": "Muthoot Finance",
+      "location": "East Delhi",
+      "work": "[What we did, e.g. branch branding, flex boards, in-branch posters]"
+    },
+    {
+      "client": "Coca-Cola",
+      "location": "Gurugram",
+      "work": "[What we did, e.g. in-store branding, standees, event setup]"
+    },
+    {
+      "client": "KFC",
+      "location": "Gurugram",
+      "work": "[What we did, e.g. store signage, menu boards, window graphics]"
+    }
   ]
 }
