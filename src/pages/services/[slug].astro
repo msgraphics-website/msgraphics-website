@@ -19,6 +19,7 @@ const lc = (t: string) => t.split(' ').map((w) => (/^[A-Z][a-z]/.test(w) && w !=
 const isHub = s.slug === DIGITAL_HUB;
 const isDigitalSub = s.parent === DIGITAL_HUB;
 const others = services.filter((x) => x.slug !== s.slug);
+const isDigital = isHub || isDigitalSub;
 const digitalSiblings = digitalServices.filter((x) => x.slug !== s.slug);
 const crumbs = isDigitalSub && digitalHub
   ? [{ href: '/services/', label: 'Services' }, { href: serviceUrl(digitalHub), label: 'Digital' }, { href: '', label: s.title }]
@@ -37,13 +38,13 @@ const serviceSchema = {
   name: s.title,
   description: s.metaDescription,
   serviceType: s.title,
-  areaServed: [{ '@type': 'AdministrativeArea', name: 'Delhi NCR' }, { '@type': 'Country', name: 'India' }, { '@type': 'Country', name: 'Nepal' }, ...(business.areasServed || []).map((name) => ({ '@type': 'Place', name }))],
+  ...(isDigital ? {} : { areaServed: [{ '@type': 'AdministrativeArea', name: 'Delhi NCR' }, { '@type': 'Country', name: 'India' }, { '@type': 'Country', name: 'Nepal' }, ...(business.areasServed || []).map((name) => ({ '@type': 'Place', name }))] }),
   url: `${config.siteUrl}${serviceUrl(s)}`,
   provider: { '@id': `${config.siteUrl}/#business` },
 };
 const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [serviceSchema];
 ---
-<Base title={s.metaTitle} description={s.metaDescription} crumb={s.title} image={s.cardImage.src.endsWith('.svg') ? undefined : s.cardImage.src} schema={schema}>
+<Base title={s.metaTitle} description={s.metaDescription} crumb={s.title} image={s.cardImage.src.endsWith('.svg') ? undefined : s.cardImage.src} schema={schema} noGeo={isDigital}>
   <PageHero label={s.shortTitle} title={s.title} text={s.tagline} crumbs={crumbs}>
     <div class="btn-row" style="margin-top:28px">
       <a href="#quote" class="btn btn--primary">Get a quote <Icon name="arrow-right" /></a>
@@ -162,7 +163,7 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
     </section>
   )}
 
-  {guides.length > 0 && (
+  {!isDigital && guides.length > 0 && (
     <section class="section">
       <div class="container">
         <div class="section-head"><SectionLabel>Guides</SectionLabel><h2>Helpful reading before you order</h2></div>
@@ -178,9 +179,19 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
         <h2>Get a quote for {s.title}</h2>
         <p class="lead">Share the details. We'll reply with a clear quote within 24 hours.</p>
         <ol class="qsteps">
+          {isDigital ? (
+            <>
+              <li><span>1</span><div><strong>Send your brief</strong>What you need, your goals and your deadline. Share any sample websites, apps or pages you like.</div></li>
+              <li><span>2</span><div><strong>Get a clear quote</strong>Our team replies within 24 hours with the price, timeline and what is included.</div></li>
+              <li><span>3</span><div><strong>We build and launch</strong>You see progress at each stage and approve it before we go live.</div></li>
+            </>
+          ) : (
+            <>
           <li><span>1</span><div><strong>Send your brief</strong>What you need, where, how many and by when. Add artwork or a photo of the site if you have one.</div></li>
           <li><span>2</span><div><strong>Get a clear quote</strong>Our team replies within 24 hours with the price and what is included.</div></li>
           <li><span>3</span><div><strong>We make and deliver</strong>Produced in our own unit at Dwarka Mor and installed by our own crew.</div></li>
+            </>
+          )}
         </ol>
         <div class="qcontact">
           <a href={telLink} data-track="call_click"><Icon name="phone" /><span><small>Call</small>{business.phoneDisplay}</span></a>
@@ -189,13 +200,13 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
           <p><Icon name="clock" /><span><small>Working hours</small>{business.workingHours}</span></p>
         </div>
         <ul class="qbadges">
-          <li><Icon name="factory" />Own unit since {business.founded}</li>
+          {!isDigital && <li><Icon name="factory" />Own unit since {business.founded}</li>}
           {business.registrations.map((r) => <li><Icon name="badge-check" />{r}</li>)}
         </ul>
         <h3 class="others-h">Other services</h3>
         <ul class="others">{others.map((o) => <li><a href={serviceUrl(o)}><Icon name={o.icon} />{o.title}</a></li>)}</ul>
       </div>
-      <QuoteForm service={s.title} />
+      <QuoteForm service={s.title} cityPlaceholder={isDigital ? 'Your city' : undefined} />
     </div>
   </section>
 </Base>

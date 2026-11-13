@@ -516,9 +516,9 @@
       "shortTitle": "Digital",
       "tagline": "Your brand online, built by the team that prints it.",
       "icon": "monitor-smartphone",
-      "metaTitle": "Website & App Development, Digital Marketing in Delhi | M.S. Graphics Studio",
-      "metaDescription": "Website design and development, mobile app development, social media, Google Ads and SEO for businesses in Delhi NCR, from the M.S. Graphics Studio team in Dwarka.",
-      "keywordHeading": "Website, app development and digital marketing in Delhi",
+      "metaTitle": "Website & App Development, Digital Marketing | M.S. Graphics Studio",
+      "metaDescription": "Website design and development, mobile app development, social media, Google Ads and SEO for businesses, from the M.S. Graphics Studio team.",
+      "keywordHeading": "Website, app development and digital marketing",
       "cardImage": {
         "src": "/images/service-digital.webp",
         "alt": "3D illustration: a business website on a desktop, laptop and phone",
@@ -565,8 +565,8 @@
           "text": "Colours, logo and message stay the same on your shop front, your print and your screens."
         },
         {
-          "title": "Local team in Delhi",
-          "text": "Meet us at our unit in Dwarka Mor, or talk on WhatsApp and phone."
+          "title": "Easy to reach",
+          "text": "Talk to us on WhatsApp, phone, email or a video call, whenever you need an update."
         },
         {
           "title": "One point of contact",
@@ -596,9 +596,7 @@
           "q": "Can you match the website to our sign board and print?",
           "a": "Yes. Because we also design your print and signage, we keep the same logo, colours and style across your website, social media and shop front."
         }
-      ],
-      "areasHeading": "Websites and digital marketing for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "website-development",
@@ -607,9 +605,9 @@
       "shortTitle": "Websites",
       "tagline": "A fast, mobile-friendly website that brings enquiries.",
       "icon": "globe",
-      "metaTitle": "Website Design & Development Company in Delhi | M.S. Graphics Studio",
-      "metaDescription": "Business website design and development in Delhi NCR: mobile-friendly websites, landing pages, enquiry forms and WhatsApp buttons, from the M.S. Graphics Studio team in Dwarka.",
-      "keywordHeading": "Website design and development in Delhi",
+      "metaTitle": "Website Design & Development Company | M.S. Graphics Studio",
+      "metaDescription": "Business website design and development: mobile-friendly websites, landing pages, enquiry forms and WhatsApp buttons, from the M.S. Graphics Studio team.",
+      "keywordHeading": "Website design and development",
       "cardImage": {
         "src": "/images/digital-website.webp",
         "alt": "3D illustration: website design on a desktop screen",
@@ -672,7 +670,7 @@
       "faqs": [
         {
           "q": "Do you make websites for small businesses and shops?",
-          "a": "Yes. M.S. Graphics Studio makes websites for shops, offices and growing brands in Delhi NCR, from a simple one-page site to a full company website."
+          "a": "Yes. M.S. Graphics Studio makes websites for shops, offices and growing brands, from a simple one-page site to a full company website."
         },
         {
           "q": "How much does a website cost?",
@@ -686,9 +684,7 @@
           "q": "Can you help with domain and hosting?",
           "a": "Yes. We can help you buy a domain, set up hosting and connect a business email."
         }
-      ],
-      "areasHeading": "Websites for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "web-app-development",
@@ -697,9 +693,9 @@
       "shortTitle": "Web apps",
       "tagline": "Custom online tools for your business, built for your way of working.",
       "icon": "app-window",
-      "metaTitle": "Web App Development Company in Delhi | M.S. Graphics Studio",
-      "metaDescription": "Custom web app development in Delhi NCR: order tracking, staff panels, dashboards, booking and billing tools, from the M.S. Graphics Studio team in Dwarka.",
-      "keywordHeading": "Custom web app development in Delhi",
+      "metaTitle": "Web App Development Company | M.S. Graphics Studio",
+      "metaDescription": "Custom web app development: order tracking, staff panels, dashboards, booking and billing tools, from the M.S. Graphics Studio team.",
+      "keywordHeading": "Custom web app development",
       "cardImage": {
         "src": "/images/digital-website.webp",
         "alt": "3D illustration: a web app dashboard on a desktop screen",
@@ -776,9 +772,7 @@
           "q": "Do you give support after launch?",
           "a": "Yes. We can fix issues and add features after launch. Ask about a support plan in your proposal."
         }
-      ],
-      "areasHeading": "Web apps for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "mobile-app-development",
@@ -787,9 +781,9 @@
       "shortTitle": "Mobile apps",
       "tagline": "Your business in your customers' pocket.",
       "icon": "smartphone",
-      "metaTitle": "Mobile App Development Company in Delhi | M.S. Graphics Studio",
-      "metaDescription": "Mobile app development in Delhi NCR for Android and iPhone: app design, development, testing and store launch, from the M.S. Graphics Studio team in Dwarka.",
-      "keywordHeading": "Mobile app development in Delhi",
+      "metaTitle": "Mobile App Development Company | M.S. Graphics Studio",
+      "metaDescription": "Mobile app development for Android and iPhone: app design, development, testing and store launch, from the M.S. Graphics Studio team.",
+      "keywordHeading": "Mobile app development",
       "cardImage": {
         "src": "/images/digital-app.webp",
         "alt": "3D illustration: mobile app screens on phones",
@@ -866,9 +860,7 @@
           "q": "Can we update the app content ourselves?",
           "a": "Yes. We can add an admin panel so you can change products, offers and other content without a developer."
         }
-      ],
-      "areasHeading": "Mobile apps for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "digital-marketing",
@@ -877,9 +869,9 @@
       "shortTitle": "Digital marketing",
       "tagline": "More enquiries from Google, Facebook and Instagram.",
       "icon": "megaphone",
-      "metaTitle": "Digital Marketing Agency in Delhi | SEO, Social Media, Google Ads | M.S. Graphics Studio",
-      "metaDescription": "Digital marketing for businesses in Delhi NCR: SEO, social media marketing, Google Ads and creatives, planned and run by the M.S. Graphics Studio team in Dwarka.",
-      "keywordHeading": "Digital marketing services in Delhi",
+      "metaTitle": "Digital Marketing Agency | SEO, Social Media, Google Ads | M.S. Graphics Studio",
+      "metaDescription": "Digital marketing for businesses: SEO, social media marketing, Google Ads and creatives, planned and run by the M.S. Graphics Studio team.",
+      "keywordHeading": "Digital marketing services",
       "cardImage": {
         "src": "/images/digital-social-ads.webp",
         "alt": "3D illustration: social media posts and ads on a laptop",
@@ -956,9 +948,7 @@
           "q": "Can you link online campaigns with print and hoardings?",
           "a": "Yes. Because we also do print, signage and hoardings, we can run one campaign across online and offline."
         }
-      ],
-      "areasHeading": "Digital marketing for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "seo-services",
@@ -967,9 +957,9 @@
       "shortTitle": "SEO",
       "tagline": "Get found on Google when customers search for you.",
       "icon": "search",
-      "metaTitle": "SEO Services in Delhi | Local SEO & Google Ranking | M.S. Graphics Studio",
-      "metaDescription": "SEO services in Delhi NCR: keyword research, on-page SEO, local SEO, content and technical fixes to help your business rank on Google, from M.S. Graphics Studio.",
-      "keywordHeading": "SEO services in Delhi",
+      "metaTitle": "SEO Services | Google Ranking & Local SEO | M.S. Graphics Studio",
+      "metaDescription": "SEO services: keyword research, on-page SEO, local SEO, content and technical fixes to help your business rank on Google, from M.S. Graphics Studio.",
+      "keywordHeading": "SEO services",
       "cardImage": {
         "src": "/images/digital-seo.webp",
         "alt": "3D illustration: search results and analytics on a laptop",
@@ -1046,9 +1036,7 @@
           "q": "Do you guarantee the first position on Google?",
           "a": "No one can honestly guarantee a position on Google. We follow good practice and report progress clearly."
         }
-      ],
-      "areasHeading": "SEO for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "social-media-marketing",
@@ -1057,9 +1045,9 @@
       "shortTitle": "Social media",
       "tagline": "Regular, on-brand posts that keep customers coming back.",
       "icon": "share-2",
-      "metaTitle": "Social Media Marketing in Delhi | Facebook & Instagram | M.S. Graphics Studio",
-      "metaDescription": "Social media marketing in Delhi NCR: Facebook and Instagram page management, post and reel designs, content calendars and paid promotions, from M.S. Graphics Studio.",
-      "keywordHeading": "Social media marketing in Delhi",
+      "metaTitle": "Social Media Marketing | Facebook & Instagram | M.S. Graphics Studio",
+      "metaDescription": "Social media marketing: Facebook and Instagram page management, post and reel designs, content calendars and paid promotions, from M.S. Graphics Studio.",
+      "keywordHeading": "Social media marketing",
       "cardImage": {
         "src": "/images/digital-social-ads.webp",
         "alt": "3D illustration: social media posts on a laptop",
@@ -1136,9 +1124,7 @@
           "q": "Can you run paid ads on Facebook and Instagram?",
           "a": "Yes. We can run paid promotions to reach more people in your area."
         }
-      ],
-      "areasHeading": "Social media marketing for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     },
     {
       "slug": "google-ads",
@@ -1147,9 +1133,9 @@
       "shortTitle": "Google Ads",
       "tagline": "Show up at the top of Google when customers are ready to buy.",
       "icon": "mouse-pointer-click",
-      "metaTitle": "Google Ads Agency in Delhi | PPC Campaign Management | M.S. Graphics Studio",
-      "metaDescription": "Google Ads management in Delhi NCR: search, display and local campaigns, keyword and budget planning, ad copy and landing pages, from M.S. Graphics Studio.",
-      "keywordHeading": "Google Ads management in Delhi",
+      "metaTitle": "Google Ads Agency | PPC Campaign Management | M.S. Graphics Studio",
+      "metaDescription": "Google Ads management: search, display and local campaigns, keyword and budget planning, ad copy and landing pages, from M.S. Graphics Studio.",
+      "keywordHeading": "Google Ads management",
       "cardImage": {
         "src": "/images/digital-seo.webp",
         "alt": "3D illustration: ads and analytics on a laptop",
@@ -1212,23 +1198,21 @@
       "faqs": [
         {
           "q": "How much should we spend on Google Ads?",
-          "a": "It depends on your business, area and competition. We suggest a starting budget after the brief. [Mention your management fee if you want to show it.]"
+          "a": "It depends on your business, target locations and competition. We suggest a starting budget after the brief. [Mention your management fee if you want to show it.]"
         },
         {
           "q": "Is the ad budget separate from your fee?",
           "a": "Yes. The ad budget is paid to Google, and our management fee is separate. We explain both in the proposal."
         },
         {
-          "q": "Can you target only Delhi NCR or my area?",
-          "a": "Yes. Ads can be shown only in the areas you choose, such as Dwarka, West Delhi, Gurgaon or all of Delhi NCR."
+          "q": "Can you show ads only in the cities or areas I choose?",
+          "a": "Yes. Ads can be shown only in the locations you choose, from a few nearby areas to the whole country."
         },
         {
           "q": "How soon will ads bring enquiries?",
           "a": "Ads can start bringing clicks soon after they go live. We improve them each month based on the results."
         }
-      ],
-      "areasHeading": "Google Ads for businesses across Delhi NCR",
-      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
+      ]
     }
   ]
 }

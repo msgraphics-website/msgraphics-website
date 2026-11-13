@@ -10,8 +10,8 @@ import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { content, config, allServices, business } from '../lib/site.js';
 
-interface Props { title: string; description: string; image?: string; schema?: object[]; crumb?: string; type?: 'website' | 'article'; published?: Date; modified?: Date; noindex?: boolean }
-const { title, description, image = config.ogImage, schema = [], crumb, type = 'website', published, modified, noindex = false } = Astro.props;
+interface Props { title: string; description: string; image?: string; schema?: object[]; crumb?: string; type?: 'website' | 'article'; published?: Date; modified?: Date; noindex?: boolean; noGeo?: boolean }
+const { title, description, image = config.ogImage, schema = [], crumb, type = 'website', published, modified, noindex = false, noGeo = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, config.siteUrl).href;
 const ogImage = new URL(image.endsWith('.svg') ? config.ogImage : image, config.siteUrl).href;
 const fullTitle = /M\.?S\.? Graphics/.test(title) || title.length > 52 ? title : `${title} | M.S. Graphics Studio`;
@@ -86,9 +86,11 @@ const jsonLd = [localBusiness, ...(isHome ? [website] : []), ...(breadcrumb ? [b
   <link rel="alternate" hreflang="en-IN" href={canonical} />
   <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
   <link rel="alternate" type="application/rss+xml" title="M.S. Graphics Studio Blog" href="/rss.xml" />
+  {!noGeo && <>
   <meta name="geo.region" content="IN-DL" />
   <meta name="geo.placename" content="Dwarka Mor, New Delhi" />
   <meta name="geo.position" content={`${config.geo.latitude};${config.geo.longitude}`} />
+  </>}
   <meta name="theme-color" content="#14213D" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta property="og:type" content={type} />

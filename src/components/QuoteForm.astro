@@ -3,8 +3,8 @@
 // `service` pre-selects a service (use the service title).
 import Icon from './Icon.astro';
 import { allServices, content, config, business } from '../lib/site.js';
-interface Props { service?: string; id?: string; compact?: boolean }
-const { service = '', id = 'quote-form', compact = false } = Astro.props;
+interface Props { service?: string; id?: string; compact?: boolean; cityPlaceholder?: string }
+const { service = '', id = 'quote-form', compact = false, cityPlaceholder = 'e.g. Gurugram' } = Astro.props;
 const options = [...allServices.map((s) => s.title), ...content.contact.extraFormServices];
 const today = new Date().toISOString().slice(0, 10);
 ---
@@ -47,7 +47,7 @@ const today = new Date().toISOString().slice(0, 10);
     </div>
     <div class="qf__field">
       <label for={`${id}-city`}>City</label>
-      <input id={`${id}-city`} name="city" type="text" autocomplete="address-level2" placeholder="e.g. Gurugram" />
+      <input id={`${id}-city`} name="city" type="text" autocomplete="address-level2" placeholder={cityPlaceholder} />
     </div>
     <div class="qf__field">
       <label for={`${id}-service`}>Service</label>
