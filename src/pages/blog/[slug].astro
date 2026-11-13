@@ -7,7 +7,7 @@ import Icon from '../../components/Icon.astro';
 import GuideRail from '../../components/GuideRail.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { getPosts, readingTime, fmtDate } from '../../lib/blog.js';
-import { services, config, business, waLink, serviceUrl } from '../../lib/site.js';
+import { allServices, config, business, waLink, serviceUrl } from '../../lib/site.js';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -17,7 +17,7 @@ const { post, all } = Astro.props;
 const { Content, headings } = await render(post);
 const d = post.data;
 const url = `${config.siteUrl}/blog/${post.id}/`;
-const service = services.find((s) => s.slug === d.service);
+const service = allServices.find((s) => s.slug === d.service);
 const related = all.filter((p) => p.id !== post.id).sort((a, b) => (b.data.service === d.service ? 1 : 0) - (a.data.service === d.service ? 1 : 0));
 const toc = headings.filter((h) => h.depth === 2);
 const schema: object[] = [{

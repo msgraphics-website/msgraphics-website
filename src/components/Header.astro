@@ -1,11 +1,12 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { services, business, config, telLink, mailLink, serviceUrl } from '../lib/site.js';
+import { services, digitalServices, digitalHub, business, config, telLink, mailLink, serviceUrl } from '../lib/site.js';
 const path = Astro.url.pathname;
 const active = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
+const digitalPaths = [digitalHub, ...digitalServices].filter(Boolean).map((s) => serviceUrl(s));
+const inDigital = digitalPaths.some((p) => path.startsWith(p));
 const links = [
-  { href: '/services/website-app-digital-marketing/', label: 'Digital' },
   { href: '/our-unit/', label: 'Our Unit' },
   { href: '/work/', label: 'Work' },
   { href: '/about/', label: 'About' },
@@ -36,7 +37,7 @@ const links = [
       <ul class="nav__list">
         <li><a href="/" aria-current={active('/') ? 'page' : undefined}>Home</a></li>
         <li class="has-sub">
-          <a href="/services/" class="nav__services" aria-current={active('/services') ? 'page' : undefined}>Services</a>
+          <a href="/services/" class="nav__services" aria-current={active('/services') && !inDigital ? 'page' : undefined}>Services</a>
           <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="sub-services"><span class="sr-only">Show services</span><Icon name="chevron-down" /></button>
           <ul class="sub" id="sub-services">
             {services.map((s) => (
@@ -45,6 +46,18 @@ const links = [
             <li class="sub__all"><a href="/services/">All services <Icon name="arrow-right" /></a></li>
           </ul>
         </li>
+        {digitalHub && (
+          <li class="has-sub">
+            <a href={serviceUrl(digitalHub)} aria-current={inDigital ? 'page' : undefined}>Digital</a>
+            <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="sub-digital"><span class="sr-only">Show digital services</span><Icon name="chevron-down" /></button>
+            <ul class="sub" id="sub-digital">
+              {digitalServices.map((s) => (
+                <li><a href={serviceUrl(s)} aria-current={path.startsWith(serviceUrl(s)) ? 'page' : undefined}><Icon name={s.icon} /><span>{s.shortTitle || s.title}</span></a></li>
+              ))}
+              <li class="sub__all"><a href={serviceUrl(digitalHub)}>All digital services <Icon name="arrow-right" /></a></li>
+            </ul>
+          </li>
+        )}
         {links.map((l) => (
           <li><a href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a></li>
         ))}
@@ -147,16 +160,20 @@ const links = [
     nav?.classList.toggle('is-open', open);
     document.body.style.overflow = open ? 'hidden' : '';
   });
-  const subToggle = document.querySelector<HTMLButtonElement>('.sub-toggle');
-  const sub = document.getElementById('sub-services');
-  subToggle?.addEventListener('click', () => {
-    const open = subToggle.getAttribute('aria-expanded') !== 'true';
-    subToggle.setAttribute('aria-expanded', String(open));
-    sub?.classList.toggle('is-open', open);
-  });
+  const subToggles = Array.from(document.querySelectorAll<HTMLButtonElement>('.sub-toggle'));
+  const setSub = (t: HTMLButtonElement, open: boolean) => {
+    t.setAttribute('aria-expanded', String(open));
+    document.getElementById(t.getAttribute('aria-controls') || '')?.classList.toggle('is-open', open);
+  };
+  subToggles.forEach((t) => t.addEventListener('click', () => {
+    const open = t.getAttribute('aria-expanded') !== 'true';
+    subToggles.forEach((o) => { if (o !== t && window.matchMedia('(min-width: 1200px)').matches) setSub(o, false); });
+    setSub(t, open);
+  }));
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (subToggle?.getAttribute('aria-expanded') === 'true') { subToggle.click(); subToggle.focus(); }
+    const openSub = subToggles.find((t) => t.getAttribute('aria-expanded') === 'true');
+    if (openSub) { setSub(openSub, false); openSub.focus(); return; }
     if (toggle?.getAttribute('aria-expanded') === 'true') { toggle.click(); toggle.focus(); }
   });
 </script>

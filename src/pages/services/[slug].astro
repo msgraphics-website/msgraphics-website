@@ -5,15 +5,24 @@ import SectionLabel from '../../components/SectionLabel.astro';
 import Photo from '../../components/Photo.astro';
 import Icon from '../../components/Icon.astro';
 import QuoteForm from '../../components/QuoteForm.astro';
-import { services, config, waLink, telLink, mailLink, serviceUrl, ph, business } from '../../lib/site.js';
+import { allServices, services, digitalServices, digitalHub, DIGITAL_HUB, config, waLink, telLink, mailLink, serviceUrl, ph, business } from '../../lib/site.js';
+import ServiceCard from '../../components/ServiceCard.astro';
 import GuideRail from '../../components/GuideRail.astro';
 import { getPosts } from '../../lib/blog.js';
 
 export function getStaticPaths() {
-  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+  return allServices.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
 }
 const { service: s } = Astro.props;
+// Lower-case a title for use mid-sentence, keeping acronyms (SEO, BTL) and brand names.
+const lc = (t: string) => t.split(' ').map((w) => (/^[A-Z][a-z]/.test(w) && w !== 'Google' ? w.toLowerCase() : w)).join(' ');
+const isHub = s.slug === DIGITAL_HUB;
+const isDigitalSub = s.parent === DIGITAL_HUB;
 const others = services.filter((x) => x.slug !== s.slug);
+const digitalSiblings = digitalServices.filter((x) => x.slug !== s.slug);
+const crumbs = isDigitalSub && digitalHub
+  ? [{ href: '/services/', label: 'Services' }, { href: serviceUrl(digitalHub), label: 'Digital' }, { href: '', label: s.title }]
+  : [{ href: '/services/', label: 'Services' }, { href: '', label: s.title }];
 const allPosts = await getPosts();
 // This service's guides first, then the rest (for the swipe row).
 const guides = [...allPosts.filter((p) => p.data.service === s.slug), ...allPosts.filter((p) => p.data.service !== s.slug)];
@@ -35,7 +44,7 @@ const serviceSchema = {
 const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [serviceSchema];
 ---
 <Base title={s.metaTitle} description={s.metaDescription} crumb={s.title} image={s.cardImage.src.endsWith('.svg') ? undefined : s.cardImage.src} schema={schema}>
-  <PageHero label={s.shortTitle} title={s.title} text={s.tagline} crumbs={[{ href: '/services/', label: 'Services' }, { href: '', label: s.title }]}>
+  <PageHero label={s.shortTitle} title={s.title} text={s.tagline} crumbs={crumbs}>
     <div class="btn-row" style="margin-top:28px">
       <a href="#quote" class="btn btn--primary">Get a quote <Icon name="arrow-right" /></a>
       <a href={waLink(`Hi M.S. Graphics Studio, I need a quote for ${s.title}: ...`)} class="btn btn--ghost-light" target="_blank" rel="noopener" data-track="whatsapp_click"><Icon name="whatsapp" /> WhatsApp Us</a>
@@ -53,11 +62,37 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
     </div>
   </section>
 
+  {isHub && (
+    <section class="section section--paper" aria-labelledby="digital-h">
+      <div class="container">
+        <div class="section-head">
+          <SectionLabel>Digital services</SectionLabel>
+          <h2 id="digital-h">Choose the digital service you need</h2>
+          <p class="lead">Each service has its own page with what is included, how we work and common questions.</p>
+        </div>
+        <div class="grid grid-3">
+          {digitalServices.map((d) => <ServiceCard service={d} />)}
+        </div>
+      </div>
+    </section>
+  )}
+  {isDigitalSub && (
+    <section class="section dchips" aria-labelledby="dchips-h">
+      <div class="container">
+        <h2 id="dchips-h" class="dchips__h">More digital services</h2>
+        <ul class="dchips__list">
+          {digitalSiblings.map((d) => <li><a href={serviceUrl(d)}><Icon name={d.icon} />{d.title}</a></li>)}
+          {digitalHub && <li><a class="dchips__all" href={serviceUrl(digitalHub)}>All digital services <Icon name="arrow-right" /></a></li>}
+        </ul>
+      </div>
+    </section>
+  )}
+
   <section class="section section--paper">
     <div class="container">
       <div class="section-head">
         <SectionLabel>Gallery</SectionLabel>
-        <h2>Recent {s.shortTitle.toLowerCase()} work</h2>
+        <h2>{isHub || isDigitalSub ? `${s.shortTitle} at a glance` : `Recent ${lc(s.shortTitle)} work`}</h2>
       </div>
       <div class="grid grid-4">
         {s.gallery.map((g) => <Photo image={g} class="reveal" />)}
@@ -70,7 +105,7 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
     <div class="container">
       <div class="section-head">
         <SectionLabel>Why us for this</SectionLabel>
-        <h2>Why brands choose us for {s.shortTitle.toLowerCase()}</h2>
+        <h2>Why brands choose us for {lc(s.shortTitle)}</h2>
       </div>
       <div class="grid grid-4">
         {s.whyUs.map((w, i) => (
@@ -98,7 +133,7 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
     <div class="container faq-wrap">
       <div>
         <SectionLabel>FAQs</SectionLabel>
-        <h2>Questions about {s.shortTitle.toLowerCase()}</h2>
+        <h2>Questions about {lc(s.shortTitle)}</h2>
         <p class="lead">Something else? <a href={waLink()} target="_blank" rel="noopener" data-track="whatsapp_click">Ask us on WhatsApp</a>.</p>
       </div>
       <div class="faq">
@@ -170,6 +205,14 @@ const schema = faqSchema.mainEntity.length ? [serviceSchema, faqSchema] : [servi
   @media (min-width: 900px) { .faq-wrap { grid-template-columns: 1fr 1.5fr; } }
   #quote .split { align-items: start; }
   .others-h { margin-top: 32px; font-size: 1rem; }
+  .dchips { padding-block: 8px 48px; }
+  .dchips__h { font-size: 1.15rem; margin: 0 0 16px; }
+  .dchips__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .dchips__list a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--navy); font-weight: 500; text-decoration: none; }
+  .dchips__list a:hover { border-color: var(--cyan); color: var(--magenta); }
+  .dchips__list :global(.icon) { width: 18px; height: 18px; color: var(--cyan); }
+  .dchips__list a.dchips__all { color: var(--magenta); font-weight: 600; }
+  .dchips__list a.dchips__all :global(.icon) { color: var(--magenta); }
   .areas__reach { list-style: none; margin: 0 0 28px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 720px; }
   .areas__reach li { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
   .areas__reach strong { display: block; font-size: 1.8rem; line-height: 1.1; color: var(--magenta); }

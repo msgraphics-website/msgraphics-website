@@ -1,5 +1,5 @@
 // Full text of every guide in one plain file, for AI assistants and search engines (see /llms.txt).
-import { business, config, services } from '../lib/site.js';
+import { business, config, allServices } from '../lib/site.js';
 import { getPosts } from '../lib/blog.js';
 
 export async function GET() {
@@ -11,7 +11,7 @@ export async function GET() {
     `> Practical guides on printing, signage, in-store branding, hoardings, events and corporate branding from ${business.name}, ${business.address.full}. Phone/WhatsApp ${business.phoneDisplay}. Areas served: Delhi NCR${business.areasServed?.length ? ` (${business.areasServed.join(', ')})` : ''}.`,
     '',
     ...posts.flatMap((p) => {
-      const s = services.find((x) => x.slug === p.data.service);
+      const s = allServices.find((x) => x.slug === p.data.service);
       return [
         `## ${p.data.title}`,
         `URL: ${u(`/blog/${p.id}/`)}`,

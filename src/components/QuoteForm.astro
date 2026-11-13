@@ -2,10 +2,10 @@
 // Quote request form. Sends to the endpoint in src/config/site.config.js (formEndpoint).
 // `service` pre-selects a service (use the service title).
 import Icon from './Icon.astro';
-import { services, content, config, business } from '../lib/site.js';
+import { allServices, content, config, business } from '../lib/site.js';
 interface Props { service?: string; id?: string; compact?: boolean }
 const { service = '', id = 'quote-form', compact = false } = Astro.props;
-const options = [...services.map((s) => s.title), ...content.contact.extraFormServices];
+const options = [...allServices.map((s) => s.title), ...content.contact.extraFormServices];
 const today = new Date().toISOString().slice(0, 10);
 ---
 <form

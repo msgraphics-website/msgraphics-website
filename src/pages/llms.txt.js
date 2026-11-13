@@ -1,6 +1,6 @@
 // /llms.txt: a plain-text summary that AI assistants (ChatGPT, Claude, Perplexity, Gemini)
 // can read to understand and cite the business accurately. Built from src/data/content/.
-import { content, services, business, config } from '../lib/site.js';
+import { content, allServices, business, config } from '../lib/site.js';
 import { getPosts } from '../lib/blog.js';
 
 export async function GET() {
@@ -30,7 +30,7 @@ export async function GET() {
     `- Quotes: within 24 hours via ${u('/contact/')} or WhatsApp`,
     '',
     '## Services',
-    ...services.map((s) => `- [${s.title}](${u(`/services/${s.slug}/`)}): ${s.tagline} ${s.whatWeDo.join('; ')}.`),
+    ...allServices.map((s) => `- [${s.title}](${u(`/services/${s.slug}/`)}): ${s.tagline} ${s.whatWeDo.join('; ')}.`),
     '',
     '## Pages',
     `- [Our production unit](${u('/our-unit/')}): machines and sections of the Dwarka unit`,

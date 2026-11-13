@@ -8,7 +8,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { content, config, services, business } from '../lib/site.js';
+import { content, config, allServices, business } from '../lib/site.js';
 
 interface Props { title: string; description: string; image?: string; schema?: object[]; crumb?: string; type?: 'website' | 'article'; published?: Date; modified?: Date; noindex?: boolean }
 const { title, description, image = config.ogImage, schema = [], crumb, type = 'website', published, modified, noindex = false } = Astro.props;
@@ -57,7 +57,7 @@ const localBusiness: Record<string, unknown> = {
   ],
   knowsAbout: ['In-store branding', 'POP and POSM printing', 'Glow sign boards', 'ACP and LED signage', 'Hoarding printing', 'Flex and vinyl printing', 'Vehicle branding', 'Exhibition stall fabrication', 'Event branding', 'BTL activation', 'Corporate gifts printing', 'Offset and digital printing'],
   hasMap: config.mapLinkUrl,
-  makesOffer: services.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.title, url: `${config.siteUrl}/services/${s.slug}/` } })),
+  makesOffer: allServices.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.title, url: `${config.siteUrl}/services/${s.slug}/` } })),
 };
 if (config.openingHours.length) {
   localBusiness.openingHoursSpecification = config.openingHours.map((h: { days: string[]; opens: string; closes: string }) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: h.days, opens: h.opens, closes: h.closes }));

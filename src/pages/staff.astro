@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { services } from '../lib/site.js';
+import { allServices } from '../lib/site.js';
 import { allSteps } from '../config/order-steps.js';
 import config from '../config/site.config.js';
 const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
@@ -56,7 +56,7 @@ const connected = Boolean(config.supabaseUrl && config.supabaseAnonKey);
         <label class="f"><span>Client phone *</span><input name="client_phone" required inputmode="tel" placeholder="+91 98xxx xxxxx" /><small>The client tracks the order with the last 4 digits.</small></label>
         <label class="f"><span>Company</span><input name="client_company" /></label>
         <label class="f"><span>Client email</span><input name="client_email" type="email" /></label>
-        <label class="f"><span>Service</span><select name="service"><option value="">Choose…</option>{services.map((s) => <option>{s.title}</option>)}<option>Other</option></select></label>
+        <label class="f"><span>Service</span><select name="service"><option value="">Choose…</option>{allServices.map((s) => <option>{s.title}</option>)}<option>Other</option></select></label>
         <label class="f"><span>Quantity</span><input name="quantity" placeholder="e.g. 500 pcs, 12 stores" /></label>
       </div>
       <fieldset class="it-box">
