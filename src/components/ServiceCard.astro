@@ -27,4 +27,12 @@ const H = headingLevel;
   .svc:hover .svc__title a { color: var(--magenta); }
   .svc .link-arrow { color: var(--magenta); }
   .svc:focus-within { box-shadow: 0 0 0 3px var(--cyan); }
+  /* A lone card on the last row of a 3-column grid spans the row, image beside text. */
+  @media (min-width: 900px) {
+    :global(.grid-3) > .svc:last-child:nth-child(3n + 1) { grid-column: 1 / -1; flex-direction: row; }
+    :global(.grid-3) > .svc:last-child:nth-child(3n + 1) :global(.photo) { flex: 0 0 calc((100% - 2 * 28px) / 3 * 2 + 28px); }
+    :global(.grid-3) > .svc:last-child:nth-child(3n + 1) .svc__body { justify-content: center; padding: 32px 36px; }
+    :global(.grid-3) > .svc:last-child:nth-child(3n + 1) .svc__icon { position: static; margin-bottom: 14px; }
+    :global(.grid-3) > .svc:last-child:nth-child(3n + 1) .svc__body p { flex: 0; }
+  }
 </style>

@@ -5,6 +5,7 @@ import { services, business, config, telLink, mailLink, serviceUrl } from '../li
 const path = Astro.url.pathname;
 const active = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
 const links = [
+  { href: '/services/website-app-digital-marketing/', label: 'Digital' },
   { href: '/our-unit/', label: 'Our Unit' },
   { href: '/work/', label: 'Work' },
   { href: '/about/', label: 'About' },
@@ -48,7 +49,7 @@ const links = [
           <li><a href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a></li>
         ))}
         <li class="nav__track"><a href="/track/" aria-current={active('/track') ? 'page' : undefined}>Track Order</a></li>
-        <li class="nav__shop"><a href={config.shopUrl}><Icon name="shopping-cart" /><span>Shop Print Products</span></a></li>
+        <li class="nav__shop"><a href={config.shopUrl}><Icon name="shopping-cart" /><span>Shop<span class="nav__shop-more"> Print Products</span></span></a></li>
       </ul>
       <a href="/contact/" class="btn btn--primary btn--sm nav__cta">Get a Quote</a>
     </nav>
@@ -117,6 +118,11 @@ const links = [
     .nav__cta { width: 100%; margin-top: 20px; min-height: 50px; }
   }
   /* desktop */
+  @media (min-width: 1200px) and (max-width: 1399px) {
+    .nav { gap: 18px !important; }
+    .nav__list { gap: 20px !important; }
+    .nav__shop-more { display: none; }
+  }
   @media (min-width: 1200px) {
     .nav-toggle { display: none; }
     .nav { display: flex; align-items: center; gap: 28px; }

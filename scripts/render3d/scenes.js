@@ -437,6 +437,41 @@ export const scenes = {
     person(root, 2.8, 2.4, C.navy, C.skin, 2.8); box(root, 1.8, 0.8, 1, C.mag, -3.6, 0.1, 2.6, { r: 0.25 });
     return { target: [0, 2.3, -0.5], dist: 19, el: 0.28, az: 0.5 };
   },
+  digital(root, { acc, variant = 'website' }) {
+    // A desk with a monitor, laptop and phones showing website, app, social and search screens.
+    const page = (kind) => canvasTex(1200, 760, (g, w, h) => {
+      g.fillStyle = '#fff'; g.fillRect(0, 0, w, h);
+      g.fillStyle = C.navy; g.fillRect(0, 0, w, 70); mark(g, 24, 12, 46, acc); g.textAlign = 'left'; g.fillStyle = '#fff'; g.font = `600 22px ${FONT}`; g.textBaseline = 'middle'; ['Home', 'Services', 'Work', 'Contact'].forEach((t, i) => g.fillText(t, 640 + i * 130, 36));
+      if (kind === 'seo') {
+        g.fillStyle = '#F1F3F6'; g.fillRect(0, 70, w, h); g.fillStyle = '#fff'; rr(g, 60, 110, w - 120, 60, 30); g.fillStyle = '#7A8394'; g.font = `500 24px ${FONT}`; g.fillText('glow sign board maker in dwarka', 100, 141);
+        for (let i = 0; i < 4; i++) { const y = 210 + i * 130; g.fillStyle = i === 0 ? '#E8F6EE' : '#fff'; rr(g, 60, y, 640, 110, 14); g.fillStyle = '#1A55C4'; g.font = `700 26px ${FONT}`; g.fillText(i === 0 ? 'M.S. Graphics Studio · Dwarka' : 'Search result', 90, y + 38); g.fillStyle = '#B8BDC7'; rr(g, 90, y + 62, 520 - i * 40, 14, 7); }
+        g.fillStyle = '#fff'; rr(g, 740, 210, 400, 500, 14); [0.35, 0.5, 0.45, 0.7, 0.62, 0.85].forEach((v, i) => { g.fillStyle = i === 5 ? acc : C.cyan; rr(g, 780 + i * 58, 660 - v * 380, 38, v * 380, 6); });
+      } else if (kind === 'social') {
+        g.fillStyle = '#F1F3F6'; g.fillRect(0, 70, w, h);
+        [[C.mag, 'SALE'], [C.cyan, 'NEW'], [C.yel, 'OFFER']].forEach(([c, t], i) => { const x = 60 + i * 380; g.fillStyle = '#fff'; rr(g, x, 110, 340, 600, 16); g.fillStyle = c; rr(g, x + 20, 180, 300, 300, 10); g.fillStyle = '#fff'; g.font = `800 64px ${FONT}`; g.textAlign = 'center'; g.fillText(t, x + 170, 330); g.textAlign = 'left'; g.fillStyle = '#C5CAD3'; rr(g, x + 20, 510, 260, 16, 8); rr(g, x + 20, 545, 200, 16, 8); g.fillStyle = C.navy; rr(g, x + 20, 130, 34, 34, 17); });
+      } else {
+        const gr = g.createLinearGradient(0, 70, w, 420); gr.addColorStop(0, C.navy); gr.addColorStop(1, '#2A3F70'); g.fillStyle = gr; g.fillRect(0, 70, w, 350);
+        g.fillStyle = '#fff'; g.font = `800 58px ${FONT}`; g.fillText('Your brand,', 70, 180); g.fillText('online.', 70, 250); g.fillStyle = acc; rr(g, 70, 300, 220, 60, 30); g.fillStyle = C.yel; g.beginPath(); g.arc(930, 245, 120, 0, 7); g.fill();
+        [C.cyan, C.mag, C.yel].forEach((c, i) => { const x = 70 + i * 370; g.fillStyle = '#F3F4F7'; rr(g, x, 460, 330, 260, 14); g.fillStyle = c; rr(g, x + 24, 484, 282, 130, 10); g.fillStyle = '#C5CAD3'; rr(g, x + 24, 640, 220, 16, 8); rr(g, x + 24, 672, 160, 16, 8); });
+      }
+    });
+    const app = (c) => canvasTex(360, 740, (g, w, h) => { g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.fillStyle = C.navy; g.fillRect(0, 0, w, 110); mark(g, 20, 40, 52, acc); g.fillStyle = c; rr(g, 20, 140, w - 40, 220, 18); for (let i = 0; i < 4; i++) { g.fillStyle = '#F1F3F6'; rr(g, 20, 390 + i * 82, w - 40, 66, 12); g.fillStyle = [C.cyan, C.mag, C.yel, C.navy][i]; rr(g, 34, 404 + i * 82, 38, 38, 10); } });
+    const kind = variant === 'seo' ? 'seo' : variant.startsWith('social') ? 'social' : 'website';
+    slab(root, 10, 8, '#DDD7CC'); box(root, 10, 4.2, 0.3, '#EEEBE5', 0, 0, -3.2);
+    box(root, 5.2, 0.1, 2.2, C.wood, 0, 1.25, -0.6, { r: 0.02 }); for (const x of [-2.45, 2.45]) box(root, 0.1, 1.25, 2, '#5E452C', x, 0, -0.6);
+    if (variant === 'app') {
+      [[-0.9, '#E6007E', 0.25], [0, C.cyan, 0], [0.9, C.yel, -0.25]].forEach(([x, c, ry]) => { const ph = new THREE.Group(); box(ph, 0.62, 1.22, 0.06, '#15171C', 0, 0, 0, { r: 0.05, metal: 0.4, rough: 0.3 }); panel(ph, 0.56, 1.14, app(c), 0, 0.61, 0.032); ph.position.set(x, 1.35, -0.4); ph.rotation.set(-0.12, ry, 0); root.add(ph); });
+      box(root, 1.1, 0.03, 0.75, '#2C2F36', -1.9, 1.35, -0.2, { r: 0.01, ry: 0.3 });
+    } else {
+      box(root, 2.6, 1.55, 0.08, '#15171C', -0.6, 1.95, -1.2, { r: 0.03, metal: 0.3, rough: 0.35 }); panel(root, 2.48, 1.43, page(kind), -0.6, 2.72, -1.155);
+      box(root, 0.12, 0.6, 0.12, '#2C2F36', -0.6, 1.35, -1.28, { metal: 0.5 }); box(root, 0.7, 0.04, 0.45, '#2C2F36', -0.6, 1.35, -1.25, { metal: 0.5 });
+      const lp = new THREE.Group(); box(lp, 1.5, 0.05, 1.0, '#9AA0AA', 0, 0, 0, { metal: 0.7, rough: 0.3 }); const scr = new THREE.Group(); box(scr, 1.5, 0.95, 0.04, '#9AA0AA', 0, 0, 0, { metal: 0.7, rough: 0.3 }); panel(scr, 1.4, 0.86, page(kind === 'website' ? 'social' : kind), 0, 0.475, 0.022); scr.position.set(0, 0.04, -0.5); scr.rotation.x = -0.25; lp.add(scr); lp.position.set(1.6, 1.35, -0.3); lp.rotation.y = -0.35; root.add(lp);
+      const ph = new THREE.Group(); box(ph, 0.36, 0.03, 0.72, '#15171C', 0, 0, 0, { r: 0.02 }); const sc = panel(ph, 0.32, 0.66, app(acc), 0, 0.032, 0); sc.rotation.x = -Math.PI / 2; ph.position.set(0.55, 1.35, 0.15); ph.rotation.y = 0.4; root.add(ph);
+    }
+    cyl(root, 0.1, 0.09, 0.22, acc, -2.1, 1.35, 0.1); plant(root, 3.6, -2.4, 1.1);
+    box(root, 0.7, 0.9, 0.7, C.navy, -0.6, 0, 0.9, { r: 0.08 });
+    return { target: [0, 1.9, -0.6], dist: 9.5, el: 0.22, az: 0.35 };
+  },
   office(root, { acc }) {
     slab(root, 11, 8, '#DDD7CC'); box(root, 11, 4.2, 0.3, C.white, 0, 0, -3.8); box(root, 0.3, 4.2, 7.6, '#F1EEE8', -5.35, 0, 0);
     panel(root, 9, 3, art('brand', acc, { w: 1800, h: 600, text: 'WE BUILD BRANDS' }), 0.3, 2.4, -3.64);

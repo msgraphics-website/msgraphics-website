@@ -430,12 +430,12 @@
     },
     {
       "slug": "corporate-branding-gifts-digital",
-      "title": "Corporate Branding, Gifts & Digital",
-      "shortTitle": "Corporate & Digital",
+      "title": "Corporate Branding & Gifts",
+      "shortTitle": "Corporate",
       "tagline": "Your brand, everywhere your customers are.",
       "icon": "gift",
       "metaTitle": "Corporate Gifts Printing & Office Branding in Delhi | M.S. Graphics Studio",
-      "metaDescription": "Corporate gifts printing in Delhi: T-shirts, mugs, diaries and kits. Office interior branding, logo and brand identity, social media, Google Ads, SEO and websites.",
+      "metaDescription": "Corporate gifts printing in Delhi: T-shirts, mugs, diaries and kits. Office interior branding, logo and brand identity design, delivered across Delhi NCR.",
       "keywordHeading": "Corporate gifts printing and office branding in Delhi",
       "cardImage": {
         "src": "/images/service-corporate.webp",
@@ -445,8 +445,7 @@
       "whatWeDo": [
         "Office interior branding",
         "Corporate gifts, T-shirts, mugs, diaries, kits",
-        "Logo and brand identity, publication design",
-        "Social media, Google Ads, SEO, websites"
+        "Logo and brand identity, publication design"
       ],
       "gallery": [
         {
@@ -485,7 +484,7 @@
         },
         {
           "title": "Digital, too",
-          "text": "Social media, Google Ads, SEO and websites when you need them."
+          "text": "Websites, apps, social media, Google Ads and SEO from our Digital team when you need them."
         }
       ],
       "process": [
@@ -505,11 +504,100 @@
         },
         {
           "q": "Do you run digital marketing as well?",
-          "a": "Yes. We handle social media, Google Ads, SEO and websites. Ask for a separate proposal."
+          "a": "Yes. Websites, mobile apps, social media, Google Ads and SEO are covered on our Website, App & Digital Marketing page. Ask for a separate proposal."
         }
       ],
       "areasHeading": "Corporate branding for offices across Delhi NCR",
       "areasText": "We brand offices and deliver printed gifts and kits to companies in Dwarka, Aerocity, Nehru Place, Connaught Place, Gurgaon, Noida and across Delhi NCR."
+    },
+    {
+      "slug": "website-app-digital-marketing",
+      "title": "Website, App & Digital Marketing",
+      "shortTitle": "Digital",
+      "tagline": "Your brand online, built by the team that prints it.",
+      "icon": "monitor-smartphone",
+      "metaTitle": "Website & App Development, Digital Marketing in Delhi | M.S. Graphics Studio",
+      "metaDescription": "Website design and development, mobile app development, social media, Google Ads and SEO for businesses in Delhi NCR, from the M.S. Graphics Studio team in Dwarka.",
+      "keywordHeading": "Website, app development and digital marketing in Delhi",
+      "cardImage": {
+        "src": "/images/service-digital.webp",
+        "alt": "3D illustration: a business website on a desktop, laptop and phone",
+        "label": "PHOTO: Website and app on laptop and phone"
+      },
+      "whatWeDo": [
+        "Website design and development",
+        "Mobile app development",
+        "Social media pages and posts",
+        "Google Ads campaigns",
+        "SEO (search engine optimisation)",
+        "Logo, brand kit and creatives for online use"
+      ],
+      "gallery": [
+        {
+          "src": "/images/digital-website.webp",
+          "alt": "3D illustration: website design on a desktop screen",
+          "label": "PHOTO: Website design"
+        },
+        {
+          "src": "/images/digital-app.webp",
+          "alt": "3D illustration: mobile app screens on phones",
+          "label": "PHOTO: Mobile app"
+        },
+        {
+          "src": "/images/digital-social-ads.webp",
+          "alt": "3D illustration: social media posts and ads on a laptop",
+          "label": "PHOTO: Social media and Google Ads"
+        },
+        {
+          "src": "/images/digital-seo.webp",
+          "alt": "3D illustration: search results and analytics on a laptop",
+          "label": "PHOTO: SEO and analytics"
+        }
+      ],
+      "whyUs": [
+        {
+          "title": "Print and digital in one place",
+          "text": "The same team designs your sign board, brochure, website and social posts, so everything matches."
+        },
+        {
+          "title": "One brand look",
+          "text": "Colours, logo and message stay the same on your shop front, your print and your screens."
+        },
+        {
+          "title": "Local team in Delhi",
+          "text": "Meet us at our unit in Dwarka Mor, or talk on WhatsApp and phone."
+        },
+        {
+          "title": "One point of contact",
+          "text": "One person handles your website, app or campaign from brief to launch."
+        }
+      ],
+      "process": [
+        "Brief",
+        "Plan & design",
+        "Build or launch",
+        "Support"
+      ],
+      "faqs": [
+        {
+          "q": "Do you make websites and mobile apps?",
+          "a": "Yes. M.S. Graphics Studio designs and develops business websites and mobile apps. Share what you need and we will send a proposal."
+        },
+        {
+          "q": "Can you run our social media and Google Ads?",
+          "a": "Yes. We handle social media pages and posts, Google Ads campaigns and SEO. Ask for a separate proposal."
+        },
+        {
+          "q": "How much does a website cost?",
+          "a": "It depends on the number of pages, features and content. [Add a starting price or price range if you want to show one.] We send a clear quote after the brief."
+        },
+        {
+          "q": "Can you match the website to our sign board and print?",
+          "a": "Yes. Because we also design your print and signage, we keep the same logo, colours and style across your website, social media and shop front."
+        }
+      ],
+      "areasHeading": "Websites and digital marketing for businesses across Delhi NCR",
+      "areasText": "We work with shops, offices and brands in Dwarka, West Delhi, South Delhi, Gurgaon, Noida and across Delhi NCR. Most digital work can also be done for clients in other cities over phone, WhatsApp and video calls."
     }
   ]
 }

@@ -93,6 +93,11 @@ These illustrate a service in general. Keep the 3D version, or replace it with a
 | `machine-cutting-cnc-laser` | Cutting plotter / CNC / laser |
 | `machine-lamination` | Lamination & finishing |
 | `machine-fabrication-tools` | Fabrication tools |
+| `service-digital` | Website and app on laptop and phone |
+| `digital-website` | Website design |
+| `digital-app` | Mobile app |
+| `digital-social-ads` | Social media and Google Ads |
+| `digital-seo` | SEO and analytics |
 
 ## Prompts
 

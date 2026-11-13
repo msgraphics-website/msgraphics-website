@@ -11,7 +11,7 @@ const cdir = path.join(root, 'src/data/content');
 const SECTIONS = [
   ['business', 'Business details (phone, address, hours, social)'],
   ['home', 'Home page'],
-  ['services', 'Services (6 service pages)'],
+  ['services', 'Services (service pages)'],
   ['testimonials', 'Client testimonials'],
   ['unit', 'Our Unit page (machines, photos)'],
   ['work', 'Work page (projects, before/after, case studies)'],

@@ -35,6 +35,7 @@ function pick(src, label) {
   if (/gondola/.test(f)) return ["interior", { variant: "gondola" }];
   if (/counter/.test(f)) return ["counter"];
   if (/instore|in-store|store-interior/.test(f)) return ["interior", { variant: "standee" }];
+  if (/digital/.test(f)) return ["digital", { variant: f.replace(/.*digital-?/, "") || "website" }];
   if (/office/.test(f) || /office/.test(L)) return ["office"];
   if (/hoarding/.test(f) || /hoarding/.test(L)) return ["hoarding"];
   if (/kiosk/.test(f)) return ["kiosk"];
