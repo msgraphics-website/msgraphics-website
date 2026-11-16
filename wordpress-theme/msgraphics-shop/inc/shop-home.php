@@ -31,15 +31,71 @@ function msg_all_products_url() {
 	return add_query_arg( 'view', 'all', wc_get_page_permalink( 'shop' ) );
 }
 
+/**
+ * Use the theme's own shop pages. Page-builder plugins (Elementor, Woolementor,
+ * ShopLentor) also swap the shop template, so this runs last. It can be turned
+ * off in Customize > M.S. Graphics Studio.
+ */
 add_filter( 'template_include', function ( $template ) {
+	if ( ! msg_opt( 'use_shop_layout' ) ) {
+		return $template;
+	}
 	if ( msg_is_shop_home() ) {
-		$custom = MSG_SHOP_DIR . '/templates/shop-home.php';
-		if ( file_exists( $custom ) ) {
-			return $custom;
-		}
+		return MSG_SHOP_DIR . '/templates/shop-home.php';
+	}
+	if ( is_shop() || is_product_taxonomy() ) {
+		return MSG_SHOP_DIR . '/templates/shop-archive.php';
 	}
 	return $template;
-}, 50 );
+}, PHP_INT_MAX - 10 );
+
+/**
+ * One product card. Built here (not by a plugin template) so the look is the
+ * same everywhere: square photo shown in full, category, name, price, button.
+ */
+function msg_render_product_card( $product, $heading = 'h3' ) {
+	if ( ! $product instanceof WC_Product ) {
+		return;
+	}
+	$url   = $product->get_permalink();
+	$name  = $product->get_name();
+	$terms = get_the_terms( $product->get_id(), 'product_cat' );
+	$cat   = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->name : '';
+	$h     = in_array( $heading, array( 'h2', 'h3' ), true ) ? $heading : 'h3';
+	$img   = $product->get_image( 'woocommerce_thumbnail', array( 'class' => 'msg-card__photo', 'loading' => 'lazy', 'alt' => $name ) );
+	?>
+	<li class="msg-card">
+		<a class="msg-card__img" href="<?php echo esc_url( $url ); ?>" tabindex="-1" aria-hidden="true">
+			<?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php if ( $product->is_on_sale() ) : ?><span class="msg-card__sale">Sale</span><?php endif; ?>
+		</a>
+		<div class="msg-card__body">
+			<?php if ( $cat ) : ?><span class="msg-card__cat"><?php echo esc_html( $cat ); ?></span><?php endif; ?>
+			<<?php echo $h; ?> class="msg-card__title"><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $name ); ?></a></<?php echo $h; ?>>
+			<span class="msg-card__price price"><?php echo wp_kses_post( $product->get_price_html() ); ?></span>
+			<?php
+			$simple = $product->is_type( 'simple' ) && $product->is_purchasable() && $product->is_in_stock();
+			if ( $simple ) {
+				printf(
+					'<a href="%1$s" data-quantity="1" data-product_id="%2$d" data-product_sku="%3$s" class="msg-btn msg-card__btn button add_to_cart_button ajax_add_to_cart" rel="nofollow" aria-label="%4$s">Add to cart</a>',
+					esc_url( $product->add_to_cart_url() ),
+					(int) $product->get_id(),
+					esc_attr( $product->get_sku() ),
+					esc_attr( sprintf( 'Add %s to your cart', $name ) )
+				);
+			} else {
+				printf(
+					'<a href="%1$s" class="msg-btn msg-card__btn" aria-label="%2$s">%3$s</a>',
+					esc_url( $url ),
+					esc_attr( sprintf( 'Choose options for %s', $name ) ),
+					$product->is_in_stock() ? 'Choose options' : 'View details'
+				);
+			}
+			?>
+		</div>
+	</li>
+	<?php
+}
 
 /** Top-level categories that have products, in the order set in Products > Categories. */
 function msg_shop_categories() {
@@ -137,15 +193,11 @@ function msg_render_category_row( WP_Term $cat ) {
 				<button type="button" class="msg-row__btn" data-dir="1" aria-controls="<?php echo esc_attr( $id ); ?>"><?php echo msg_icon( 'chevron-right' ); ?><span class="screen-reader-text">More <?php echo esc_html( $label ); ?> products</span></button>
 			</div>
 		</div>
-		<ul class="products msg-row__track" id="<?php echo esc_attr( $id ); ?>" tabindex="-1">
+		<ul class="msg-row__track" id="<?php echo esc_attr( $id ); ?>" tabindex="-1">
 			<?php
-			global $post;
 			foreach ( $ids as $pid ) {
-				$post = get_post( $pid ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-				setup_postdata( $post );
-				wc_get_template_part( 'content', 'product' );
+				msg_render_product_card( wc_get_product( $pid ) );
 			}
-			wp_reset_postdata();
 			?>
 		</ul>
 	</section>

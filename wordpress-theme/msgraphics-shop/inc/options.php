@@ -27,6 +27,7 @@ function msg_defaults() {
 		'youtube'       => '',
 		'use_header'    => true,
 		'use_footer'    => true,
+		'use_shop_layout' => true,
 	);
 }
 
@@ -80,7 +81,7 @@ add_action( 'customize_register', function ( WP_Customize_Manager $c ) {
 		$c->add_setting( 'msg_' . $key, array( 'default' => $d[ $key ], 'sanitize_callback' => $sanitize ) );
 		$c->add_control( 'msg_' . $key, array( 'label' => $f[0], 'description' => $f[2], 'section' => 'msg_shop', 'type' => $f[1] ) );
 	}
-	foreach ( array( 'use_header' => 'Use the website-style header', 'use_footer' => 'Use the website-style footer' ) as $key => $label ) {
+	foreach ( array( 'use_header' => 'Use the website-style header', 'use_footer' => 'Use the website-style footer', 'use_shop_layout' => 'Use the theme\'s shop pages (category rows and product cards). Untick to let Elementor or Woolementor show the shop.' ) as $key => $label ) {
 		$c->add_setting( 'msg_' . $key, array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
 		$c->add_control( 'msg_' . $key, array( 'label' => $label, 'section' => 'msg_shop', 'type' => 'checkbox' ) );
 	}
