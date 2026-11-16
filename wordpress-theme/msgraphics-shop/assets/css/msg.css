@@ -84,13 +84,7 @@ html body.msg-theme { font-family: var(--msg-font); color: var(--msg-graphite); 
 .msg-header__in { display: flex; align-items: center; justify-content: space-between; min-height: var(--msg-header-h); gap: 12px; }
 .msg-header__logo { display: block; flex-shrink: 0; }
 .msg-logo { height: 44px; width: auto; display: block; }
-@media (max-width: 479px) {
-  .msg-header .msg-logo { height: 32px; }
-  .msg-header__in { gap: 6px; }
-  .msg-tools { gap: 2px; }
-  .msg-tool { width: 40px; height: 40px; }
-  .msg-nav-toggle { width: 42px; height: 42px; margin-left: 4px; }
-}
+
 .msg-tools { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .msg-tool, .msg-nav-toggle { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; border: 0; background: transparent; color: var(--msg-navy); cursor: pointer; padding: 0; }
 .msg-theme .msg-tool:hover, .msg-theme .msg-tool:focus-visible { background: var(--msg-paper); color: var(--msg-magenta); }
@@ -160,9 +154,14 @@ html body.msg-theme { font-family: var(--msg-font); color: var(--msg-graphite); 
 .msg-crumbs__sep { color: #7f89a3; }
 
 /* ----- category bar ----- */
-.msg-cats { border-bottom: 1px solid var(--msg-line); background: #fff; }
-.msg-cats__list { list-style: none; margin: 0; padding: 14px 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: thin; }
-.msg-cats__list li { flex-shrink: 0; }
+.msg-cats { border-bottom: 1px solid var(--msg-line); background: #fff; overflow: hidden; }
+.msg-theme .msg-cats__list { list-style: none; margin: 0; padding: 14px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.msg-theme .msg-cats__list li { flex-shrink: 0; margin: 0; }
+/* Phones: one swipeable row, without a scrollbar. */
+@media (max-width: 767px) {
+  .msg-theme .msg-cats__list { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin-right: calc(-1 * var(--msg-gutter)); padding-right: var(--msg-gutter); }
+  .msg-theme .msg-cats__list::-webkit-scrollbar { display: none; }
+}
 .msg-theme .msg-cats a { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--msg-line); color: var(--msg-navy); font-weight: 500; font-size: 0.92rem; text-decoration: none; white-space: nowrap; }
 .msg-theme .msg-cats a:hover { border-color: var(--msg-cyan); color: var(--msg-magenta); }
 .msg-theme .msg-cats a[aria-current="page"] { background: var(--msg-navy); border-color: var(--msg-navy); color: #fff; }
@@ -366,3 +365,14 @@ html body.msg-theme { font-family: var(--msg-font); color: var(--msg-graphite); 
 .msg-footer__logo-img { display: inline-block; background: #fff; border-radius: var(--msg-radius); padding: 8px 12px; margin-bottom: 18px; }
 .msg-footer__logo-img img { max-height: 46px; width: auto; display: block; }
 @media (max-width: 479px) { .msg-header__logo .custom-logo, .msg-header__logo img { max-height: 36px; } }
+
+/* Small phones: tighter header (kept at the end so it wins). */
+@media (max-width: 479px) {
+  .msg-header__logo { min-width: 0; flex-shrink: 1; }
+  .msg-header__logo .custom-logo, .msg-header__logo img { max-width: 100%; height: auto; }
+  .msg-header .msg-logo { height: 32px; }
+  .msg-header__in { gap: 6px; }
+  .msg-tools { gap: 2px; }
+  .msg-tool { width: 40px; height: 40px; }
+  .msg-nav-toggle { width: 42px; height: 42px; margin-left: 4px; }
+}
