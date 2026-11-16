@@ -76,6 +76,7 @@ function msg_render_shop_banner() {
 				<?php if ( ! $small ) : ?><p class="msg-label msg-label--light"><?php echo msg_dots(); ?><?php echo esc_html( $label ); ?></p><?php endif; ?>
 				<h1 class="msg-hero__title"><?php echo esc_html( $title ); ?></h1>
 				<?php if ( $text ) : ?><p class="msg-hero__text"><?php echo esc_html( $text ); ?></p><?php endif; ?>
+				<?php if ( ! $small ) { msg_render_search(); } ?>
 			<?php endif; ?>
 		</div>
 	</section>

@@ -20,24 +20,46 @@ add_action( 'template_redirect', function () {
 	}
 }, 999 );
 
-function msg_nav_items() {
-	$shop = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
-	return array(
-		array( msg_main( '/' ), 'Home', false ),
-		array( msg_main( '/services/' ), 'Services', false ),
-		array( msg_digital_url(), 'Digital', false ),
-		array( $shop, 'Shop', function_exists( 'is_woocommerce' ) && ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() ) ),
-		array( msg_main( '/our-unit/' ), 'Our Unit', false ),
-		array( msg_main( '/work/' ), 'Work', false ),
-		array( msg_main( '/about/' ), 'About', false ),
-		array( msg_main( '/contact/' ), 'Contact', false ),
-	);
+/** Menu rows (Services and Digital dropdowns), shared with the main website. */
+function msg_menu_data() {
+	static $data = null;
+	if ( null === $data ) {
+		$data = require MSG_SHOP_DIR . '/inc/menu-data.php';
+	}
+	return $data;
+}
+
+/** One dropdown menu item: a link plus a button that opens the list (same as the main website). */
+function msg_render_sub( $id, $label, $url, $rows, $all_label, $all_url, $use_short = false ) {
+	?>
+	<li class="msg-has-sub">
+		<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
+		<button type="button" class="msg-sub-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $id ); ?>"><span class="screen-reader-text">Show <?php echo esc_html( strtolower( $label ) ); ?></span><?php echo msg_icon( 'chevron-down' ); ?></button>
+		<ul class="msg-sub" id="<?php echo esc_attr( $id ); ?>">
+			<?php foreach ( $rows as $r ) : ?>
+				<li><a href="<?php echo esc_url( msg_main( $r[1] ) ); ?>"><?php echo msg_icon( $r[2] ); ?><span><?php echo esc_html( $use_short ? $r[3] : $r[0] ); ?></span></a></li>
+			<?php endforeach; ?>
+			<li class="msg-sub__all"><a href="<?php echo esc_url( $all_url ); ?>"><?php echo esc_html( $all_label ); ?> <?php echo msg_icon( 'arrow-right' ); ?></a></li>
+		</ul>
+	</li>
+	<?php
 }
 
 function msg_render_header() {
 	$account = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : wp_login_url();
 	$cart    = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/cart/' );
+	$shop    = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
+	$in_shop = function_exists( 'is_woocommerce' ) && ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() );
 	$count   = msg_cart_count();
+	$menu    = msg_menu_data();
+	$digital = msg_opt( 'digital_url' ) ? msg_opt( 'digital_url' ) : msg_main( $menu['digital_hub'] );
+	$links   = array(
+		array( '/our-unit/', 'Our Unit' ),
+		array( '/work/', 'Work' ),
+		array( '/about/', 'About' ),
+		array( '/blog/', 'Blog' ),
+		array( '/contact/', 'Contact' ),
+	);
 	?>
 	<aside class="msg-topbar" aria-label="Contact details">
 		<div class="msg-container msg-topbar__in">
@@ -47,6 +69,7 @@ function msg_render_header() {
 			</span>
 			<span class="msg-topbar__right">
 				<a href="<?php echo esc_url( msg_main( '/track/' ) ); ?>"><?php echo msg_icon( 'package-search' ); ?> Track your order</a>
+				<a class="msg-topbar__account" href="<?php echo esc_url( $account ); ?>"><?php echo msg_icon( 'user' ); ?> <?php echo is_user_logged_in() ? 'My account' : 'Log in'; ?></a>
 				<span class="msg-topbar__hours"><?php echo msg_icon( 'clock' ); ?> <?php echo esc_html( msg_opt( 'hours' ) ); ?></span>
 			</span>
 		</div>
@@ -54,32 +77,40 @@ function msg_render_header() {
 	<header class="msg-header" id="masthead">
 		<div class="msg-container msg-header__in">
 			<a href="<?php echo esc_url( msg_main( '/' ) ); ?>" class="msg-header__logo"><?php echo msg_logo(); ?></a>
+			<a class="msg-cart msg-cart--m" href="<?php echo esc_url( $cart ); ?>"><?php echo msg_icon( 'shopping-cart' ); ?><span class="screen-reader-text">Cart, </span><span class="msg-cart__count" data-count="<?php echo esc_attr( $count ); ?>"><?php echo esc_html( $count ); ?><span class="screen-reader-text"> items</span></span></a>
+			<button class="msg-nav-toggle" type="button" aria-expanded="false" aria-controls="msg-nav">
+				<span class="screen-reader-text">Menu</span><?php echo msg_icon( 'menu', '', 'msg-icon msg-nav-toggle__open' ); ?><?php echo msg_icon( 'x', '', 'msg-icon msg-nav-toggle__close' ); ?>
+			</button>
 			<nav class="msg-nav" id="msg-nav" aria-label="Main">
 				<ul class="msg-nav__list">
-					<?php foreach ( msg_nav_items() as $item ) : ?>
-						<li><a href="<?php echo esc_url( $item[0] ); ?>"<?php echo $item[2] ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $item[1] ); ?></a></li>
+					<li><a href="<?php echo esc_url( msg_main( '/' ) ); ?>">Home</a></li>
+					<?php msg_render_sub( 'msg-sub-services', 'Services', msg_main( '/services/' ), $menu['services'], 'All services', msg_main( '/services/' ) ); ?>
+					<?php msg_render_sub( 'msg-sub-digital', 'Digital', $digital, $menu['digital'], 'All digital services', $digital, true ); ?>
+					<?php foreach ( $links as $l ) : ?>
+						<li><a href="<?php echo esc_url( msg_main( $l[0] ) ); ?>"><?php echo esc_html( $l[1] ); ?></a></li>
 					<?php endforeach; ?>
+					<li class="msg-nav__mobile-only"><a href="<?php echo esc_url( msg_main( '/track/' ) ); ?>">Track Order</a></li>
+					<li class="msg-nav__mobile-only"><a href="<?php echo esc_url( $account ); ?>"><?php echo is_user_logged_in() ? 'My account' : 'Log in / Create account'; ?></a></li>
+					<li class="msg-nav__shop"><a href="<?php echo esc_url( $shop ); ?>"<?php echo $in_shop ? ' aria-current="page"' : ''; ?>><?php echo msg_icon( 'shopping-cart' ); ?><span>Shop<span class="msg-nav__shop-more"> Print Products</span></span></a></li>
 				</ul>
 				<a href="<?php echo esc_url( msg_main( '/contact/' ) ); ?>" class="msg-btn msg-btn--primary msg-btn--sm msg-nav__cta">Get a Quote</a>
+				<a class="msg-cart msg-cart--d" href="<?php echo esc_url( $cart ); ?>"><?php echo msg_icon( 'shopping-cart' ); ?><span class="screen-reader-text">Cart, </span><span class="msg-cart__count" data-count="<?php echo esc_attr( $count ); ?>"><?php echo esc_html( $count ); ?><span class="screen-reader-text"> items</span></span></a>
 			</nav>
-			<div class="msg-tools">
-				<button type="button" class="msg-tool msg-search-toggle" aria-expanded="false" aria-controls="msg-search"><?php echo msg_icon( 'search' ); ?><span class="screen-reader-text">Search products</span></button>
-				<a class="msg-tool" href="<?php echo esc_url( $account ); ?>"><?php echo msg_icon( 'user' ); ?><span class="screen-reader-text"><?php echo is_user_logged_in() ? 'My account' : 'Log in or create an account'; ?></span></a>
-				<a class="msg-tool msg-cart" href="<?php echo esc_url( $cart ); ?>"><?php echo msg_icon( 'shopping-cart' ); ?><span class="screen-reader-text">Cart, </span><span class="msg-cart__count" data-count="<?php echo esc_attr( $count ); ?>"><?php echo esc_html( $count ); ?><span class="screen-reader-text"> items</span></span></a>
-				<button class="msg-nav-toggle" type="button" aria-expanded="false" aria-controls="msg-nav">
-					<span class="screen-reader-text">Menu</span><?php echo msg_icon( 'menu', '', 'msg-icon msg-nav-toggle__open' ); ?><?php echo msg_icon( 'x', '', 'msg-icon msg-nav-toggle__close' ); ?>
-				</button>
-			</div>
-		</div>
-		<div class="msg-search" id="msg-search" hidden>
-			<form class="msg-container msg-search__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<label class="screen-reader-text" for="msg-search-input">Search products</label>
-				<input id="msg-search-input" type="search" name="s" placeholder="Search visiting cards, flyers, stickers…" value="<?php echo esc_attr( get_search_query() ); ?>">
-				<input type="hidden" name="post_type" value="product">
-				<button type="submit" class="msg-btn msg-btn--primary">Search</button>
-			</form>
 		</div>
 	</header>
+	<?php
+}
+
+/** Product search, shown in the shop banner. */
+function msg_render_search() {
+	?>
+	<form class="msg-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<label class="screen-reader-text" for="msg-search-input">Search products</label>
+		<?php echo msg_icon( 'search' ); ?>
+		<input id="msg-search-input" type="search" name="s" placeholder="Search visiting cards, flyers, stickers…" value="<?php echo esc_attr( get_search_query() ); ?>">
+		<input type="hidden" name="post_type" value="product">
+		<button type="submit" class="msg-btn msg-btn--primary">Search</button>
+	</form>
 	<?php
 }
 

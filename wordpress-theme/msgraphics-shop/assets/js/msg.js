@@ -1,9 +1,9 @@
-/* M.S. Graphics Studio shop: mobile menu and search toggle. */
+/* M.S. Graphics Studio shop: mobile menu and dropdowns (same behaviour as the main website). */
 (function () {
   var navToggle = document.querySelector('.msg-nav-toggle');
   var nav = document.getElementById('msg-nav');
-  var searchToggle = document.querySelector('.msg-search-toggle');
-  var search = document.getElementById('msg-search');
+  var subToggles = Array.prototype.slice.call(document.querySelectorAll('.msg-sub-toggle'));
+  var desktop = window.matchMedia('(min-width: 1200px)');
 
   function setNav(open) {
     if (!navToggle || !nav) return;
@@ -11,23 +11,25 @@
     nav.classList.toggle('is-open', open);
     document.body.classList.toggle('msg-nav-open', open);
   }
-  function setSearch(open) {
-    if (!searchToggle || !search) return;
-    searchToggle.setAttribute('aria-expanded', String(open));
-    search.hidden = !open;
-    if (open) { var i = search.querySelector('input[type="search"]'); if (i) i.focus(); }
+  function setSub(t, open) {
+    t.setAttribute('aria-expanded', String(open));
+    var el = document.getElementById(t.getAttribute('aria-controls') || '');
+    if (el) el.classList.toggle('is-open', open);
   }
   if (navToggle) navToggle.addEventListener('click', function () {
-    setSearch(false);
     setNav(navToggle.getAttribute('aria-expanded') !== 'true');
   });
-  if (searchToggle) searchToggle.addEventListener('click', function () {
-    setNav(false);
-    setSearch(searchToggle.getAttribute('aria-expanded') !== 'true');
+  subToggles.forEach(function (t) {
+    t.addEventListener('click', function () {
+      var open = t.getAttribute('aria-expanded') !== 'true';
+      if (desktop.matches) subToggles.forEach(function (o) { if (o !== t) setSub(o, false); });
+      setSub(t, open);
+    });
   });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (searchToggle && searchToggle.getAttribute('aria-expanded') === 'true') { setSearch(false); searchToggle.focus(); }
+    var openSub = subToggles.filter(function (t) { return t.getAttribute('aria-expanded') === 'true'; })[0];
+    if (openSub) { setSub(openSub, false); openSub.focus(); return; }
     if (navToggle && navToggle.getAttribute('aria-expanded') === 'true') { setNav(false); navToggle.focus(); }
   });
 })();

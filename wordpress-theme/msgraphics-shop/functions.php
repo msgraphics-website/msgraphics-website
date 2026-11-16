@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MSG_SHOP_VERSION', '1.1.0' );
+define( 'MSG_SHOP_VERSION', '1.2.0' );
 define( 'MSG_SHOP_DIR', get_stylesheet_directory() );
 define( 'MSG_SHOP_URI', get_stylesheet_directory_uri() );
 
