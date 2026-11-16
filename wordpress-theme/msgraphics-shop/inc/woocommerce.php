@@ -97,14 +97,15 @@ function msg_render_category_bar() {
 	<nav class="msg-cats" aria-label="Product categories">
 		<div class="msg-container">
 			<ul class="msg-cats__list">
-				<li><a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"<?php echo is_shop() ? ' aria-current="page"' : ''; ?>>All products</a></li>
+				<?php $msg_all_on = is_shop() && ! is_search() && function_exists( 'msg_is_shop_home' ) && ! msg_is_shop_home(); ?>
+				<li><a href="<?php echo esc_url( function_exists( 'msg_all_products_url' ) ? msg_all_products_url() : wc_get_page_permalink( 'shop' ) ); ?>"<?php echo $msg_all_on ? ' aria-current="page"' : ''; ?>><?php echo msg_icon( 'layout-grid' ); ?>All products</a></li>
 				<?php foreach ( $cats as $cat ) : ?>
 					<?php
 					if ( (int) $cat->term_id === $uncat ) {
 						continue;
 					}
 					?>
-					<li><a href="<?php echo esc_url( get_term_link( $cat ) ); ?>"<?php echo (int) $cat->term_id === $current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $cat->name ); ?></a></li>
+					<li><a href="<?php echo esc_url( get_term_link( $cat ) ); ?>"<?php echo (int) $cat->term_id === $current ? ' aria-current="page"' : ''; ?>><?php echo msg_icon( function_exists( 'msg_cat_icon' ) ? msg_cat_icon( $cat->name ) : 'tag' ); ?><?php echo esc_html( $cat->name ); ?></a></li>
 				<?php endforeach; ?>
 			</ul>
 		</div>

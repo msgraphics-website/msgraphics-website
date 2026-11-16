@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MSG_SHOP_VERSION', '1.0.2' );
+define( 'MSG_SHOP_VERSION', '1.1.0' );
 define( 'MSG_SHOP_DIR', get_stylesheet_directory() );
 define( 'MSG_SHOP_URI', get_stylesheet_directory_uri() );
 
@@ -17,6 +17,7 @@ require MSG_SHOP_DIR . '/inc/options.php';
 require MSG_SHOP_DIR . '/inc/template-tags.php';
 require MSG_SHOP_DIR . '/inc/layout.php';
 require MSG_SHOP_DIR . '/inc/woocommerce.php';
+require MSG_SHOP_DIR . '/inc/shop-home.php';
 
 /* ---------- styles and scripts ---------- */
 add_action( 'wp_enqueue_scripts', function () {
