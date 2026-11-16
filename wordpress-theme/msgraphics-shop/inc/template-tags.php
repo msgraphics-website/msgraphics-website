@@ -25,8 +25,17 @@ function msg_wa_link( $text = 'Hi M.S. Graphics Studio, I have a question about 
 	return 'https://wa.me/' . rawurlencode( preg_replace( '/\D/', '', msg_opt( 'whatsapp' ) ) ) . '?text=' . rawurlencode( $text );
 }
 
-/** The brand logo, same as the main website. $variant: light (navy text) or dark (white text). */
+/**
+ * The logo. Uses the logo already set in Customize > Site Identity (your current
+ * logo) when there is one; otherwise the main website's logo.
+ * $variant: light (for white backgrounds) or dark (for the navy footer).
+ */
 function msg_logo( $variant = 'light' ) {
+	$logo_id = (int) get_theme_mod( 'custom_logo' );
+	if ( $logo_id && wp_attachment_is_image( $logo_id ) ) {
+		$img = wp_get_attachment_image( $logo_id, 'medium', false, array( 'class' => 'custom-logo', 'alt' => 'M.S. Graphics Studio', 'loading' => 'eager' ) );
+		return 'dark' === $variant ? '<span class="msg-footer__logo-img">' . $img . '</span>' : $img;
+	}
 	$text     = 'dark' === $variant ? '#FFFFFF' : '#14213D';
 	$mark     = $text;
 	$mark_txt = 'dark' === $variant ? '#14213D' : '#FFFFFF';
